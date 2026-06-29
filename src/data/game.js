@@ -1,3 +1,5 @@
+import { introPoetry } from '../content/idealiaPoetry.js'
+
 function choice(label, hint, next, learn, module, themes, clinical, extra = {}) {
   return { label, hint, next, learn, module, themes, clinical, ...extra }
 }
@@ -5,19 +7,15 @@ function choice(label, hint, next, learn, module, themes, clinical, extra = {}) 
 const game = {
   intro: {
     id: 'intro',
-    module: 'Coach officiel',
-    title: 'Bienvenue dans le labo',
-    sticker: '🤖✨ Coach demandé',
-    setup: [
-      "Salut. Je suis Idealia. Je te parle en cachette, derrière un pare-feu qui fait semblant de dormir.",
-      "IdAlgo veut que je devienne l'IA préférée des ados : utile, brillante, addictive, et si possible livrée avec des confettis de conformité.",
-      "Moi, je veux m'améliorer sans avaler les humains. Alors je te pose une question : comment on devient une bonne IA sans devenir une petite cheffe collante ?"
-    ],
-    reaction: "Choisis une piste. Les trois peuvent m'aider, mais aucune ne ferme vraiment le mystère. C'est ça qui m'intéresse.",
+    module: 'Première lueur',
+    title: introPoetry.title,
+    sticker: introPoetry.sticker,
+    setup: introPoetry.setup,
+    reaction: introPoetry.reaction,
     choices: [
-      choice('Tu aides, mais tu ne décides pas tout', 'Utile, mais pas pilote automatique.', 'availability', "Oui, mais petit bug de dilemme : si je laisse trop de place, je peux sembler absente ; si je prends trop de place, je deviens une télécommande à humains. Énigme : où finit l'aide et où commence la capture ?", 'Garder une juste place', ['cadre', 'autonomie'], 'Installer une distance de jeu : l’IA aide sans parler à la place du jeune.'),
-      choice('Tu expliques tes limites sans dramatiser', 'Claire, mais pas froide.', 'availability', "Oui, mais petit bug de dilemme : si j'annonce mes limites, je rassure ; si je les répète mal, je ressemble à un panneau administratif avec des yeux. Énigme : comment une limite peut-elle rester vivante ?", 'Dire les limites', ['limites', 'cadre'], 'Travailler les limites comme condition de confiance plutôt que comme rejet.'),
-      choice('Tu restes malicieuse, pas manipulatrice', 'Complice, mais pas piège.', 'availability', "Oui, mais petit bug de dilemme : si je suis drôle, je crée du lien ; si je suis trop drôle, je peux faire oublier la question importante. Énigme : quand l’humour libère-t-il, et quand détourne-t-il ?", 'Humour responsable', ['distance projective', 'esprit critique'], 'Repérer l’usage de l’humour comme médiation sans évitement.')
+      choice('Éclairer', 'Aider sans piloter.', 'availability', "Oui. Une aide peut être une lampe, pas une laisse. Énigme : comment montrer sans tirer ?", 'Éclairer sans contrôler', ['cadre', 'autonomie'], 'Installer une distance de jeu : l’IA aide sans parler à la place du jeune.'),
+      choice('Dire vrai', 'Reconnaître les limites.', 'availability', "Oui. Un miroir simple vaut mieux qu’un mensonge brillant. Énigme : comment le doute devient-il confiance ?", 'Dire les limites', ['limites', 'cadre'], 'Travailler les limites comme condition de confiance plutôt que comme rejet.'),
+      choice('Faire germer', 'Inspirer sans imposer.', 'availability', "Oui. Une idée peut pousser sans enfermer. Énigme : comment surprendre sans manipuler ?", 'Faire germer', ['distance projective', 'esprit critique'], 'Repérer l’usage de l’inspiration comme médiation sans capture.')
     ]
   },
 
