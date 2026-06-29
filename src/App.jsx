@@ -52,7 +52,9 @@ function useHapticsAndSound(enabled) {
   function ensureAudio() {
     if (!enabled) return null
     if (!audioRef.current) {
-      audioRef.current = new AudioContext()
+      const AudioEngine = window.AudioContext || window.webkitAudioContext
+      if (!AudioEngine) return null
+      audioRef.current = new AudioEngine()
     }
     return audioRef.current
   }
@@ -119,12 +121,25 @@ function TypeText({ lines = [], speed = 28, onDone }) {
   )
 }
 
-function MissionBubbles({ lines, onDone }) {
+function MissionBubbles({ lines, onDone, ready, waitingForVoice, onContinue, continueLabel }) {
   return (
     <div className="bubbleStack">
       <div className="bubble idealiaBubble">
         <TypeText lines={lines} onDone={onDone} />
       </div>
+
+      {ready && (
+        <motion.button
+          type="button"
+          className="storyContinue"
+          onClick={onContinue}
+          disabled={waitingForVoice}
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+        >
+          {waitingForVoice ? 'Idealia termine sa phrase…' : continueLabel}
+        </motion.button>
+      )}
     </div>
   )
 }
@@ -305,6 +320,8 @@ export default function App() {
   const [missionId, setMissionId] = useState('intro')
   const [stage, setStage] = useState('story')
   const [selectedChoice, setSelectedChoice] = useState(null)
+  const [storyTyped, setStoryTyped] = useState(false)
+  const [voiceDone, setVoiceDone] = useState(true)
   const [modules, setModules] = useState([])
   const [choices, setChoices] = useState([])
   const [signals, setSignals] = useState(emptySignals)
@@ -321,8 +338,22 @@ export default function App() {
   useEffect(() => {
     setStage('story')
     setSelectedChoice(null)
+    setStoryTyped(false)
+    setVoiceDone(!voiceEnabled)
     setSpeaking(false)
   }, [missionId])
+
+  const canContinueStory = storyTyped && (!voiceEnabled || voiceDone)
+
+  function getNextStageAfterStory(currentMission) {
+    if (currentMission.boss) return 'boss'
+    if (currentMission.bug) return 'bug'
+    return 'choice'
+  }
+
+  function getNextStageAfterBoss(currentMission) {
+    return currentMission.bug ? 'bug' : 'choice'
+  }
 
   function recordChoice(choice) {
     setSelectedChoice(choice)
@@ -371,7 +402,14 @@ export default function App() {
           className={`soundButton ${voiceEnabled ? 'on' : ''}`}
           aria-pressed={voiceEnabled}
           onClick={() => {
-            setVoiceEnabled(current => !current)
+            setVoiceEnabled(current => {
+              const next = !current
+              if (!next) {
+                setVoiceDone(true)
+                setSpeaking(false)
+              }
+              return next
+            })
             blip('tap')
           }}
         >
@@ -402,14 +440,30 @@ export default function App() {
           text={mission.setup.join(' ')}
           role="idealia"
           enabled={voiceEnabled && stage === 'story'}
-          onStart={() => setSpeaking(true)}
-          onEnd={() => setSpeaking(false)}
+          onStart={() => {
+            setVoiceDone(false)
+            setSpeaking(true)
+          }}
+          onEnd={() => {
+            setVoiceDone(true)
+            setSpeaking(false)
+          }}
         />
 
         <AnimatePresence mode="wait">
           {stage === 'story' && (
             <motion.div key="story" className="stageWrap" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -16 }}>
-              <MissionBubbles lines={mission.setup} onDone={() => setStage('boss')} />
+              <MissionBubbles
+                lines={mission.setup}
+                ready={canContinueStory}
+                waitingForVoice={storyTyped && voiceEnabled && !voiceDone}
+                onDone={() => setStoryTyped(true)}
+                continueLabel={mission.boss ? 'Répondre au vocal du Boss' : 'Voir la synthèse'}
+                onContinue={() => {
+                  blip('tap')
+                  setStage(getNextStageAfterStory(mission))
+                }}
+              />
             </motion.div>
           )}
 
@@ -419,7 +473,7 @@ export default function App() {
                 text={mission.boss}
                 voiceEnabled={voiceEnabled}
                 onPulse={blip}
-                onDone={() => setStage('bug')}
+                onDone={() => setStage(getNextStageAfterBoss(mission))}
               />
             </motion.div>
           )}

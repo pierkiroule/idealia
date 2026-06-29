@@ -677,3 +677,22 @@ button:focus-visible {
     height: 96px;
   }
 }
+
+.storyContinue {
+  width: 100%;
+  border: 0;
+  padding: 15px 16px;
+  border-radius: 22px;
+  color: #24304d;
+  background: linear-gradient(180deg, #c7f9ff, #67e8f9);
+  font-weight: 950;
+  box-shadow: 0 10px 0 rgba(14, 116, 144, 0.16);
+  cursor: pointer;
+}
+
+.storyContinue:disabled {
+  color: #64748b;
+  background: #e2e8f0;
+  box-shadow: none;
+  cursor: wait;
+}

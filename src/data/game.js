@@ -379,12 +379,7 @@ const game = {
       "J'ai appris à aider sans avaler toute la place.",
       "Je garde mon 1 % manquant comme un rappel : certaines choses restent humaines."
     ],
-    boss: "Bon... 99 %, c'est presque un KPI. Je vais respirer dans un tableur.",
-    bug: {
-      title: 'Aucun bug à corriger',
-      text: "Le 99 % rappelle qu'une IA responsable connaît ses limites."
-    },
-    reaction: "Tu peux relancer une partie, ou ouvrir le mode clinicien avec le titre si un adulte accompagne.",
+    reaction: "Voilà mes modules. Tu peux relancer une partie, ou ouvrir le mode clinicien avec le titre si un adulte accompagne.",
     choices: [
       {
         label: 'Recommencer une mission complète',
