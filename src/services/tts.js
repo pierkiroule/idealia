@@ -8,14 +8,6 @@ const characterProfiles = {
     baseRate: 1.02,
     basePitch: 1.22,
     volume: 1
-  },
-  boss: {
-    lang: 'fr-FR',
-    voiceHints: ['male', 'homme', 'thomas'],
-    kokoroVoice: 'am_adam',
-    baseRate: 1.08,
-    basePitch: 0.58,
-    volume: 1
   }
 }
 
@@ -114,7 +106,7 @@ function pickVoice(voices, character) {
     profile.voiceHints
       .map(hint => candidates.find(voice => voice.name.toLowerCase().includes(hint)))
       .find(Boolean) ||
-    candidates[character === 'boss' ? 1 : 0] ||
+    candidates[0] ||
     voices[0]
   )
 }

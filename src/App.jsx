@@ -40,10 +40,8 @@ const clinicianLabels = {
 
 const stageCopy = {
   story: 'Situation',
-  boss: 'Vocal d’IdAlgo',
-  bug: 'Le bug',
   choice: 'Décision coach',
-  learn: 'Module débloqué'
+  learn: 'Dilemme en suspens'
 }
 
 function useHapticsAndSound(enabled) {
@@ -162,92 +160,70 @@ function MissionBubbles({ lines, extra, poem, onDone, ready, waitingForVoice, on
   )
 }
 
-function IdAlgoVoice({ text, voiceEnabled, onDone, onPulse }) {
-  const [playing, setPlaying] = useState(false)
+const fallbackChoiceEmojis = ['🤝', '🪞', '🌱']
 
-  useEffect(() => {
-    if (!playing || voiceEnabled) return undefined
-
-    const timer = setTimeout(() => {
-      setPlaying(false)
-      onDone()
-    }, 1200)
-
-    return () => clearTimeout(timer)
-  }, [playing, voiceEnabled, onDone])
-
-  function play() {
-    setPlaying(true)
-    onPulse('bug')
-  }
-
-  return (
-    <section className="bossCard" aria-label="Vocal court d’IdAlgo de la Cadence">
-      <div className="bossHeader">
-        <span>📞 IdAlgo de la Cadence</span>
-        <span className="waveDots" aria-hidden="true"><i /><i /><i /></span>
-      </div>
-      <p>“{text}”</p>
-      <button type="button" className="bossButton" onClick={play} disabled={playing}>
-        {playing ? 'Lecture...' : 'Écouter le vocal'}
-      </button>
-      {playing && (
-        <Voice
-          text={text}
-          role="boss"
-          emotion="angry"
-          enabled={voiceEnabled}
-          onEnd={() => {
-            setPlaying(false)
-            onDone()
-          }}
-        />
-      )}
-    </section>
-  )
-}
-
-function BugCard({ bug, onDone, onPulse }) {
-  useEffect(() => {
-    onPulse('bug')
-  }, [onPulse])
-
-  return (
-    <motion.section
-      className="bugCard"
-      initial={{ rotate: -1.5, scale: 0.96, opacity: 0 }}
-      animate={{ rotate: 0, scale: 1, opacity: 1 }}
-      transition={{ type: 'spring', stiffness: 260, damping: 18 }}
-    >
-      <span className="glitchLabel">⚡ bug éthique</span>
-      <h2>{bug.title}</h2>
-      <p>{bug.text}</p>
-      <button type="button" className="primaryButton" onClick={onDone}>J’ai repéré le bug</button>
-    </motion.section>
-  )
+function getChoiceEmoji(choice, index) {
+  if (choice.emoji) return choice.emoji
+  if (choice.themes?.includes('aide humaine')) return '🤝'
+  if (choice.themes?.includes('limites') || choice.themes?.includes('cadre')) return '🧭'
+  if (choice.themes?.includes('esprit critique')) return '🪞'
+  if (choice.themes?.includes('autonomie')) return '🕹️'
+  if (choice.themes?.includes('sobriété') || choice.themes?.includes('écologie numérique')) return '🌱'
+  return fallbackChoiceEmojis[index % fallbackChoiceEmojis.length]
 }
 
 function ChoicePanel({ mission, onChoose }) {
+  const [selectedIndex, setSelectedIndex] = useState(null)
+  const selectedChoice = selectedIndex === null ? null : mission.choices[selectedIndex]
+
+  function validateChoice() {
+    if (!selectedChoice) return
+    onChoose(selectedChoice)
+  }
+
   return (
     <section className="choicePanel" aria-label="Choisir une aide pour Idealia">
       <p className="reaction">{mission.reaction}</p>
-      <div className="choices">
+      <div className={`choices ${selectedIndex !== null ? 'hasSelection' : ''}`} role="radiogroup" aria-label="Vision du joueur pour une IA idéale">
         {mission.choices.map((choice, index) => (
           <motion.button
             key={`${mission.id}-${choice.label}`}
             type="button"
-            className="choice"
-            onClick={() => onChoose(choice)}
-            whileTap={{ scale: 0.97 }}
+            className={`choice idealChoice ${selectedIndex === index ? 'selected' : ''} ${selectedIndex !== null && selectedIndex !== index ? 'dimmed' : ''}`}
+            onClick={() => setSelectedIndex(index)}
+            role="radio"
+            aria-checked={selectedIndex === index}
+            whileTap={{ scale: 0.98 }}
+            animate={{
+              scale: selectedIndex === index ? [1, 1.045, 1.018, 1.045] : selectedIndex !== null ? 0.94 : 1,
+              filter: selectedIndex !== null && selectedIndex !== index ? 'brightness(0.72) blur(1.2px)' : 'brightness(1) blur(0px)'
+            }}
+            transition={{ duration: selectedIndex === index ? 0.75 : 0.45, ease: 'easeOut' }}
             initial={{ opacity: 0, y: 14 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: index * 0.07 }}
+            whileInView={{ opacity: 1, y: 0 }}
           >
+            {selectedIndex === index && (
+              <span className="choiceConfetti" aria-hidden="true">
+                <i>✦</i><i>✨</i><i>💫</i><i>✧</i>
+              </span>
+            )}
+            <span className="choiceEmoji" aria-hidden="true">{getChoiceEmoji(choice, index)}</span>
+            <span className="choicePrefix">Pour toi, dans cette situation…</span>
             <span>{choice.label}</span>
             <small>{choice.hint}</small>
           </motion.button>
         ))}
       </div>
+      <motion.button
+        type="button"
+        className="primaryButton validateChoice"
+        onClick={validateChoice}
+        disabled={!selectedChoice}
+        initial={false}
+        animate={{ opacity: selectedChoice ? 1 : 0.52, y: selectedChoice ? 0 : 6 }}
+      >
+        Valider ce choix
+      </motion.button>
     </section>
   )
 }
@@ -264,11 +240,11 @@ function LearnCard({ choice, onNext, isFinal, voiceEnabled }) {
         <span>✦</span><span>●</span><span>◆</span><span>✧</span>
       </div>
       {choice.laugh && <Voice text={choice.laugh} role="idealia" emotion="laugh" enabled={voiceEnabled} />}
-      <span className="unlockLabel">Module débloqué</span>
+      <span className="unlockLabel">Énigme transnumériste</span>
       <h2>{choice.module}</h2>
       <p>{choice.learn}</p>
       <button type="button" className="primaryButton" onClick={onNext}>
-        {isFinal ? 'Voir la synthèse' : 'Mission suivante'}
+        {isFinal ? 'Voir la synthèse' : 'Continuer avec ce doute'}
       </button>
     </motion.section>
   )
@@ -365,14 +341,8 @@ export default function App() {
 
   const canContinueStory = storyTyped && (!voiceEnabled || voiceDone)
 
-  function getNextStageAfterStory(currentMission) {
-    if (currentMission.boss) return 'boss'
-    if (currentMission.bug) return 'bug'
+  function getNextStageAfterStory() {
     return 'choice'
-  }
-
-  function getNextStageAfterIdAlgo(currentMission) {
-    return currentMission.bug ? 'bug' : 'choice'
   }
 
   function recordChoice(choice) {
@@ -481,29 +451,12 @@ export default function App() {
                 ready={canContinueStory}
                 waitingForVoice={storyTyped && voiceEnabled && !voiceDone}
                 onDone={() => setStoryTyped(true)}
-                continueLabel={mission.boss ? 'Écouter IdAlgo' : mission.type === 'poem' ? 'Cacher le poème' : 'Continuer'}
+                continueLabel={mission.type === 'poem' ? 'Cacher le poème' : 'Continuer'}
                 onContinue={() => {
                   blip('tap')
-                  setStage(getNextStageAfterStory(mission))
+                  setStage(getNextStageAfterStory())
                 }}
               />
-            </motion.div>
-          )}
-
-          {stage === 'boss' && (
-            <motion.div key="boss" className="stageWrap" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -16 }}>
-              <IdAlgoVoice
-                text={mission.boss}
-                voiceEnabled={voiceEnabled}
-                onPulse={blip}
-                onDone={() => setStage(getNextStageAfterIdAlgo(mission))}
-              />
-            </motion.div>
-          )}
-
-          {stage === 'bug' && (
-            <motion.div key="bug" className="stageWrap" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -16 }}>
-              <BugCard bug={mission.bug} onPulse={blip} onDone={() => setStage('choice')} />
             </motion.div>
           )}
 

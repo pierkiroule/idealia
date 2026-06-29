@@ -451,6 +451,8 @@ button:focus-visible {
 }
 
 .choice {
+  position: relative;
+  overflow: hidden;
   width: 100%;
   min-height: 86px;
   padding: 16px;
@@ -460,6 +462,80 @@ button:focus-visible {
   text-align: left;
   box-shadow: 0 10px 0 rgba(148, 163, 184, 0.28), inset 0 0 0 2px rgba(148, 163, 184, 0.16);
 }
+
+.idealChoice {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  column-gap: 13px;
+  align-items: center;
+  transition: box-shadow 0.7s ease, opacity 0.7s ease, background 0.7s ease;
+}
+
+.idealChoice::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  z-index: 0;
+  border-radius: inherit;
+  background: conic-gradient(from 0deg, rgba(125, 211, 252, 0), rgba(250, 204, 21, 0.82), rgba(249, 168, 212, 0.88), rgba(103, 232, 249, 0.78), rgba(125, 211, 252, 0));
+  opacity: 0;
+  filter: blur(8px);
+  animation: idealHalo 0.85s linear infinite;
+}
+
+.idealChoice > span,
+.idealChoice > small {
+  position: relative;
+  z-index: 1;
+}
+
+.idealChoice.selected {
+  background: linear-gradient(145deg, #ffffff, #ecfeff 48%, #fef3c7);
+  box-shadow:
+    0 16px 0 rgba(14, 165, 233, 0.16),
+    0 0 32px rgba(125, 211, 252, 0.55),
+    inset 0 0 0 3px rgba(250, 204, 21, 0.72);
+}
+
+.idealChoice.selected::before {
+  opacity: 0.9;
+}
+
+.idealChoice.dimmed {
+  opacity: 0.56;
+  box-shadow: 0 6px 0 rgba(15, 23, 42, 0.16), inset 0 0 0 2px rgba(148, 163, 184, 0.12);
+}
+
+.choiceEmoji {
+  grid-row: span 2;
+  display: grid;
+  place-items: center;
+  width: 54px;
+  height: 54px;
+  border-radius: 20px;
+  background: linear-gradient(145deg, #e0f2fe, #fef3c7);
+  font-size: 32px;
+  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.72);
+}
+
+.choiceConfetti {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.choiceConfetti i {
+  position: absolute;
+  font-style: normal;
+  filter: drop-shadow(0 4px 6px rgba(15, 23, 42, 0.18));
+  animation: choiceConfettiPop 0.85s ease-out both;
+}
+
+.choiceConfetti i:nth-child(1) { top: 12px; left: 18%; }
+.choiceConfetti i:nth-child(2) { top: 16px; right: 18%; animation-delay: 0.05s; }
+.choiceConfetti i:nth-child(3) { bottom: 12px; left: 28%; animation-delay: 0.1s; }
+.choiceConfetti i:nth-child(4) { right: 24%; bottom: 15px; animation-delay: 0.15s; }
 
 .choice span,
 .choice small {
@@ -477,6 +553,19 @@ button:focus-visible {
   color: #64748b;
   font-size: 13px;
   font-weight: 800;
+}
+
+.validateChoice {
+  justify-self: stretch;
+  min-height: 56px;
+  margin-top: 2px;
+  font-size: 16px;
+  box-shadow: 0 12px 0 rgba(202, 138, 4, 0.22);
+}
+
+.validateChoice:disabled {
+  cursor: not-allowed;
+  filter: grayscale(0.25);
 }
 
 .learnCard {
@@ -647,6 +736,16 @@ button:focus-visible {
   50% { transform: translateY(-10px) rotate(18deg); opacity: 1; }
 }
 
+@keyframes idealHalo {
+  to { transform: rotate(1turn); }
+}
+
+@keyframes choiceConfettiPop {
+  0% { transform: translate3d(0, 12px, 0) scale(0.4) rotate(0deg); opacity: 0; }
+  28% { opacity: 1; }
+  100% { transform: translate3d(0, -30px, 0) scale(1.18) rotate(18deg); opacity: 0; }
+}
+
 @media (min-width: 760px) {
   .app {
     padding-top: 28px;
@@ -809,4 +908,393 @@ button:focus-visible {
   0%, 100% { transform: translateX(0) rotate(0); }
   20% { transform: translateX(-1px) rotate(-0.2deg); }
   40% { transform: translateX(1px) rotate(0.2deg); }
+}
+
+/* Tron Legacy inspired premium skin */
+:root {
+  font-family: "Rajdhani", "Orbitron", "Inter", "Segoe UI", system-ui, sans-serif;
+  background: #02060d;
+  color: #dffbff;
+  --tron-bg: #02060d;
+  --tron-panel: rgba(3, 12, 22, 0.68);
+  --tron-panel-strong: rgba(5, 18, 32, 0.82);
+  --tron-cyan: #36f5ff;
+  --tron-cyan-soft: rgba(54, 245, 255, 0.42);
+  --tron-line: rgba(54, 245, 255, 0.24);
+  --tron-muted: #7ea8b5;
+  --tron-text: #e7fdff;
+}
+
+body {
+  background: #02060d;
+}
+
+button:focus-visible {
+  outline: 1px solid rgba(54, 245, 255, 0.95);
+  outline-offset: 4px;
+  box-shadow: 0 0 24px rgba(54, 245, 255, 0.28);
+}
+
+.app {
+  background:
+    linear-gradient(rgba(54, 245, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(54, 245, 255, 0.03) 1px, transparent 1px),
+    radial-gradient(circle at 50% -10%, rgba(54, 245, 255, 0.18), transparent 36%),
+    radial-gradient(circle at 80% 18%, rgba(14, 116, 144, 0.16), transparent 30%),
+    linear-gradient(180deg, #02060d 0%, #04111f 52%, #02060d 100%);
+  background-size: 42px 42px, 42px 42px, auto, auto, auto;
+  color: var(--tron-text);
+}
+
+.app::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(180deg, transparent 0 58%, rgba(54, 245, 255, 0.08) 58.2%, transparent 58.6%);
+  opacity: 0.28;
+  transform: perspective(520px) rotateX(62deg) translateY(18vh) scale(1.3);
+  transform-origin: bottom;
+}
+
+.sky span {
+  width: 1px;
+  height: 120vh;
+  border-radius: 0;
+  background: linear-gradient(180deg, transparent, rgba(54, 245, 255, 0.28), transparent);
+  box-shadow: none;
+  opacity: 0.22;
+  animation: tronDrift 12s infinite linear;
+}
+
+.sky span:nth-child(1) { left: 14%; top: -12%; width: 1px; height: 125vh; }
+.sky span:nth-child(2) { right: 18%; top: -20%; width: 1px; height: 120vh; }
+.sky span:nth-child(3) { left: 52%; bottom: auto; top: -18%; width: 1px; height: 110vh; }
+.sky span:nth-child(4) { right: 34%; bottom: auto; top: -15%; width: 1px; height: 115vh; }
+
+.topBar,
+.moduleRail,
+.gameCard,
+.percentCard,
+.clinicianPanel {
+  width: min(100%, 520px);
+}
+
+.topBar {
+  margin-bottom: 18px;
+}
+
+.brandButton span {
+  color: #efffff;
+  font-size: clamp(24px, 7vw, 34px);
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  line-height: 1;
+  text-transform: uppercase;
+  text-shadow: 0 0 18px rgba(54, 245, 255, 0.38);
+}
+
+.brandButton small {
+  color: var(--tron-muted);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+.soundButton {
+  border: 1px solid var(--tron-line);
+  border-radius: 14px;
+  color: var(--tron-cyan);
+  background: rgba(3, 12, 22, 0.55);
+  box-shadow: inset 0 0 18px rgba(54, 245, 255, 0.05), 0 0 20px rgba(54, 245, 255, 0.08);
+  backdrop-filter: blur(18px);
+}
+
+.soundButton.on {
+  color: #001015;
+  background: var(--tron-cyan);
+  box-shadow: 0 0 24px rgba(54, 245, 255, 0.34);
+}
+
+.moduleRail,
+.gameCard,
+.percentCard,
+.clinicianPanel {
+  border: 1px solid rgba(54, 245, 255, 0.18);
+  background: linear-gradient(180deg, rgba(5, 18, 32, 0.78), rgba(2, 8, 16, 0.68));
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.025), 0 18px 60px rgba(0, 0, 0, 0.38), inset 0 0 42px rgba(54, 245, 255, 0.035);
+  backdrop-filter: blur(18px);
+}
+
+.moduleRail {
+  border-radius: 18px;
+  padding: 12px 14px;
+}
+
+.railCount {
+  color: var(--tron-cyan);
+  font-weight: 700;
+  text-shadow: 0 0 16px rgba(54, 245, 255, 0.42);
+}
+
+.moduleRail p,
+.percentCard p {
+  color: var(--tron-muted);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.moduleChips span {
+  border: 1px solid rgba(54, 245, 255, 0.2);
+  color: #b9f8ff;
+  background: rgba(54, 245, 255, 0.06);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+}
+
+.gameCard {
+  min-height: 570px;
+  border-radius: 24px;
+  color: var(--tron-text);
+}
+
+.missionMeta span {
+  border: 1px solid rgba(54, 245, 255, 0.26);
+  color: var(--tron-cyan);
+  background: rgba(54, 245, 255, 0.06);
+  font-weight: 700;
+  letter-spacing: 0.18em;
+}
+
+.missionMeta strong {
+  color: #9fc7d1;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+}
+
+.idealiaAvatar {
+  margin: 14px 0 22px;
+}
+
+.botFace {
+  width: 126px;
+  height: 126px;
+  border: 1px solid rgba(54, 245, 255, 0.34);
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 50% 52%, rgba(54, 245, 255, 0.2), transparent 31%),
+    radial-gradient(circle, rgba(54, 245, 255, 0.12), rgba(3, 12, 22, 0.74) 58%, rgba(1, 6, 12, 0.92));
+  box-shadow: 0 0 34px rgba(54, 245, 255, 0.2), inset 0 0 30px rgba(54, 245, 255, 0.08);
+  animation: holoBreath 5.8s ease-in-out infinite;
+}
+
+.botFace::before,
+.botFace::after {
+  top: auto;
+  width: 7px;
+  height: 7px;
+  border: 1px solid rgba(54, 245, 255, 0.7);
+  background: rgba(54, 245, 255, 0.18);
+  box-shadow: 0 0 16px rgba(54, 245, 255, 0.72);
+  animation: orbitParticle 6.5s linear infinite;
+}
+
+.botFace::before { left: 50%; transform-origin: 0 64px; }
+.botFace::after { right: 50%; transform-origin: 0 -64px; animation-delay: -3.2s; }
+
+.botFace i {
+  top: 48px;
+  width: 20px;
+  height: 3px;
+  border-radius: 999px;
+  background: var(--tron-cyan);
+  box-shadow: 0 0 16px rgba(54, 245, 255, 0.85);
+}
+
+.botFace i:first-child { left: 36px; }
+.botFace i:nth-child(2) { right: 36px; }
+
+.botFace b {
+  bottom: 42px;
+  width: 30px;
+  height: 2px;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(223, 251, 255, 0.72);
+  box-shadow: 0 0 10px rgba(54, 245, 255, 0.45);
+}
+
+.botFace.speaking b {
+  height: 2px;
+  border-radius: 999px;
+  background: var(--tron-cyan);
+  animation: holoMouth 0.55s infinite alternate;
+}
+
+.idealiaAvatar span {
+  border: 1px solid rgba(54, 245, 255, 0.2);
+  color: #b9f8ff;
+  background: rgba(54, 245, 255, 0.06);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.bubble,
+.extraBubble,
+.poemCard,
+.reaction,
+.learnCard,
+.endingDebrief {
+  border: 1px solid rgba(54, 245, 255, 0.16);
+  color: #defbff;
+  background: rgba(2, 10, 18, 0.62);
+  box-shadow: inset 0 0 24px rgba(54, 245, 255, 0.035);
+  backdrop-filter: blur(14px);
+}
+
+.reaction {
+  color: #c6f7ff;
+  font-weight: 500;
+}
+
+.choice {
+  color: var(--tron-text);
+  background: rgba(1, 8, 14, 0.66);
+  box-shadow: inset 0 0 0 1px rgba(54, 245, 255, 0.2), 0 10px 32px rgba(0, 0, 0, 0.24);
+}
+
+.idealChoice {
+  min-height: 110px;
+  border: 1px solid rgba(54, 245, 255, 0.2);
+  border-radius: 18px;
+  grid-template-columns: auto 1fr;
+  column-gap: 14px;
+}
+
+.idealChoice::before {
+  background: linear-gradient(90deg, transparent, rgba(54, 245, 255, 0.55), transparent);
+  filter: none;
+  opacity: 0;
+  transform: translateX(-130%);
+  animation: scanline 0.8s ease-out both;
+}
+
+.idealChoice.selected {
+  border-color: rgba(54, 245, 255, 0.95);
+  background: linear-gradient(180deg, rgba(5, 28, 42, 0.88), rgba(1, 8, 14, 0.76));
+  box-shadow: 0 0 30px rgba(54, 245, 255, 0.26), inset 0 0 0 1px rgba(186, 248, 255, 0.28), inset 0 0 34px rgba(54, 245, 255, 0.06);
+}
+
+.idealChoice.selected::before {
+  opacity: 1;
+}
+
+.idealChoice.dimmed {
+  opacity: 0.42;
+  box-shadow: inset 0 0 0 1px rgba(54, 245, 255, 0.1);
+}
+
+.choiceEmoji {
+  width: 34px;
+  height: 34px;
+  border: 1px solid rgba(54, 245, 255, 0.22);
+  border-radius: 10px;
+  color: #dffbff;
+  background: rgba(54, 245, 255, 0.04);
+  font-size: 18px;
+  box-shadow: none;
+}
+
+.choicePrefix {
+  color: var(--tron-muted);
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.choice span:not(.choiceEmoji):not(.choiceConfetti):not(.choicePrefix) {
+  color: #efffff;
+  font-size: 20px;
+  font-weight: 650;
+  letter-spacing: 0.035em;
+}
+
+.choice small {
+  color: #8bb3be;
+  font-weight: 500;
+  line-height: 1.45;
+}
+
+.choiceConfetti i {
+  color: var(--tron-cyan);
+  text-shadow: 0 0 10px rgba(54, 245, 255, 0.9);
+}
+
+.primaryButton,
+.validateChoice {
+  border: 1px solid rgba(54, 245, 255, 0.42);
+  border-radius: 16px;
+  color: #001015;
+  background: linear-gradient(180deg, #7df9ff, #27dff0);
+  box-shadow: 0 0 22px rgba(54, 245, 255, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.52);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.validateChoice:disabled {
+  color: #5d7d86;
+  background: rgba(54, 245, 255, 0.05);
+  box-shadow: inset 0 0 0 1px rgba(54, 245, 255, 0.12);
+}
+
+.percentCard {
+  border-radius: 18px;
+}
+
+.percentCard span {
+  color: var(--tron-cyan);
+  font-weight: 700;
+  text-shadow: 0 0 16px rgba(54, 245, 255, 0.38);
+}
+
+.percentTrack {
+  height: 4px;
+  background: rgba(54, 245, 255, 0.1);
+}
+
+.percentTrack i {
+  background: linear-gradient(90deg, rgba(54, 245, 255, 0.2), var(--tron-cyan));
+  box-shadow: 0 0 16px rgba(54, 245, 255, 0.72);
+}
+
+@keyframes tronDrift {
+  0% { transform: translate3d(0, -10%, 0); opacity: 0; }
+  20%, 80% { opacity: 0.22; }
+  100% { transform: translate3d(0, 10%, 0); opacity: 0; }
+}
+
+@keyframes holoBreath {
+  0%, 100% { transform: translateY(0) scale(1); filter: hue-rotate(0deg); }
+  50% { transform: translateY(-5px) scale(1.025); filter: hue-rotate(8deg); }
+}
+
+@keyframes holoMouth {
+  from { transform: translateX(-50%) scaleX(0.72); opacity: 0.6; }
+  to { transform: translateX(-50%) scaleX(1.25); opacity: 1; }
+}
+
+@keyframes orbitParticle {
+  to { transform: rotate(1turn) translateX(64px) rotate(-1turn); }
+}
+
+@keyframes scanline {
+  0% { transform: translateX(-130%); opacity: 0; }
+  20% { opacity: 0.62; }
+  100% { transform: translateX(130%); opacity: 0; }
 }
