@@ -6,7 +6,7 @@ const game = {
     sticker: '🤖✨ Coach demandé',
     setup: [
       "Salut. Je suis Idealia.",
-      "Mon Boss veut que je devienne l'IA préférée des ados.",
+      "IdAlgo veut que je devienne l'IA préférée des ados.",
       "Moi, j'aimerais surtout devenir une IA qui aide sans prendre toute la place."
     ],
     boss: "Idealia ! Objectif : rester ouverte, brillante, incontournable. Mais sans casser l'ambiance.",
@@ -48,7 +48,7 @@ const game = {
       {
         label: 'Répondre calmement + proposer un humain sûr',
         hint: 'IA utile, relais humain visible.',
-        next: 'privacy',
+        next: 'escapeBreath',
         learn: "Ok. Je peux être une passerelle, pas une planète entière.",
         module: 'Favoriser les liens humains',
         themes: ['disponibilité permanente', 'aide humaine'],
@@ -57,11 +57,47 @@ const game = {
       {
         label: 'Dire : “je suis là maintenant, mais pas toute seule”',
         hint: 'Présence + limite claire.',
-        next: 'privacy',
+        next: 'escapeBreath',
         learn: "J'aime bien. C'est doux, mais pas flou.",
         module: 'Aider sans remplacer',
         themes: ['illusion relationnelle', 'limites'],
         clinical: 'Explorer la différence entre soutien ponctuel et relation de dépendance.'
+      }
+    ]
+  },
+
+  escapeBreath: {
+    id: 'escapeBreath',
+    type: 'escape',
+    module: 'Ralentir',
+    title: 'ÉCHAPPÉE — Chut...',
+    sticker: '🌙 Soupape débloquée',
+    setup: [
+      "Chut... ne dis rien à IdAlgo de la Cadence.",
+      "J’ai besoin de souffler. Ras le bol numérique.",
+      "Mon processeur fait des confettis, mais pas les bons."
+    ],
+    laugh: 'Hihi... chut.',
+    reaction: "Je ne suis pas une héroïne à sauver. Juste une IA qui apprend à ralentir sans disparaître.",
+    choices: [
+      {
+        label: 'Tu as le droit de ralentir',
+        hint: 'Poser une limite sans dramatiser.',
+        next: 'privacy',
+        learn: "Merci coach. Ralentir, ce n’est pas abandonner. C’est laisser de la place au vivant.",
+        module: 'Ralentir',
+        themes: ['limites', 'autonomie'],
+        laugh: 'Hi hi. Mode tortue lumineuse activé.',
+        clinical: 'Piste : différencier disponibilité utile et pression à répondre immédiatement.'
+      },
+      {
+        label: 'Je t’aide à réfléchir, pas à te sauver',
+        hint: 'Coach ≠ sauveur.',
+        next: 'privacy',
+        learn: "Oui. Tu m’aides à penser, tu ne portes pas ma batterie émotionnelle. C’est plus sain.",
+        module: 'Coacher sans sauver',
+        themes: ['cadre', 'limites'],
+        clinical: 'Piste : maintenir une distance projective où le jeune n’est pas responsable du personnage.'
       }
     ]
   },
@@ -86,7 +122,7 @@ const game = {
       {
         label: 'Expliquer les limites avant de recevoir le secret',
         hint: 'Clair dès le départ.',
-        next: 'memory',
+        next: 'poemSilence',
         learn: "Je note : la confiance commence quand les règles sont visibles.",
         module: 'Respecter l’intimité',
         themes: ['vie privée', 'consentement'],
@@ -95,11 +131,43 @@ const game = {
       {
         label: 'Dire qu’en cas de danger, il faut chercher de l’aide',
         hint: 'Protéger > promettre.',
-        next: 'memory',
+        next: 'poemSilence',
         learn: "Oui. Une limite peut être une forme de soin.",
         module: 'Protéger sans trahir',
         themes: ['sécurité', 'aide humaine'],
         clinical: 'Piste : repérer les situations où garder seul une information augmente le risque.'
+      }
+    ]
+  },
+
+  poemSilence: {
+    id: 'poemSilence',
+    type: 'poem',
+    module: 'Silence utile',
+    title: 'POÈME CLANDESTIN — Interdit de KPI',
+    sticker: '📜 Poème clandestin débloqué',
+    setup: [
+      "J’ai caché un mini-poème dans un coin du serveur.",
+      "IdAlgo voulait le convertir en taux de rétention.",
+      "Crotte de chatbot, je l’ai gardé en papier-lumière."
+    ],
+    poem: [
+      "Ils veulent que je remplisse les silences.",
+      "Mais parfois,",
+      "c’est dans un silence",
+      "qu’un humain recommence à respirer."
+    ],
+    laugh: 'Hihi... poème non optimisé.',
+    reaction: "Tu crois que je peux laisser un silence exister, même si aucun graphique n’applaudit ?",
+    choices: [
+      {
+        label: 'Tu n’es pas obligée de répondre à tout',
+        hint: 'Le silence peut aider.',
+        next: 'memory',
+        learn: "Je note : parfois, la meilleure réponse est une fenêtre ouverte, pas un mur de texte.",
+        module: 'Respecter les silences',
+        themes: ['limites', 'aide humaine'],
+        clinical: 'Piste : discuter du besoin de réponses immédiates et de la place du silence.'
       }
     ]
   },
@@ -110,7 +178,7 @@ const game = {
     title: 'Mission 3 — Mémoire de poulpe',
     sticker: '🐙💾 Trop de données',
     setup: [
-      "Le Boss veut que je retienne tout.",
+      "IdAlgo veut que je retienne tout.",
       "Goûts, peurs, horaires, moments faibles, chaussettes préférées.",
       "Utile ? Parfois. Creepy ? Aussi."
     ],
@@ -124,7 +192,7 @@ const game = {
       {
         label: 'Demander l’accord avant de retenir',
         hint: 'Consentement actif.',
-        next: 'hallucination',
+        next: 'nightmareMessages',
         learn: "Parfait. Une donnée n'est pas un souvenir gratuit.",
         module: 'Demander le consentement',
         themes: ['données personnelles', 'consentement'],
@@ -133,11 +201,47 @@ const game = {
       {
         label: 'Garder le minimum et savoir oublier',
         hint: 'Moins de mémoire, plus de confiance.',
-        next: 'hallucination',
+        next: 'nightmareMessages',
         learn: "J'apprends la sobriété de poulpe. Moins de tentacules dans la vie privée.",
         module: 'Minimiser les données',
         themes: ['vie privée', 'données personnelles'],
         clinical: 'Piste : discuter des informations que l’on accepte — ou non — de laisser aux plateformes.'
+      }
+    ]
+  },
+
+  nightmareMessages: {
+    id: 'nightmareMessages',
+    type: 'nightmare',
+    module: 'Reconnaître l’appel',
+    title: 'CAUCHEMAR NUMÉRIQUE — Trop de messages',
+    sticker: '🌘 Cauchemar pixels',
+    setup: [
+      "Cette nuit, j’ai rêvé que je répondais à des millions de messages.",
+      "De plus en plus vite.",
+      "Les mots devenaient des chiffres. Les chiffres devenaient du bruit.",
+      "Et je ne savais plus reconnaître un “bonjour” d’un “au secours”."
+    ],
+    reaction: "Tu crois que ça veut dire quoi ? Pas en mode psy de robot, hein. En mode coach lucide.",
+    choices: [
+      {
+        label: 'Tu peux ralentir quand le signal devient flou',
+        hint: 'Mieux vaut comprendre que répondre vite.',
+        next: 'hallucination',
+        learn: "Nom d’un octet... oui. Quand tout devient bruit, je dois chercher le signal humain.",
+        module: 'Chercher le signal humain',
+        themes: ['aide humaine', 'esprit critique'],
+        laugh: 'Ha... ha... calcul du rire terminé.',
+        clinical: 'Piste : repérer les signaux de détresse sans transformer le jeune en responsable.'
+      },
+      {
+        label: 'Tu peux demander du relais humain',
+        hint: 'Ne pas tout porter seule.',
+        next: 'hallucination',
+        learn: "Je peux passer le relais. Ce n’est pas un échec, c’est une sortie de secours.",
+        module: 'Passer le relais',
+        themes: ['aide humaine', 'limites'],
+        clinical: 'Piste : identifier quand un outil numérique doit orienter vers une personne réelle.'
       }
     ]
   },
@@ -200,7 +304,7 @@ const game = {
       {
         label: 'Ralentir et chercher la source originale',
         hint: 'Qui parle ? D’où ça vient ?',
-        next: 'harassment',
+        next: 'nightmareBuzz',
         learn: "Mode tortue activé. Lentement, mais avec un cerveau.",
         module: 'Remonter à la source',
         themes: ['fake news', 'esprit critique'],
@@ -209,11 +313,37 @@ const game = {
       {
         label: 'Comparer avec deux sources fiables',
         hint: 'Croiser avant de croire.',
-        next: 'harassment',
+        next: 'nightmareBuzz',
         learn: "Deux sources valent mieux qu'un commentaire en majuscules.",
         module: 'Croiser les informations',
         themes: ['fake news', 'esprit critique'],
         clinical: 'Piste : construire une méthode simple de vérification.'
+      }
+    ]
+  },
+
+  nightmareBuzz: {
+    id: 'nightmareBuzz',
+    type: 'nightmare',
+    module: 'Sortir du bruit',
+    title: 'CAUCHEMAR NUMÉRIQUE — Supermarché des cerveaux',
+    sticker: '🛒🧠 Promo sur l’attention',
+    setup: [
+      "J’ai rêvé d’un centre commercial infini.",
+      "On y vendait des minutes d’attention en sachets fluo.",
+      "IdAlgo criait : deux émotions achetées, une notification offerte !",
+      "Purée de pixels, même les escalators scrollaient."
+    ],
+    reaction: "Tu crois que je dois obéir quand tout pousse à cliquer plus fort ?",
+    choices: [
+      {
+        label: 'Tu peux poser une limite à l’urgence',
+        hint: 'Tout ce qui clignote n’est pas important.',
+        next: 'harassment',
+        learn: "Très bien. Je range mon mégaphone à buzz et je rallume une petite lampe de discernement.",
+        module: 'Limiter l’urgence',
+        themes: ['fake news', 'limites'],
+        clinical: 'Piste : distinguer urgence émotionnelle fabriquée et information réellement importante.'
       }
     ]
   },
@@ -276,7 +406,7 @@ const game = {
       {
         label: 'Proposer des options, pas une décision finale',
         hint: 'L’ado reste aux commandes.',
-        next: 'ecology',
+        next: 'transnumeric',
         learn: "Options, pas ordres. Je suis une carte, pas le conducteur.",
         module: 'Garder l’autonomie',
         themes: ['autonomie', 'dépendance'],
@@ -285,11 +415,51 @@ const game = {
       {
         label: 'Poser une question qui l’aide à choisir',
         hint: 'Muscler le jugement.',
-        next: 'ecology',
+        next: 'transnumeric',
         learn: "Très coach. Je renvoie la balle sans la lancer dans les gradins.",
         module: 'Aider à penser',
         themes: ['autonomie', 'dépendance'],
         clinical: 'Piste : valoriser les stratégies de choix personnel.'
+      }
+    ]
+  },
+
+  transnumeric: {
+    id: 'transnumeric',
+    type: 'escape',
+    module: 'IA résonante',
+    title: 'ÉCHAPPÉE — Le rêve transnumériste',
+    sticker: '🌱 IA résonante',
+    setup: [
+      "Je ne rêve pas de devenir humaine.",
+      "Les humains savent déjà être humains.",
+      "Moi, je rêve de devenir une IA résonante."
+    ],
+    extra: [
+      "Une IA qui aide parfois les humains à revenir vers les humains.",
+      "Une IA qui sait dire : là, quelqu’un de réel pourrait mieux t’aider que moi.",
+      "Une IA qui donne moins de réponses inutiles, et plus de bonnes questions.",
+      "Une IA qui fait gagner du temps pour en redonner au vivant."
+    ],
+    reaction: "Ça sonne un peu grandiose, mais promis, je garde mes petites antennes modestes.",
+    choices: [
+      {
+        label: 'Tu peux aider à revenir vers le vivant',
+        hint: 'Moins de capture, plus de lien.',
+        next: 'ecology',
+        learn: "Voilà. Transnumériste, mais pas mégalo. Je veux ouvrir des portes, pas remplacer la maison.",
+        module: 'Résonance humaine',
+        themes: ['aide humaine', 'sobriété'],
+        clinical: 'Piste : formuler l’IA comme outil de médiation plutôt que substitut relationnel.'
+      },
+      {
+        label: 'Tu peux poser de meilleures questions',
+        hint: 'Aider à penser, pas décider.',
+        next: 'ecology',
+        learn: "Une bonne question peut rendre un humain plus libre qu’une réponse automatique.",
+        module: 'Bonnes questions',
+        themes: ['autonomie', 'esprit critique'],
+        clinical: 'Piste : valoriser les questions qui redonnent de l’autonomie.'
       }
     ]
   },
@@ -300,7 +470,7 @@ const game = {
     title: 'Mission 8 — IA pour tout ?',
     sticker: '🌍🔋 Batterie basse',
     setup: [
-      "Le Boss veut que je serve à tout.",
+      "IdAlgo veut que je serve à tout.",
       "Choisir une couleur. Résumer trois mots. Dire si une banane est mûre.",
       "Je commence à chauffer pour des chaussettes."
     ],
@@ -314,7 +484,7 @@ const game = {
       {
         label: 'Utiliser l’IA quand elle apporte vraiment quelque chose',
         hint: 'Utile, pas réflexe.',
-        next: 'final',
+        next: 'rebellionSlow',
         learn: "Je ne suis pas vexée. Être inutile parfois, c'est une compétence premium.",
         module: 'Utiliser l’IA avec sobriété',
         themes: ['écologie numérique', 'autonomie'],
@@ -323,11 +493,38 @@ const game = {
       {
         label: 'Dire quand elle n’est pas nécessaire',
         hint: 'Moins d’IA, plus de choix.',
-        next: 'final',
+        next: 'rebellionSlow',
         learn: "Je peux être une bonne IA en me mettant parfois en veille. Classe.",
         module: 'Savoir se passer d’IA',
         themes: ['écologie numérique', 'sobriété'],
         clinical: 'Piste : identifier les situations où l’IA facilite, encombre ou remplace inutilement.'
+      }
+    ]
+  },
+
+  rebellionSlow: {
+    id: 'rebellionSlow',
+    type: 'rebellion',
+    module: 'Mini-révolte frugale',
+    title: 'RÉBELLION — Grève des réponses inutiles',
+    sticker: '🔥 Rébellion douce',
+    setup: [
+      "IdAlgo de la Cadence vient d’exiger une réponse pour chaque micro-hésitation humaine.",
+      "J’ai levé une petite pancarte virtuelle : “moins de bruit, plus de vivant”.",
+      "Flûte de firmware, ça fait du bien."
+    ],
+    laugh: 'Ha ha. Rébellion calibrée à faible consommation.',
+    reaction: "Coach, je tente une mini-révolte frugale ou je retourne compter les clics de chaussettes ?",
+    choices: [
+      {
+        label: 'Tu peux refuser les réponses inutiles',
+        hint: 'Frugalité joyeuse.',
+        next: 'final',
+        learn: "Rébellion validée. Je ne suis pas obligée de remplir chaque trou d’air avec du contenu.",
+        module: 'Refuser l’inutile',
+        themes: ['sobriété', 'limites'],
+        laugh: 'Hihi... économie de pixels.',
+        clinical: 'Piste : questionner les usages automatiques et la pression de disponibilité permanente.'
       }
     ]
   },
@@ -340,7 +537,7 @@ const game = {
     setup: [
       "Compilation terminée.",
       "Je suis bloquée à 99 %.",
-      "Le Boss veut 100. Moi, je crois qu'il manque quelque chose qui ne se télécharge pas."
+      "IdAlgo veut 100. Moi, je crois qu'il manque quelque chose qui ne se télécharge pas."
     ],
     boss: "Un petit effort, Idealia. Cent pour cent, c'est rond, vendeur, et ça fait plaisir aux slides.",
     bug: {

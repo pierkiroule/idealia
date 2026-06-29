@@ -40,7 +40,7 @@ const clinicianLabels = {
 
 const stageCopy = {
   story: 'Situation',
-  boss: 'Vocal du Boss',
+  boss: 'Vocal d’IdAlgo',
   bug: 'Le bug',
   choice: 'Décision coach',
   learn: 'Module débloqué'
@@ -121,12 +121,30 @@ function TypeText({ lines = [], speed = 28, onDone }) {
   )
 }
 
-function MissionBubbles({ lines, onDone, ready, waitingForVoice, onContinue, continueLabel }) {
+function MissionBubbles({ lines, extra, poem, onDone, ready, waitingForVoice, onContinue, continueLabel }) {
   return (
     <div className="bubbleStack">
       <div className="bubble idealiaBubble">
         <TypeText lines={lines} onDone={onDone} />
       </div>
+
+      {extra?.length > 0 && (
+        <div className="bubble extraBubble">
+          {extra.map((line, index) => <p key={`${line}-${index}`}>{line}</p>)}
+        </div>
+      )}
+
+      {poem?.length > 0 && (
+        <motion.div
+          className="poemCard"
+          initial={{ opacity: 0, rotate: -2, y: 16 }}
+          animate={{ opacity: 1, rotate: 0, y: 0 }}
+          transition={{ delay: 0.2, type: 'spring', stiffness: 180, damping: 16 }}
+        >
+          <span>📜 Poème clandestin débloqué</span>
+          {poem.map((line, index) => <p key={`${line}-${index}`}>{line}</p>)}
+        </motion.div>
+      )}
 
       {ready && (
         <motion.button
@@ -144,7 +162,7 @@ function MissionBubbles({ lines, onDone, ready, waitingForVoice, onContinue, con
   )
 }
 
-function BossVoice({ text, voiceEnabled, onDone, onPulse }) {
+function IdAlgoVoice({ text, voiceEnabled, onDone, onPulse }) {
   const [playing, setPlaying] = useState(false)
 
   useEffect(() => {
@@ -164,9 +182,9 @@ function BossVoice({ text, voiceEnabled, onDone, onPulse }) {
   }
 
   return (
-    <section className="bossCard" aria-label="Vocal court du Big Boss">
+    <section className="bossCard" aria-label="Vocal court d’IdAlgo de la Cadence">
       <div className="bossHeader">
-        <span>📞 Big Boss</span>
+        <span>📞 IdAlgo de la Cadence</span>
         <span className="waveDots" aria-hidden="true"><i /><i /><i /></span>
       </div>
       <p>“{text}”</p>
@@ -233,7 +251,7 @@ function ChoicePanel({ mission, onChoose }) {
   )
 }
 
-function LearnCard({ choice, onNext, isFinal }) {
+function LearnCard({ choice, onNext, isFinal, voiceEnabled }) {
   return (
     <motion.section
       className="learnCard"
@@ -241,9 +259,10 @@ function LearnCard({ choice, onNext, isFinal }) {
       animate={{ scale: 1, opacity: 1 }}
       transition={{ type: 'spring', stiffness: 280, damping: 16 }}
     >
-      <div className="confetti" aria-hidden="true">
+      <div className={`confetti ${choice.laugh ? 'laughBurst' : ''}`} aria-hidden="true">
         <span>✦</span><span>●</span><span>◆</span><span>✧</span>
       </div>
+      {choice.laugh && <Voice text={choice.laugh} role="idealia" enabled={voiceEnabled} />}
       <span className="unlockLabel">Module débloqué</span>
       <h2>{choice.module}</h2>
       <p>{choice.learn}</p>
@@ -351,7 +370,7 @@ export default function App() {
     return 'choice'
   }
 
-  function getNextStageAfterBoss(currentMission) {
+  function getNextStageAfterIdAlgo(currentMission) {
     return currentMission.bug ? 'bug' : 'choice'
   }
 
@@ -381,7 +400,7 @@ export default function App() {
   }
 
   return (
-    <main className={`app stage-${stage}`}>
+    <main className={`app stage-${stage} scene-${mission.type || 'mission'}`}>
       <div className="sky" aria-hidden="true">
         <span /><span /><span /><span />
       </div>
@@ -437,7 +456,7 @@ export default function App() {
         </div>
 
         <Voice
-          text={mission.setup.join(' ')}
+          text={[...mission.setup, ...(mission.extra || []), mission.laugh || ''].join(' ')}
           role="idealia"
           enabled={voiceEnabled && stage === 'story'}
           onStart={() => {
@@ -455,10 +474,12 @@ export default function App() {
             <motion.div key="story" className="stageWrap" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -16 }}>
               <MissionBubbles
                 lines={mission.setup}
+                extra={mission.extra}
+                poem={mission.poem}
                 ready={canContinueStory}
                 waitingForVoice={storyTyped && voiceEnabled && !voiceDone}
                 onDone={() => setStoryTyped(true)}
-                continueLabel={mission.boss ? 'Répondre au vocal du Boss' : 'Voir la synthèse'}
+                continueLabel={mission.boss ? 'Écouter IdAlgo' : mission.type === 'poem' ? 'Cacher le poème' : 'Continuer'}
                 onContinue={() => {
                   blip('tap')
                   setStage(getNextStageAfterStory(mission))
@@ -469,11 +490,11 @@ export default function App() {
 
           {stage === 'boss' && (
             <motion.div key="boss" className="stageWrap" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -16 }}>
-              <BossVoice
+              <IdAlgoVoice
                 text={mission.boss}
                 voiceEnabled={voiceEnabled}
                 onPulse={blip}
-                onDone={() => setStage(getNextStageAfterBoss(mission))}
+                onDone={() => setStage(getNextStageAfterIdAlgo(mission))}
               />
             </motion.div>
           )}
@@ -493,7 +514,7 @@ export default function App() {
 
           {stage === 'learn' && selectedChoice && (
             <motion.div key="learn" className="stageWrap" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -16 }}>
-              <LearnCard choice={selectedChoice} onNext={goNext} isFinal={selectedChoice.next === 'ending'} />
+              <LearnCard choice={selectedChoice} onNext={goNext} isFinal={selectedChoice.next === 'ending'} voiceEnabled={voiceEnabled} />
             </motion.div>
           )}
         </AnimatePresence>
