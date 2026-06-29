@@ -40,9 +40,8 @@ const clinicianLabels = {
 
 const stageCopy = {
   story: 'Situation',
-  bug: 'Le bug',
   choice: 'Décision coach',
-  learn: 'Module débloqué'
+  learn: 'Dilemme en suspens'
 }
 
 function useHapticsAndSound(enabled) {
@@ -161,26 +160,6 @@ function MissionBubbles({ lines, extra, poem, onDone, ready, waitingForVoice, on
   )
 }
 
-function BugCard({ bug, onDone, onPulse }) {
-  useEffect(() => {
-    onPulse('bug')
-  }, [onPulse])
-
-  return (
-    <motion.section
-      className="bugCard"
-      initial={{ rotate: -1.5, scale: 0.96, opacity: 0 }}
-      animate={{ rotate: 0, scale: 1, opacity: 1 }}
-      transition={{ type: 'spring', stiffness: 260, damping: 18 }}
-    >
-      <span className="glitchLabel">⚡ bug éthique</span>
-      <h2>{bug.title}</h2>
-      <p>{bug.text}</p>
-      <button type="button" className="primaryButton" onClick={onDone}>J’ai repéré le bug</button>
-    </motion.section>
-  )
-}
-
 function ChoicePanel({ mission, onChoose }) {
   return (
     <section className="choicePanel" aria-label="Choisir une aide pour Idealia">
@@ -218,11 +197,11 @@ function LearnCard({ choice, onNext, isFinal, voiceEnabled }) {
         <span>✦</span><span>●</span><span>◆</span><span>✧</span>
       </div>
       {choice.laugh && <Voice text={choice.laugh} role="idealia" emotion="laugh" enabled={voiceEnabled} />}
-      <span className="unlockLabel">Module débloqué</span>
+      <span className="unlockLabel">Énigme transnumériste</span>
       <h2>{choice.module}</h2>
       <p>{choice.learn}</p>
       <button type="button" className="primaryButton" onClick={onNext}>
-        {isFinal ? 'Voir la synthèse' : 'Mission suivante'}
+        {isFinal ? 'Voir la synthèse' : 'Continuer avec ce doute'}
       </button>
     </motion.section>
   )
@@ -319,8 +298,7 @@ export default function App() {
 
   const canContinueStory = storyTyped && (!voiceEnabled || voiceDone)
 
-  function getNextStageAfterStory(currentMission) {
-    if (currentMission.bug) return 'bug'
+  function getNextStageAfterStory() {
     return 'choice'
   }
 
@@ -433,14 +411,9 @@ export default function App() {
                 continueLabel={mission.type === 'poem' ? 'Cacher le poème' : 'Continuer'}
                 onContinue={() => {
                   blip('tap')
-                  setStage(getNextStageAfterStory(mission))
+                  setStage(getNextStageAfterStory())
                 }}
               />
-            </motion.div>
-          )}
-          {stage === 'bug' && (
-            <motion.div key="bug" className="stageWrap" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -16 }}>
-              <BugCard bug={mission.bug} onPulse={blip} onDone={() => setStage('choice')} />
             </motion.div>
           )}
 

@@ -6,16 +6,16 @@ L’expérience conserve une finalité clinique et psychoéducative, mais elle n
 
 ## Principes de conception
 
-- Une mission suit une boucle courte : confidence d’Idealia, pression d’IdAlgo rapportée par Idealia, bug éthique, choix du coach, module débloqué.
-- Les textes restent courts, rythmés, malicieux et non moralisateurs, avec plus d’états d’âme d’Idealia, des échappées, cauchemars numériques, poèmes clandestins et mini-révoltes frugales.
+- Une mission suit une boucle courte : confidence-question d’Idealia, trois conseils ambigus, réponse d’Idealia en « oui, mais... », puis énigme transnumériste laissée en suspens.
+- Les textes restent courts, rythmés, malicieux et non moralisateurs : Idealia doute, ruse, demande conseil, puis transforme chaque choix en dilemme critique plutôt qu’en bonne réponse fermée.
 - Le joueur débloque des modules, jamais des points visibles.
 - Idealia reste à 99 % : le dernier 1 % représente ce qu’une IA ne peut pas remplacer.
 - Le mode clinicien est caché et propose seulement une synthèse de séance : thèmes, modules, pistes de discussion.
 
 ## Architecture
 
-- `src/data/game.js` décrit les missions et interludes dans des objets JSON-like : types de scènes, confidences, pression d’IdAlgo racontée par Idealia, bugs, poèmes, rires rares, choix, modules et pistes cliniques.
-- `src/App.jsx` contient le moteur indépendant du contenu : étapes de mission, transitions, modules, feedbacks, synthèse clinicienne.
+- `src/data/game.js` décrit les missions et interludes dans des objets JS : types de scènes, confidences-question, trois choix ambigus par scène, dilemmes en retour, poèmes, rires rares, modules et pistes cliniques.
+- `src/App.jsx` contient le moteur indépendant du contenu : étapes de mission simplifiées, transitions situation → choix → dilemme, modules, feedbacks, synthèse clinicienne.
 - `src/components/Voice.jsx` gère la voix de synthèse d’Idealia, narratrice unique de l’expérience.
 - `src/styles/app.css` porte la direction artistique mobile : cartes généreuses, avatar, micro-interactions, particules et responsive Android.
 
