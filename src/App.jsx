@@ -160,26 +160,17 @@ function MissionBubbles({ lines, extra, poem, onDone, ready, waitingForVoice, on
   )
 }
 
-const idealChoiceCards = [
-  {
-    emoji: '🤝',
-    prefix: 'Pour toi, une IA idéale doit…',
-    title: 'aider sans décider',
-    hint: 'Elle accompagne la réflexion, mais ne pilote pas la vie des humains.'
-  },
-  {
-    emoji: '🪞',
-    prefix: 'Pour toi, une IA idéale doit…',
-    title: 'reconnaître ses limites',
-    hint: 'Elle dit quand elle ne sait pas, sans inventer ni faire semblant.'
-  },
-  {
-    emoji: '🌱',
-    prefix: 'Pour toi, une IA idéale doit…',
-    title: 'rester drôle et créative',
-    hint: 'Elle inspire, surprend et fait sourire, sans manipuler les émotions.'
-  }
-]
+const fallbackChoiceEmojis = ['🤝', '🪞', '🌱']
+
+function getChoiceEmoji(choice, index) {
+  if (choice.emoji) return choice.emoji
+  if (choice.themes?.includes('aide humaine')) return '🤝'
+  if (choice.themes?.includes('limites') || choice.themes?.includes('cadre')) return '🧭'
+  if (choice.themes?.includes('esprit critique')) return '🪞'
+  if (choice.themes?.includes('autonomie')) return '🕹️'
+  if (choice.themes?.includes('sobriété') || choice.themes?.includes('écologie numérique')) return '🌱'
+  return fallbackChoiceEmojis[index % fallbackChoiceEmojis.length]
+}
 
 function ChoicePanel({ mission, onChoose }) {
   const [selectedIndex, setSelectedIndex] = useState(null)
@@ -187,14 +178,7 @@ function ChoicePanel({ mission, onChoose }) {
 
   function validateChoice() {
     if (!selectedChoice) return
-
-    const ideal = idealChoiceCards[selectedIndex]
-    onChoose({
-      ...selectedChoice,
-      label: `${ideal.prefix} ${ideal.title}`,
-      hint: ideal.hint,
-      emoji: ideal.emoji
-    })
+    onChoose(selectedChoice)
   }
 
   return (
@@ -223,10 +207,10 @@ function ChoicePanel({ mission, onChoose }) {
                 <i>✦</i><i>✨</i><i>💫</i><i>✧</i>
               </span>
             )}
-            <span className="choiceEmoji" aria-hidden="true">{idealChoiceCards[index].emoji}</span>
-            <span className="choicePrefix">{idealChoiceCards[index].prefix}</span>
-            <span>{idealChoiceCards[index].title}</span>
-            <small>{idealChoiceCards[index].hint}</small>
+            <span className="choiceEmoji" aria-hidden="true">{getChoiceEmoji(choice, index)}</span>
+            <span className="choicePrefix">Pour toi, dans cette situation…</span>
+            <span>{choice.label}</span>
+            <small>{choice.hint}</small>
           </motion.button>
         ))}
       </div>
