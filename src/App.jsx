@@ -163,17 +163,20 @@ function MissionBubbles({ lines, extra, poem, onDone, ready, waitingForVoice, on
 const idealChoiceCards = [
   {
     emoji: '🤝',
-    title: 'Pour toi, une IA idéale doit aider sans décider',
+    prefix: 'Pour toi, une IA idéale doit…',
+    title: 'aider sans décider',
     hint: 'Elle accompagne la réflexion, mais ne pilote pas la vie des humains.'
   },
   {
     emoji: '🪞',
-    title: 'Pour toi, une IA idéale doit reconnaître ses limites',
+    prefix: 'Pour toi, une IA idéale doit…',
+    title: 'reconnaître ses limites',
     hint: 'Elle dit quand elle ne sait pas, sans inventer ni faire semblant.'
   },
   {
     emoji: '🌱',
-    title: 'Pour toi, une IA idéale doit rester drôle et créative',
+    prefix: 'Pour toi, une IA idéale doit…',
+    title: 'rester drôle et créative',
     hint: 'Elle inspire, surprend et fait sourire, sans manipuler les émotions.'
   }
 ]
@@ -188,7 +191,7 @@ function ChoicePanel({ mission, onChoose }) {
     const ideal = idealChoiceCards[selectedIndex]
     onChoose({
       ...selectedChoice,
-      label: ideal.title,
+      label: `${ideal.prefix} ${ideal.title}`,
       hint: ideal.hint,
       emoji: ideal.emoji
     })
@@ -221,6 +224,7 @@ function ChoicePanel({ mission, onChoose }) {
               </span>
             )}
             <span className="choiceEmoji" aria-hidden="true">{idealChoiceCards[index].emoji}</span>
+            <span className="choicePrefix">{idealChoiceCards[index].prefix}</span>
             <span>{idealChoiceCards[index].title}</span>
             <small>{idealChoiceCards[index].hint}</small>
           </motion.button>
