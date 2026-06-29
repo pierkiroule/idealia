@@ -8,7 +8,9 @@ export const initialScores = {
   reconnaissance: 0,
   relaisHumain: 0,
   controle: 0,
-  evitement: 0
+  evitement: 0,
+  doute: 0,
+  creativite: 0
 }
 
 export function updateScores(scores, choiceEffects = {}) {
@@ -31,8 +33,9 @@ export function getFinalProfile(scores) {
       name: `${primary.name} / ${secondary.name}`,
       mirror: `${primary.mirror} ${secondary.mirror}`,
       need: `${primary.need} ${secondary.need}`,
+      power: `${primary.power} ${secondary.power}`,
       vigilance: `${primary.vigilance} ${secondary.vigilance}`,
-      invitation: `${primary.invitation}`,
+      invitation: primary.invitation,
       final: `${primary.final} ${secondary.final}`,
       isHybrid: true
     }

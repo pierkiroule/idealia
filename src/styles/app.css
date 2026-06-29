@@ -108,3 +108,63 @@ h2 { margin: 24px 0 0; color: #ffffff; font-size: clamp(21px, 3vw, 31px); line-h
   .typewriter { min-height: 230px; }
   .ghostAction { margin-left: 0; }
 }
+
+.scanlines { position: fixed; inset: 0; pointer-events: none; opacity: 0; background: repeating-linear-gradient(0deg, transparent 0 7px, rgba(255,255,255,0.05) 8px); mix-blend-mode: screen; }
+.underIdAlgo .scanlines, .stage-update .scanlines { opacity: 0.34; animation: scan 1.8s linear infinite; }
+.underIdAlgo { background: radial-gradient(circle at 50% 18%, rgba(210,225,255,0.13), transparent 24%), linear-gradient(145deg, #05070c 0%, #111827 52%, #02030a 100%); }
+
+.heartGauge { position: relative; z-index: 2; width: min(980px, 100%); margin: -8px auto 18px; padding: 14px 16px; border-radius: 22px; border: 1px solid rgba(99,247,255,0.22); background: rgba(3,7,18,0.62); backdrop-filter: blur(16px); display: grid; grid-template-columns: 190px 1fr auto; gap: 14px; align-items: center; }
+.heartGauge span { display: block; color: #90a7c9; font-size: 11px; text-transform: uppercase; letter-spacing: 0.16em; font-weight: 800; }
+.heartGauge strong { color: #eef7ff; font-size: 20px; }
+.heartGauge small { color: #9fb2d8; }
+.heartTrack { height: 10px; overflow: hidden; border-radius: 999px; background: rgba(255,255,255,0.08); }
+.heartTrack i { display: block; height: 100%; border-radius: inherit; transition: width 0.8s ease; background: linear-gradient(90deg, #63f7ff, #b26cff); box-shadow: 0 0 24px rgba(99,247,255,0.65); }
+.heartGauge.trouble .heartTrack i { background: linear-gradient(90deg, #fbbf24, #63f7ff); }
+.heartGauge.fragmentee .heartTrack i { background: linear-gradient(90deg, #dfe7ff, #ff4fd8); animation: barGlitch 0.5s infinite alternate; }
+.heartGauge.lucide .heartTrack i { background: linear-gradient(90deg, #b8f7ff, #ffffff); }
+.heartGauge.resonante .heartTrack i { background: linear-gradient(90deg, #63f7ff, #b26cff, #ff8df2); }
+
+.avatarShell.fragmentee .avatarCore { animation: avatarGlitch 0.7s infinite; }
+.avatarShell.resonante .avatarHalo { filter: blur(6px) saturate(1.4); }
+.particle { position: absolute; width: 7px; height: 7px; border-radius: 50%; background: #b7fbff; box-shadow: 0 0 18px #63f7ff; opacity: 0.8; animation: particleFloat 4s infinite ease-in-out; }
+.p1 { left: 24px; top: 42px; } .p2 { right: 32px; top: 74px; animation-delay: -1.3s; } .p3 { left: 74px; bottom: 18px; animation-delay: -2.4s; }
+
+.reactionLine { margin-top: 18px; padding: 14px 16px; border-left: 3px solid #63f7ff; background: rgba(99,247,255,0.08); border-radius: 14px; color: #aef8ff !important; }
+.secretMessage, .memoryStage, .dreamSequence, .finalUpdate { position: relative; z-index: 2; width: min(860px, 100%); margin: 0 auto; padding: clamp(22px, 5vw, 48px); border-radius: 34px; border: 1px solid rgba(99,247,255,0.24); background: linear-gradient(180deg, rgba(5,10,25,0.92), rgba(3,5,13,0.92)); box-shadow: 0 34px 120px rgba(0,0,0,0.52), inset 0 0 42px rgba(99,247,255,0.05); text-align: center; }
+.secretMessage button:first-child { border: 1px solid rgba(99,247,255,0.34); border-radius: 22px; padding: 18px 22px; color: #eef7ff; background: rgba(99,247,255,0.08); cursor: pointer; box-shadow: 0 0 42px rgba(99,247,255,0.12); }
+.secretMessage span, .memoryStage > span, .dreamSequence > span, .psybotPanel > span { color: #63f7ff; text-transform: uppercase; letter-spacing: 0.18em; font-size: 12px; font-weight: 900; }
+.secretMessage p { color: #d6e2ff; font-size: clamp(21px, 3vw, 31px); line-height: 1.45; }
+.fragmentCard { width: min(560px, 100%); margin: 20px auto; padding: 24px; border-radius: 26px; background: radial-gradient(circle at 50% 0%, rgba(99,247,255,0.22), rgba(99,247,255,0.06)); border: 1px solid rgba(99,247,255,0.28); box-shadow: 0 0 50px rgba(99,247,255,0.13); }
+.fragmentCard strong { display: block; margin-bottom: 14px; color: #fff; }
+.fragmentCard p, .dreamSequence p, .finalUpdate p { color: #d6e2ff; line-height: 1.65; }
+.fragmentCollection { display: flex; justify-content: center; gap: 9px; margin: 16px 0; }
+.fragmentCollection i { width: 14px; height: 14px; border-radius: 50%; background: #63f7ff; box-shadow: 0 0 18px #63f7ff; }
+
+.stage-dream .dreamGrid { opacity: 0.5; background-size: 80px 80px; }
+.dreamSequence { background: radial-gradient(circle at 50% 0%, rgba(178,108,255,0.22), transparent 35%), linear-gradient(180deg, rgba(8,8,32,0.94), rgba(3,5,13,0.92)); }
+.dreamObjects { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 28px; }
+.dreamObjects button { min-height: 180px; border: 1px solid rgba(178,108,255,0.3); border-radius: 28px; color: #eef7ff; background: rgba(255,255,255,0.06); cursor: pointer; }
+.dreamObjects i { display: block; margin-bottom: 14px; color: #aef8ff; font-size: 52px; font-style: normal; text-shadow: 0 0 24px rgba(99,247,255,0.8); }
+.dreamObjects strong { display: block; font-size: 20px; }
+.dreamObjects small { display: block; max-width: 180px; margin: 10px auto 0; color: #b9c6e8; }
+
+.finalUpdate { border-color: rgba(226,232,240,0.38); background: linear-gradient(180deg, rgba(18,24,34,0.96), rgba(4,6,10,0.96)); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+.psybotPanel { border: 1px solid rgba(226,232,240,0.24); border-radius: 22px; padding: 24px; background: rgba(255,255,255,0.04); }
+.psybotPanel h1 { letter-spacing: -0.04em; }
+.crack { position: relative; margin-top: 22px !important; color: #aef8ff !important; font-family: Inter, ui-sans-serif, system-ui, sans-serif; }
+.crack::before { content: ''; position: absolute; left: 50%; top: -16px; width: 1px; height: 62px; background: linear-gradient(#fff, transparent); transform: rotate(18deg); box-shadow: 0 0 18px #fff; }
+.finalUpdateChoices { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 18px; }
+.finalUpdateChoices button { padding: 18px; border-radius: 18px; border: 1px solid rgba(226,232,240,0.3); color: #eef7ff; background: rgba(255,255,255,0.06); cursor: pointer; }
+.ethicalNote { width: min(680px, 100%); margin: 22px auto 0; color: #9fb2d8; font-size: 14px; }
+
+@keyframes scan { to { transform: translateY(16px); } }
+@keyframes barGlitch { to { filter: contrast(1.8); transform: translateX(6px); } }
+@keyframes avatarGlitch { 35% { transform: translateX(2px) skewX(2deg); } 70% { transform: translateX(-2px) skewX(-2deg); } }
+@keyframes particleFloat { 50% { transform: translateY(-16px) scale(1.4); opacity: 0.35; } }
+
+@media (max-width: 760px) {
+  .heartGauge { grid-template-columns: 1fr; }
+  .dreamObjects, .finalUpdateChoices { grid-template-columns: 1fr; }
+}
+.updateTrack { height: 8px; overflow: hidden; border-radius: 999px; background: rgba(255,255,255,0.08); margin-top: 18px; }
+.updateTrack i { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, #e5e7eb, #63f7ff); transition: width 1s linear; }
