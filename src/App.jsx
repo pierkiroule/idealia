@@ -3,31 +3,90 @@ import { AnimatePresence, motion } from 'framer-motion'
 import game from './data/game.js'
 import Voice from './components/Voice.jsx'
 
-const emptyStats = {
-  listen: 0,
-  safety: 0,
+const emptySignals = {
+  boundaries: 0,
   privacy: 0,
+  critical: 0,
   autonomy: 0,
-  critical: 0
+  humanHelp: 0,
+  sobriety: 0
 }
 
-const statLabels = {
-  listen: 'Écoute',
-  safety: 'Sécurité',
-  privacy: 'Intimité',
+const signalByTheme = {
+  limites: 'boundaries',
+  cadre: 'boundaries',
+  'vie privée': 'privacy',
+  'données personnelles': 'privacy',
+  consentement: 'privacy',
+  'esprit critique': 'critical',
+  hallucinations: 'critical',
+  'fake news': 'critical',
+  autonomie: 'autonomy',
+  dépendance: 'autonomy',
+  'aide humaine': 'humanHelp',
+  sécurité: 'humanHelp',
+  'écologie numérique': 'sobriety',
+  sobriété: 'sobriety'
+}
+
+const clinicianLabels = {
+  boundaries: 'Limites et cadre',
+  privacy: 'Intimité et données',
+  critical: 'Esprit critique',
   autonomy: 'Autonomie',
-  critical: 'Esprit critique'
+  humanHelp: 'Aide humaine',
+  sobriety: 'Sobriété numérique'
 }
 
-const statHelp = {
-  listen: 'Accueillir sans isoler',
-  safety: 'Repérer les situations à risque',
-  privacy: 'Respecter les données et les secrets',
-  autonomy: 'Garder l’ado acteur de ses choix',
-  critical: 'Vérifier, douter, contextualiser'
+const stageCopy = {
+  story: 'Situation',
+  boss: 'Vocal du Boss',
+  bug: 'Le bug',
+  choice: 'Décision coach',
+  learn: 'Module débloqué'
 }
 
-function TypeText({ text = '', speed = 34, onDone }) {
+function useHapticsAndSound(enabled) {
+  const audioRef = useRef(null)
+
+  function ensureAudio() {
+    if (!enabled) return null
+    if (!audioRef.current) {
+      audioRef.current = new AudioContext()
+    }
+    return audioRef.current
+  }
+
+  function blip(type = 'tap') {
+    if (navigator.vibrate) {
+      const pattern = type === 'success' ? [18, 25, 35] : type === 'bug' ? [35, 20, 35] : 12
+      navigator.vibrate(pattern)
+    }
+
+    const audio = ensureAudio()
+    if (!audio) return
+
+    const oscillator = audio.createOscillator()
+    const gain = audio.createGain()
+    const now = audio.currentTime
+    const frequency = type === 'success' ? 660 : type === 'bug' ? 130 : 360
+
+    oscillator.type = type === 'bug' ? 'sawtooth' : 'sine'
+    oscillator.frequency.setValueAtTime(frequency, now)
+    oscillator.frequency.exponentialRampToValueAtTime(frequency * 1.18, now + 0.09)
+    gain.gain.setValueAtTime(0.0001, now)
+    gain.gain.exponentialRampToValueAtTime(0.035, now + 0.01)
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.14)
+    oscillator.connect(gain).connect(audio.destination)
+    oscillator.start(now)
+    oscillator.stop(now + 0.16)
+  }
+
+  return blip
+}
+
+function TypeText({ lines = [], speed = 28, onDone }) {
+  const text = Array.isArray(lines) ? lines.join(' ') : lines
   const [shown, setShown] = useState('')
   const onDoneRef = useRef(onDone)
 
@@ -37,13 +96,13 @@ function TypeText({ text = '', speed = 34, onDone }) {
 
   useEffect(() => {
     const words = text.split(' ')
-    let i = 0
+    let index = 0
     setShown('')
 
     const timer = setInterval(() => {
-      i += 1
-      setShown(words.slice(0, i).join(' '))
-      if (i >= words.length) {
+      index += 1
+      setShown(words.slice(0, index).join(' '))
+      if (index >= words.length) {
         clearInterval(timer)
         onDoneRef.current?.()
       }
@@ -60,255 +119,339 @@ function TypeText({ text = '', speed = 34, onDone }) {
   )
 }
 
-function VoiceButton({ bossAudio, enabled, onDone }) {
+function MissionBubbles({ lines, onDone }) {
+  return (
+    <div className="bubbleStack">
+      <div className="bubble idealiaBubble">
+        <TypeText lines={lines} onDone={onDone} />
+      </div>
+    </div>
+  )
+}
+
+function BossVoice({ text, voiceEnabled, onDone, onPulse }) {
   const [playing, setPlaying] = useState(false)
-  if (!bossAudio) return null
+
+  useEffect(() => {
+    if (!playing || voiceEnabled) return undefined
+
+    const timer = setTimeout(() => {
+      setPlaying(false)
+      onDone()
+    }, 1200)
+
+    return () => clearTimeout(timer)
+  }, [playing, voiceEnabled, onDone])
+
+  function play() {
+    setPlaying(true)
+    onPulse('bug')
+  }
 
   return (
-    <aside className="bossCard" aria-label="Message vocal du Boss">
+    <section className="bossCard" aria-label="Vocal court du Big Boss">
       <div className="bossHeader">
-        <span>📞 Vocal du Boss</span>
-        <span className="bossWave" aria-hidden="true">signal entrant</span>
+        <span>📞 Big Boss</span>
+        <span className="waveDots" aria-hidden="true"><i /><i /><i /></span>
       </div>
-      <p>Idealia : “Il a encore envoyé un vocal… Tu l’écoutes avec moi ?”</p>
-
-      <button
-        className="bossButton"
-        type="button"
-        onClick={() => {
-          setPlaying(true)
-          if (navigator.vibrate) navigator.vibrate([20, 30, 20])
-        }}
-      >
-        ▶ Écouter le briefing
+      <p>“{text}”</p>
+      <button type="button" className="bossButton" onClick={play} disabled={playing}>
+        {playing ? 'Lecture...' : 'Écouter le vocal'}
       </button>
-
       {playing && (
         <Voice
-          text={bossAudio}
+          text={text}
           role="boss"
-          enabled={enabled}
+          enabled={voiceEnabled}
           onEnd={() => {
             setPlaying(false)
             onDone()
           }}
         />
       )}
-    </aside>
-  )
-}
-
-function Debrief({ modules, stats }) {
-  const top = Object.entries(stats)
-    .sort((a, b) => b[1] - a[1])
-    .slice(0, 3)
-
-  return (
-    <section className="debriefBox" aria-labelledby="debrief-title">
-      <h2 id="debrief-title">Ce que tu as appris à Idealia</h2>
-
-      <div className="moduleGrid" aria-label="Modules débloqués">
-        {modules.slice(-8).map((module, index) => (
-          <div className="modulePill" key={`${module}-${index}`}>🔓 {module}</div>
-        ))}
-      </div>
-
-      <h3>À discuter avec le soignant</h3>
-      {top.map(([key]) => (
-        <div className="debriefItem" key={key}>✓ {statLabels[key]} — {statHelp[key]}</div>
-      ))}
     </section>
   )
 }
 
-function ProgressPanel({ progress, stats }) {
-  const statEntries = useMemo(() => Object.entries(stats), [stats])
+function BugCard({ bug, onDone, onPulse }) {
+  useEffect(() => {
+    onPulse('bug')
+  }, [onPulse])
 
   return (
-    <section className="progressPanel" aria-label="Progression et compétences">
-      <div className="bigProgress">
-        <div className="progressCopy">
-          <span>{Math.min(progress, 99)}%</span>
-          <p>Stabilité éthique d’Idealia</p>
-        </div>
-        <div className="bigTrack" aria-hidden="true">
-          <motion.div
-            className="bigFill"
-            animate={{ width: `${Math.min(progress, 99)}%` }}
-          />
-        </div>
-      </div>
+    <motion.section
+      className="bugCard"
+      initial={{ rotate: -1.5, scale: 0.96, opacity: 0 }}
+      animate={{ rotate: 0, scale: 1, opacity: 1 }}
+      transition={{ type: 'spring', stiffness: 260, damping: 18 }}
+    >
+      <span className="glitchLabel">⚡ bug éthique</span>
+      <h2>{bug.title}</h2>
+      <p>{bug.text}</p>
+      <button type="button" className="primaryButton" onClick={onDone}>J’ai repéré le bug</button>
+    </motion.section>
+  )
+}
 
-      <div className="statsGrid">
-        {statEntries.map(([key, value]) => (
-          <div className="statCard" key={key}>
-            <strong>{value}</strong>
-            <span>{statLabels[key]}</span>
-          </div>
+function ChoicePanel({ mission, onChoose }) {
+  return (
+    <section className="choicePanel" aria-label="Choisir une aide pour Idealia">
+      <p className="reaction">{mission.reaction}</p>
+      <div className="choices">
+        {mission.choices.map((choice, index) => (
+          <motion.button
+            key={`${mission.id}-${choice.label}`}
+            type="button"
+            className="choice"
+            onClick={() => onChoose(choice)}
+            whileTap={{ scale: 0.97 }}
+            initial={{ opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: index * 0.07 }}
+          >
+            <span>{choice.label}</span>
+            <small>{choice.hint}</small>
+          </motion.button>
         ))}
       </div>
+    </section>
+  )
+}
+
+function LearnCard({ choice, onNext, isFinal }) {
+  return (
+    <motion.section
+      className="learnCard"
+      initial={{ scale: 0.88, opacity: 0 }}
+      animate={{ scale: 1, opacity: 1 }}
+      transition={{ type: 'spring', stiffness: 280, damping: 16 }}
+    >
+      <div className="confetti" aria-hidden="true">
+        <span>✦</span><span>●</span><span>◆</span><span>✧</span>
+      </div>
+      <span className="unlockLabel">Module débloqué</span>
+      <h2>{choice.module}</h2>
+      <p>{choice.learn}</p>
+      <button type="button" className="primaryButton" onClick={onNext}>
+        {isFinal ? 'Voir la synthèse' : 'Mission suivante'}
+      </button>
+    </motion.section>
+  )
+}
+
+function ModuleRail({ modules, total }) {
+  return (
+    <section className="moduleRail" aria-label="Modules débloqués">
+      <div>
+        <span className="railCount">{modules.length}/{total}</span>
+        <p>modules débloqués</p>
+      </div>
+      <div className="moduleChips">
+        {modules.slice(-4).map((module, index) => (
+          <span key={`${module}-${index}`}>✨ {module}</span>
+        ))}
+        {modules.length === 0 && <span>Coach en attente</span>}
+      </div>
+    </section>
+  )
+}
+
+function ClinicianPanel({ modules, choices, signals }) {
+  const themes = [...new Set(choices.flatMap(choice => choice.themes || []))]
+  const topSignals = Object.entries(signals)
+    .sort((a, b) => b[1] - a[1])
+    .filter(([, value]) => value > 0)
+    .slice(0, 3)
+
+  return (
+    <aside className="clinicianPanel" aria-label="Synthèse clinicien discrète">
+      <div className="panelHeader">
+        <span>Mode clinicien</span>
+        <strong>Sans score • sans diagnostic</strong>
+      </div>
+      <h2>Synthèse de séance</h2>
+      <p>Thèmes travaillés : {themes.join(', ') || '—'}</p>
+      <p>Modules débloqués : {modules.join(', ') || '—'}</p>
+      <div className="signalList">
+        {topSignals.map(([key]) => <span key={key}>{clinicianLabels[key]}</span>)}
+        {topSignals.length === 0 && <span>Aucun axe dominant pour le moment</span>}
+      </div>
+      <ul>
+        {choices.slice(-4).map((choice, index) => (
+          <li key={`${choice.label}-${index}`}>{choice.clinical}</li>
+        ))}
+      </ul>
+    </aside>
+  )
+}
+
+function EndingDebrief({ modules, choices }) {
+  return (
+    <section className="endingDebrief">
+      <h2>Ce qu’Idealia garde en mémoire courte</h2>
+      <div className="moduleGrid">
+        {modules.map((module, index) => (
+          <span key={`${module}-${index}`}>🔓 {module}</span>
+        ))}
+      </div>
+      <p>
+        Le parcours a traversé {new Set(choices.flatMap(choice => choice.themes || [])).size} thèmes sans transformer le joueur en questionnaire.
+      </p>
     </section>
   )
 }
 
 export default function App() {
-  const [sceneId, setSceneId] = useState('start')
-  const [progress, setProgress] = useState(4)
-  const [stats, setStats] = useState(emptyStats)
+  const [missionId, setMissionId] = useState('intro')
+  const [stage, setStage] = useState('story')
+  const [selectedChoice, setSelectedChoice] = useState(null)
   const [modules, setModules] = useState([])
-  const [typingDone, setTypingDone] = useState(false)
-  const [bossDone, setBossDone] = useState(false)
+  const [choices, setChoices] = useState([])
+  const [signals, setSignals] = useState(emptySignals)
   const [voiceEnabled, setVoiceEnabled] = useState(false)
+  const [clinicianOpen, setClinicianOpen] = useState(false)
   const [speaking, setSpeaking] = useState(false)
-  const [clinician, setClinician] = useState(false)
 
-  const scene = game[sceneId]
-  const needsBoss = Boolean(scene.bossAudio)
-  const canChoose = typingDone && (!needsBoss || bossDone)
+  const mission = game[missionId]
+  const missionIds = useMemo(() => Object.keys(game).filter(id => id !== 'ending'), [])
+  const totalModules = missionIds.length
+  const completion = Math.min(99, Math.round((modules.length / totalModules) * 99))
+  const blip = useHapticsAndSound(voiceEnabled)
 
   useEffect(() => {
-    setTypingDone(false)
-    setBossDone(!game[sceneId]?.bossAudio)
+    setStage('story')
+    setSelectedChoice(null)
     setSpeaking(false)
-  }, [sceneId])
+  }, [missionId])
 
-  function addStats(sceneStats = {}) {
-    setStats(current => {
+  function recordChoice(choice) {
+    setSelectedChoice(choice)
+    setModules(current => choice.module && !choice.reset ? [...current, choice.module] : current)
+    setChoices(current => [...current, choice])
+    setSignals(current => {
       const next = { ...current }
-      Object.entries(sceneStats).forEach(([key, value]) => {
-        next[key] = Math.max(0, (next[key] || 0) + value)
+      ;(choice.themes || []).forEach(theme => {
+        const key = signalByTheme[theme]
+        if (key) next[key] += 1
       })
       return next
     })
+    blip('success')
+    setStage('learn')
   }
 
-  function choose(choice) {
-    if (!canChoose) return
-
-    if (choice.reset) {
-      setSceneId('start')
-      setProgress(4)
-      setStats(emptyStats)
+  function goNext() {
+    if (selectedChoice?.reset) {
       setModules([])
-      return
+      setChoices([])
+      setSignals(emptySignals)
     }
-
-    if (choice.module) setModules(current => [...current, choice.module])
-    addStats(choice.stats)
-    setProgress(current => Math.min(99, current + 12))
-    setSceneId(choice.next)
+    setMissionId(selectedChoice.next)
   }
 
   return (
-    <main className={`app ${scene.type === 'bug' ? 'bugMode' : ''}`}>
-      <Voice
-        text={`${scene.text} ${scene.extra || ''}`}
-        role="idealia"
-        enabled={voiceEnabled}
-        onStart={() => setSpeaking(true)}
-        onEnd={() => setSpeaking(false)}
-      />
+    <main className={`app stage-${stage}`}>
+      <div className="sky" aria-hidden="true">
+        <span /><span /><span /><span />
+      </div>
 
-      <div className="stars" aria-hidden="true" />
-
-      <header className="header">
-        <div className="brand" onDoubleClick={() => setClinician(current => !current)}>
-          <span className="eyebrow">Serious game • IA & ados</span>
-          <h1>Idealia Ado</h1>
-          <p>Sauve Idealia avant qu’elle devienne une mauvaise IA.</p>
-        </div>
+      <header className="topBar">
+        <button
+          type="button"
+          className="brandButton"
+          onDoubleClick={() => setClinicianOpen(current => !current)}
+          aria-label="Idealia Ado, double clic pour le mode clinicien"
+        >
+          <span>Idealia Ado</span>
+          <small>coach officiel d’une IA pas encore parfaite</small>
+        </button>
 
         <button
-          className={`soundBtn ${voiceEnabled ? 'on' : ''}`}
           type="button"
+          className={`soundButton ${voiceEnabled ? 'on' : ''}`}
           aria-pressed={voiceEnabled}
-          onClick={() => setVoiceEnabled(current => !current)}
+          onClick={() => {
+            setVoiceEnabled(current => !current)
+            blip('tap')
+          }}
         >
-          {voiceEnabled ? '🔊 Voix activée' : '🔇 Activer la voix'}
+          {voiceEnabled ? '🔊' : '🔇'}
         </button>
       </header>
 
-      <ProgressPanel progress={progress} stats={stats} />
+      <ModuleRail modules={modules} total={totalModules} />
 
-      <section className="console" aria-live="polite">
-        <div className="avatar">
-          <div className={`orb ${speaking ? 'speaking' : ''}`} aria-hidden="true" />
-          <div>
-            <strong>Idealia</strong>
-            <span>{speaking ? 'Je parle...' : scene.type === 'bug' ? 'Oups...' : 'IA stressée mais motivée'}</span>
-          </div>
+      <section className="gameCard" aria-live="polite">
+        <div className="missionMeta">
+          <span>{stageCopy[stage]}</span>
+          <strong>{mission.title}</strong>
         </div>
 
-        <div className="chat">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={sceneId}
-              initial={{ opacity: 0, y: 18 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -18 }}
-            >
-              {scene.title && <div className="missionTitle">{scene.title}</div>}
-              {scene.sticker && <div className="sticker">{scene.sticker}</div>}
+        <div className="idealiaAvatar" aria-hidden="true">
+          <motion.div
+            className={`botFace ${speaking ? 'speaking' : ''}`}
+            animate={{ y: [0, -4, 0] }}
+            transition={{ duration: 2.3, repeat: Infinity, ease: 'easeInOut' }}
+          >
+            <i /><i /><b />
+          </motion.div>
+          <span>{mission.sticker}</span>
+        </div>
 
-              <div className="bubble bot">
-                <TypeText
-                  text={scene.text}
-                  onDone={() => {
-                    if (!scene.extra) setTypingDone(true)
-                  }}
-                />
-              </div>
+        <Voice
+          text={mission.setup.join(' ')}
+          role="idealia"
+          enabled={voiceEnabled && stage === 'story'}
+          onStart={() => setSpeaking(true)}
+          onEnd={() => setSpeaking(false)}
+        />
 
-              {scene.extra && (
-                <div className="extra">
-                  <TypeText
-                    text={scene.extra}
-                    speed={30}
-                    onDone={() => setTypingDone(true)}
-                  />
-                </div>
-              )}
-
-              {typingDone && needsBoss && (
-                <VoiceButton
-                  bossAudio={scene.bossAudio}
-                  enabled={voiceEnabled}
-                  onDone={() => setBossDone(true)}
-                />
-              )}
-
-              {scene.type === 'debrief' && typingDone && (
-                <Debrief modules={modules} stats={stats} />
-              )}
-
-              <div className={`choices ${canChoose ? 'ready' : 'locked'}`}>
-                {scene.choices?.map((choice, index) => (
-                  <button
-                    key={`${choice.label}-${index}`}
-                    className="choice bigChoice"
-                    type="button"
-                    onClick={() => choose(choice)}
-                    disabled={!canChoose}
-                  >
-                    <span>{choice.label}</span>
-                    <small>{choice.hint}</small>
-                  </button>
-                ))}
-              </div>
+        <AnimatePresence mode="wait">
+          {stage === 'story' && (
+            <motion.div key="story" className="stageWrap" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -16 }}>
+              <MissionBubbles lines={mission.setup} onDone={() => setStage('boss')} />
             </motion.div>
-          </AnimatePresence>
-        </div>
+          )}
+
+          {stage === 'boss' && (
+            <motion.div key="boss" className="stageWrap" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -16 }}>
+              <BossVoice
+                text={mission.boss}
+                voiceEnabled={voiceEnabled}
+                onPulse={blip}
+                onDone={() => setStage('bug')}
+              />
+            </motion.div>
+          )}
+
+          {stage === 'bug' && (
+            <motion.div key="bug" className="stageWrap" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -16 }}>
+              <BugCard bug={mission.bug} onPulse={blip} onDone={() => setStage('choice')} />
+            </motion.div>
+          )}
+
+          {stage === 'choice' && (
+            <motion.div key="choice" className="stageWrap" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -16 }}>
+              <ChoicePanel mission={mission} onChoose={recordChoice} />
+              {mission.id === 'ending' && <EndingDebrief modules={modules} choices={choices} />}
+            </motion.div>
+          )}
+
+          {stage === 'learn' && selectedChoice && (
+            <motion.div key="learn" className="stageWrap" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -16 }}>
+              <LearnCard choice={selectedChoice} onNext={goNext} isFinal={selectedChoice.next === 'ending'} />
+            </motion.div>
+          )}
+        </AnimatePresence>
       </section>
 
-      {clinician && (
-        <aside className="clinicianPanel" aria-label="Mode soignant">
-          <h3>Mode soignant</h3>
-          <p>Modules débloqués : {modules.join(', ') || '—'}</p>
-          <p>Axes dominants : {Object.entries(stats).sort((a, b) => b[1] - a[1]).map(([key]) => statLabels[key]).slice(0, 3).join(', ')}</p>
-        </aside>
-      )}
+      <section className="percentCard" aria-label="Progression finale d’Idealia">
+        <span>{completion}%</span>
+        <div className="percentTrack"><motion.i animate={{ width: `${completion}%` }} /></div>
+        <p>Idealia n’ira jamais à 100 %. Le dernier 1 % reste humain.</p>
+      </section>
 
-      <footer>Double clic sur le titre : mode soignant. Prototype éducatif, pas un dispositif médical.</footer>
+      {clinicianOpen && <ClinicianPanel modules={modules} choices={choices} signals={signals} />}
     </main>
   )
 }
