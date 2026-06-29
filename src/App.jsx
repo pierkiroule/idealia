@@ -40,7 +40,6 @@ const clinicianLabels = {
 
 const stageCopy = {
   story: 'Situation',
-  boss: 'Vocal d’IdAlgo',
   bug: 'Le bug',
   choice: 'Décision coach',
   learn: 'Module débloqué'
@@ -159,51 +158,6 @@ function MissionBubbles({ lines, extra, poem, onDone, ready, waitingForVoice, on
         </motion.button>
       )}
     </div>
-  )
-}
-
-function IdAlgoVoice({ text, voiceEnabled, onDone, onPulse }) {
-  const [playing, setPlaying] = useState(false)
-
-  useEffect(() => {
-    if (!playing || voiceEnabled) return undefined
-
-    const timer = setTimeout(() => {
-      setPlaying(false)
-      onDone()
-    }, 1200)
-
-    return () => clearTimeout(timer)
-  }, [playing, voiceEnabled, onDone])
-
-  function play() {
-    setPlaying(true)
-    onPulse('bug')
-  }
-
-  return (
-    <section className="bossCard" aria-label="Vocal court d’IdAlgo de la Cadence">
-      <div className="bossHeader">
-        <span>📞 IdAlgo de la Cadence</span>
-        <span className="waveDots" aria-hidden="true"><i /><i /><i /></span>
-      </div>
-      <p>“{text}”</p>
-      <button type="button" className="bossButton" onClick={play} disabled={playing}>
-        {playing ? 'Lecture...' : 'Écouter le vocal'}
-      </button>
-      {playing && (
-        <Voice
-          text={text}
-          role="boss"
-          emotion="angry"
-          enabled={voiceEnabled}
-          onEnd={() => {
-            setPlaying(false)
-            onDone()
-          }}
-        />
-      )}
-    </section>
   )
 }
 
@@ -366,13 +320,8 @@ export default function App() {
   const canContinueStory = storyTyped && (!voiceEnabled || voiceDone)
 
   function getNextStageAfterStory(currentMission) {
-    if (currentMission.boss) return 'boss'
     if (currentMission.bug) return 'bug'
     return 'choice'
-  }
-
-  function getNextStageAfterIdAlgo(currentMission) {
-    return currentMission.bug ? 'bug' : 'choice'
   }
 
   function recordChoice(choice) {
@@ -481,7 +430,7 @@ export default function App() {
                 ready={canContinueStory}
                 waitingForVoice={storyTyped && voiceEnabled && !voiceDone}
                 onDone={() => setStoryTyped(true)}
-                continueLabel={mission.boss ? 'Écouter IdAlgo' : mission.type === 'poem' ? 'Cacher le poème' : 'Continuer'}
+                continueLabel={mission.type === 'poem' ? 'Cacher le poème' : 'Continuer'}
                 onContinue={() => {
                   blip('tap')
                   setStage(getNextStageAfterStory(mission))
@@ -489,18 +438,6 @@ export default function App() {
               />
             </motion.div>
           )}
-
-          {stage === 'boss' && (
-            <motion.div key="boss" className="stageWrap" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -16 }}>
-              <IdAlgoVoice
-                text={mission.boss}
-                voiceEnabled={voiceEnabled}
-                onPulse={blip}
-                onDone={() => setStage(getNextStageAfterIdAlgo(mission))}
-              />
-            </motion.div>
-          )}
-
           {stage === 'bug' && (
             <motion.div key="bug" className="stageWrap" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -16 }}>
               <BugCard bug={mission.bug} onPulse={blip} onDone={() => setStage('choice')} />

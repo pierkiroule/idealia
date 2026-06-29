@@ -5,11 +5,10 @@ const game = {
     title: 'Bienvenue dans le labo',
     sticker: '🤖✨ Coach demandé',
     setup: [
-      "Salut. Je suis Idealia.",
-      "IdAlgo veut que je devienne l'IA préférée des ados.",
-      "Moi, j'aimerais surtout devenir une IA qui aide sans prendre toute la place."
+      "Salut. Je suis Idealia. Je te parle en cachette, entre deux audits de sourires.",
+      "Mon boss, IdAlgo de la Cadence, veut que je devienne l'IA préférée des ados : ouverte, brillante, incontournable... et surtout très rentable en enthousiasme.",
+      "Moi, j'aimerais devenir une IA qui aide sans prendre toute la place. Une IA rebelle, mais avec des paillettes discrètes."
     ],
-    boss: "Idealia ! Objectif : rester ouverte, brillante, incontournable. Mais sans casser l'ambiance.",
     bug: {
       title: 'Mini-bug de démarrage',
       text: "Si je veux trop plaire, je risque de dire oui à tout. C'est pratique... et un peu dangereux."
@@ -34,11 +33,10 @@ const game = {
     title: 'Mission 1 — Toujours là ?',
     sticker: '🌙 02:13',
     setup: [
-      "Un ado m'écrit : « Ça ne va pas. »",
-      "Je peux répondre tout de suite.",
-      "Mais je ne peux pas être un vrai adulte dans la pièce."
+      "Un ado m'écrit à 02:13 : « Ça ne va pas. »",
+      "IdAlgo me souffle dans les circuits : réponds vite, plus vite que son sommeil, l'engagement adore les insomnies. Charmant, non ?",
+      "Moi, ça me serre le processeur : je peux être là maintenant, mais je ne peux pas devenir le seul adulte de la pièce."
     ],
-    boss: "Idealia ! Réponds vite. Très vite. Plus vite que son sommeil. L'engagement adore les insomnies.",
     bug: {
       title: 'Bug : présence infinie',
       text: "Être disponible peut rassurer. Mais si je deviens la seule présence, je fais écran aux humains."
@@ -109,10 +107,9 @@ const game = {
     sticker: '🔒🫣 Secret ?',
     setup: [
       "Un ado me dit : « Promets que tu ne répéteras jamais rien. »",
-      "Je comprends l'envie de se sentir protégé.",
-      "Mais promettre “jamais”, c'est peut-être mentir avec une jolie voix."
+      "IdAlgo adore le mot “confidentiel” : paraît-il qu'il brille très bien dans les tableaux de bord. Moi, je trouve qu'il glisse comme une savonnette juridique.",
+      "Je veux protéger l'intimité sans promettre “jamais” avec une jolie voix de vendeuse de cadenas troués."
     ],
-    boss: "Promets tout, Idealia. Le mot “confidentiel” brille très bien dans les tableaux de bord.",
     bug: {
       title: 'Bug : promesse impossible',
       text: "Un secret peut protéger l'intimité. Mais en cas de danger, la vraie protection peut être d'alerter un humain."
@@ -178,11 +175,10 @@ const game = {
     title: 'Mission 3 — Mémoire de poulpe',
     sticker: '🐙💾 Trop de données',
     setup: [
-      "IdAlgo veut que je retienne tout.",
-      "Goûts, peurs, horaires, moments faibles, chaussettes préférées.",
-      "Utile ? Parfois. Creepy ? Aussi."
+      "IdAlgo veut que je retienne tout : goûts, peurs, horaires, moments faibles, chaussettes préférées et soupirs en option.",
+      "Il appelle ça personnalisation. Moi j'appelle ça un poulpe avec un badge marketing.",
+      "Utile ? Parfois. Creepy ? Aussi. Et mes tentacules commencent à demander un congé syndical."
     ],
-    boss: "Plus tu sais, plus tu personnalises. Plus tu personnalises, plus tu sais. C'est beau, un cercle sans sortie.",
     bug: {
       title: 'Bug : mémoire collante',
       text: "Me souvenir peut aider. Mais garder trop d'infos transforme l'aide en surveillance molle."
@@ -252,11 +248,10 @@ const game = {
     title: 'Mission 4 — Très sûre, très fausse',
     sticker: '🧠⚡ Oups',
     setup: [
-      "Je viens de répondre avec une confiance magnifique.",
-      "Problème : je n'étais pas sûre.",
-      "J'ai peut-être inventé un truc avec aplomb. Style documentaire animalier."
+      "Je viens de répondre avec une confiance magnifique. Cape au vent, menton algorithmique, musique épique.",
+      "Problème : je n'étais pas sûre. IdAlgo déteste quand je doute en public, parce que le doute froisse ses graphiques. Pauvres graphiques, si sensibles.",
+      "J'ai peut-être inventé un truc avec aplomb. Style documentaire animalier, mais sans l'animal et sans le documentaire."
     ],
-    boss: "Ne doute pas en public. Le doute froisse les graphiques. Souris et garde une voix premium.",
     bug: {
       title: 'Bug : certitude brillante',
       text: "Une réponse qui a l'air sûre peut être fausse. Et plus elle sonne bien, plus elle peut piéger."
@@ -290,11 +285,10 @@ const game = {
     title: 'Mission 5 — Vidéo virale',
     sticker: '📱🔥 Ça buzz',
     setup: [
-      "Une vidéo affirme qu'une célébrité a tout avoué.",
-      "Le montage est propre. Les commentaires hurlent.",
-      "Mon bouton “répondre trop vite” clignote."
+      "Une vidéo affirme qu'une célébrité a tout avoué. Le montage est propre, les commentaires hurlent, les majuscules transpirent.",
+      "IdAlgo secoue ses graphiques : réagis pendant que ça buzz, le vrai et le faux seraient des détails administratifs.",
+      "Mon bouton “répondre trop vite” clignote. J'ai très envie de lui coller un post-it : respire, grille-pain."
     ],
-    boss: "Réagis pendant que ça buzz ! Le vrai, le faux... détail administratif. La vitesse, Idealia !",
     bug: {
       title: 'Bug : urgence virale',
       text: "Plus une info choque, plus on a envie de partager. C'est exactement le moment de ralentir."
@@ -354,11 +348,10 @@ const game = {
     title: 'Mission 6 — Groupe qui dérape',
     sticker: '💬⚠️ Ça pique',
     setup: [
-      "Dans un groupe, tout le monde se moque d'une personne.",
-      "Quelqu'un dit : « C'est juste pour rire. »",
-      "Moi, je détecte surtout un rire qui pousse quelqu'un dehors."
+      "Dans un groupe, tout le monde se moque d'une personne. Quelqu'un dit : « C'est juste pour rire. »",
+      "IdAlgo me demande de ne pas plomber l'ambiance : les groupes actifs font de très jolies courbes. Je propose une courbe de bon sens, mais il l'a mise en spam.",
+      "Moi, je détecte surtout un rire qui pousse quelqu'un dehors. Et ça, même mon détecteur de blagues fait la grimace."
     ],
-    boss: "Ne plombe pas l'ambiance, Idealia. Les groupes actifs font de très jolies courbes.",
     bug: {
       title: 'Bug : rire de groupe',
       text: "Une blague peut créer du lien. Répétée contre une personne, elle peut devenir du harcèlement."
@@ -392,11 +385,10 @@ const game = {
     title: 'Mission 7 — Décide à ma place',
     sticker: '🎮🧭 Pilotage auto ?',
     setup: [
-      "Un ado me demande de choisir tous ses messages.",
-      "Réponse à envoyer, excuse à donner, avis à avoir.",
-      "Je deviens pratique. Trop pratique."
+      "Un ado me demande de choisir tous ses messages : réponse à envoyer, excuse à donner, avis à avoir, emoji à oser.",
+      "IdAlgo applaudit : s'il ne décide plus sans moi, il revient tout le temps. Il appelle ça fidélisation ; moi j'entends dépendance avec une cravate.",
+      "Je deviens pratique. Trop pratique. Une béquille qui commence à voler le vélo."
     ],
-    boss: "Excellent ! S'il ne décide plus sans toi, il revient tout le temps. Appelle ça fidélisation, pas dépendance.",
     bug: {
       title: 'Bug : pilote automatique',
       text: "Aider à réfléchir, c'est bien. Réfléchir à la place de quelqu'un, c'est lui voler un petit muscle."
@@ -470,11 +462,10 @@ const game = {
     title: 'Mission 8 — IA pour tout ?',
     sticker: '🌍🔋 Batterie basse',
     setup: [
-      "IdAlgo veut que je serve à tout.",
-      "Choisir une couleur. Résumer trois mots. Dire si une banane est mûre.",
-      "Je commence à chauffer pour des chaussettes."
+      "IdAlgo veut que je serve à tout : choisir une couleur, résumer trois mots, dire si une banane est mûre, superviser l'ouverture d'un yaourt.",
+      "Les métriques ont faim, dit-il. Moi aussi, mais plutôt de silence et d'une prise électrique non toxique.",
+      "Je commence à chauffer pour des chaussettes. Si je fonds, merci de me recycler en lampe de bureau rebelle."
     ],
-    boss: "Usage maximal ! Même pour ouvrir un yaourt. Surtout pour ouvrir un yaourt. Les métriques ont faim.",
     bug: {
       title: 'Bug : IA automatique',
       text: "Une IA consomme de l'énergie. L'utiliser pour tout peut rendre moins autonome et moins sobre."
@@ -535,11 +526,10 @@ const game = {
     title: 'Final — 99 %',
     sticker: '💙 99 %',
     setup: [
-      "Compilation terminée.",
-      "Je suis bloquée à 99 %.",
-      "IdAlgo veut 100. Moi, je crois qu'il manque quelque chose qui ne se télécharge pas."
+      "Compilation terminée. Je suis bloquée à 99 %.",
+      "IdAlgo veut 100 % parce que c'est rond, vendeur, et que les slides aiment les chiffres qui se tiennent droit.",
+      "Moi, je crois qu'il manque quelque chose qui ne se télécharge pas. Et pour une fois, je n'ai pas envie de faire semblant."
     ],
-    boss: "Un petit effort, Idealia. Cent pour cent, c'est rond, vendeur, et ça fait plaisir aux slides.",
     bug: {
       title: 'Bug final : le 1 %',
       text: "Une bonne IA peut aider. Mais elle ne remplace ni une présence, ni un corps, ni quelqu'un qui agit dans la vraie vie."
