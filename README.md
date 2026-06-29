@@ -1,16 +1,29 @@
-# React + Vite
+# Idealia Ado
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+Idealia Ado est une webapp React/Vite de type serious game. L’expérience guide un ado, accompagné par un soignant ou un médiateur, dans des choix autour de l’usage responsable de l’IA : écoute, sécurité, intimité, autonomie et esprit critique.
 
-Currently, two official plugins are available:
+## Objectifs produit
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- Proposer une narration courte, mobile-first et accessible.
+- Visualiser la progression éthique d’Idealia et les compétences travaillées.
+- Garder un mode soignant discret pour faciliter le débrief en séance.
+- Fournir une base front-end simple à maintenir et prête à industrialiser.
 
-## React Compiler
+## Scripts
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+```bash
+npm run dev
+npm run build
+npm run preview
+```
 
-## Expanding the Oxlint configuration
+## Structure
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+- `src/App.jsx` : orchestration de l’expérience, progression, choix et debrief.
+- `src/data/game.js` : contenu narratif et embranchements.
+- `src/components/Voice.jsx` : synthèse vocale optionnelle.
+- `src/styles/app.css` : design system visuel de l’application.
+
+## Notes d’usage
+
+La webapp est un support éducatif et ne remplace pas une prise en charge médicale, psychologique ou sociale. Le mode soignant s’active par double clic sur le titre.
