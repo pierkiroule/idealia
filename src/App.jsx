@@ -160,27 +160,82 @@ function MissionBubbles({ lines, extra, poem, onDone, ready, waitingForVoice, on
   )
 }
 
+const idealChoiceCards = [
+  {
+    emoji: '🤝',
+    title: 'Pour toi, une IA idéale doit aider sans décider',
+    hint: 'Elle accompagne la réflexion, mais ne pilote pas la vie des humains.'
+  },
+  {
+    emoji: '🪞',
+    title: 'Pour toi, une IA idéale doit reconnaître ses limites',
+    hint: 'Elle dit quand elle ne sait pas, sans inventer ni faire semblant.'
+  },
+  {
+    emoji: '🌱',
+    title: 'Pour toi, une IA idéale doit rester drôle et créative',
+    hint: 'Elle inspire, surprend et fait sourire, sans manipuler les émotions.'
+  }
+]
+
 function ChoicePanel({ mission, onChoose }) {
+  const [selectedIndex, setSelectedIndex] = useState(null)
+  const selectedChoice = selectedIndex === null ? null : mission.choices[selectedIndex]
+
+  function validateChoice() {
+    if (!selectedChoice) return
+
+    const ideal = idealChoiceCards[selectedIndex]
+    onChoose({
+      ...selectedChoice,
+      label: ideal.title,
+      hint: ideal.hint,
+      emoji: ideal.emoji
+    })
+  }
+
   return (
     <section className="choicePanel" aria-label="Choisir une aide pour Idealia">
       <p className="reaction">{mission.reaction}</p>
-      <div className="choices">
+      <div className={`choices ${selectedIndex !== null ? 'hasSelection' : ''}`} role="radiogroup" aria-label="Vision du joueur pour une IA idéale">
         {mission.choices.map((choice, index) => (
           <motion.button
             key={`${mission.id}-${choice.label}`}
             type="button"
-            className="choice"
-            onClick={() => onChoose(choice)}
-            whileTap={{ scale: 0.97 }}
+            className={`choice idealChoice ${selectedIndex === index ? 'selected' : ''} ${selectedIndex !== null && selectedIndex !== index ? 'dimmed' : ''}`}
+            onClick={() => setSelectedIndex(index)}
+            role="radio"
+            aria-checked={selectedIndex === index}
+            whileTap={{ scale: 0.98 }}
+            animate={{
+              scale: selectedIndex === index ? [1, 1.045, 1.018, 1.045] : selectedIndex !== null ? 0.94 : 1,
+              filter: selectedIndex !== null && selectedIndex !== index ? 'brightness(0.72) blur(1.2px)' : 'brightness(1) blur(0px)'
+            }}
+            transition={{ duration: selectedIndex === index ? 0.75 : 0.45, ease: 'easeOut' }}
             initial={{ opacity: 0, y: 14 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: index * 0.07 }}
+            whileInView={{ opacity: 1, y: 0 }}
           >
-            <span>{choice.label}</span>
-            <small>{choice.hint}</small>
+            {selectedIndex === index && (
+              <span className="choiceConfetti" aria-hidden="true">
+                <i>✦</i><i>✨</i><i>💫</i><i>✧</i>
+              </span>
+            )}
+            <span className="choiceEmoji" aria-hidden="true">{idealChoiceCards[index].emoji}</span>
+            <span>{idealChoiceCards[index].title}</span>
+            <small>{idealChoiceCards[index].hint}</small>
           </motion.button>
         ))}
       </div>
+      <motion.button
+        type="button"
+        className="primaryButton validateChoice"
+        onClick={validateChoice}
+        disabled={!selectedChoice}
+        initial={false}
+        animate={{ opacity: selectedChoice ? 1 : 0.52, y: selectedChoice ? 0 : 6 }}
+      >
+        Valider ce choix
+      </motion.button>
     </section>
   )
 }

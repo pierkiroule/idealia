@@ -451,6 +451,8 @@ button:focus-visible {
 }
 
 .choice {
+  position: relative;
+  overflow: hidden;
   width: 100%;
   min-height: 86px;
   padding: 16px;
@@ -460,6 +462,80 @@ button:focus-visible {
   text-align: left;
   box-shadow: 0 10px 0 rgba(148, 163, 184, 0.28), inset 0 0 0 2px rgba(148, 163, 184, 0.16);
 }
+
+.idealChoice {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  column-gap: 13px;
+  align-items: center;
+  transition: box-shadow 0.7s ease, opacity 0.7s ease, background 0.7s ease;
+}
+
+.idealChoice::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  z-index: 0;
+  border-radius: inherit;
+  background: conic-gradient(from 0deg, rgba(125, 211, 252, 0), rgba(250, 204, 21, 0.82), rgba(249, 168, 212, 0.88), rgba(103, 232, 249, 0.78), rgba(125, 211, 252, 0));
+  opacity: 0;
+  filter: blur(8px);
+  animation: idealHalo 0.85s linear infinite;
+}
+
+.idealChoice > span,
+.idealChoice > small {
+  position: relative;
+  z-index: 1;
+}
+
+.idealChoice.selected {
+  background: linear-gradient(145deg, #ffffff, #ecfeff 48%, #fef3c7);
+  box-shadow:
+    0 16px 0 rgba(14, 165, 233, 0.16),
+    0 0 32px rgba(125, 211, 252, 0.55),
+    inset 0 0 0 3px rgba(250, 204, 21, 0.72);
+}
+
+.idealChoice.selected::before {
+  opacity: 0.9;
+}
+
+.idealChoice.dimmed {
+  opacity: 0.56;
+  box-shadow: 0 6px 0 rgba(15, 23, 42, 0.16), inset 0 0 0 2px rgba(148, 163, 184, 0.12);
+}
+
+.choiceEmoji {
+  grid-row: span 2;
+  display: grid;
+  place-items: center;
+  width: 54px;
+  height: 54px;
+  border-radius: 20px;
+  background: linear-gradient(145deg, #e0f2fe, #fef3c7);
+  font-size: 32px;
+  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.72);
+}
+
+.choiceConfetti {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.choiceConfetti i {
+  position: absolute;
+  font-style: normal;
+  filter: drop-shadow(0 4px 6px rgba(15, 23, 42, 0.18));
+  animation: choiceConfettiPop 0.85s ease-out both;
+}
+
+.choiceConfetti i:nth-child(1) { top: 12px; left: 18%; }
+.choiceConfetti i:nth-child(2) { top: 16px; right: 18%; animation-delay: 0.05s; }
+.choiceConfetti i:nth-child(3) { bottom: 12px; left: 28%; animation-delay: 0.1s; }
+.choiceConfetti i:nth-child(4) { right: 24%; bottom: 15px; animation-delay: 0.15s; }
 
 .choice span,
 .choice small {
@@ -477,6 +553,19 @@ button:focus-visible {
   color: #64748b;
   font-size: 13px;
   font-weight: 800;
+}
+
+.validateChoice {
+  justify-self: stretch;
+  min-height: 56px;
+  margin-top: 2px;
+  font-size: 16px;
+  box-shadow: 0 12px 0 rgba(202, 138, 4, 0.22);
+}
+
+.validateChoice:disabled {
+  cursor: not-allowed;
+  filter: grayscale(0.25);
 }
 
 .learnCard {
@@ -645,6 +734,16 @@ button:focus-visible {
 @keyframes confettiPop {
   0%, 100% { transform: translateY(0) rotate(0); opacity: 0.6; }
   50% { transform: translateY(-10px) rotate(18deg); opacity: 1; }
+}
+
+@keyframes idealHalo {
+  to { transform: rotate(1turn); }
+}
+
+@keyframes choiceConfettiPop {
+  0% { transform: translate3d(0, 12px, 0) scale(0.4) rotate(0deg); opacity: 0; }
+  28% { opacity: 1; }
+  100% { transform: translate3d(0, -30px, 0) scale(1.18) rotate(18deg); opacity: 0; }
 }
 
 @media (min-width: 760px) {
