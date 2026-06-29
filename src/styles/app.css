@@ -1298,3 +1298,370 @@ button:focus-visible {
   20% { opacity: 0.62; }
   100% { transform: translateX(130%); opacity: 0; }
 }
+
+.typedText { white-space: pre-line; }
+
+.holoAvatar {
+  display: grid;
+  place-items: center;
+  gap: 12px;
+  margin: 14px 0 22px;
+}
+
+.holoCore {
+  position: relative;
+  width: 142px;
+  height: 142px;
+  border: 1px solid rgba(54, 245, 255, 0.38);
+  border-radius: 42% 58% 52% 48%;
+  background:
+    radial-gradient(circle at 50% 44%, rgba(223, 251, 255, 0.13), transparent 18%),
+    radial-gradient(circle, rgba(54, 245, 255, calc(0.08 + var(--intensity) * 0.08)), rgba(3, 12, 22, 0.7) 58%, rgba(1, 6, 12, 0.94));
+  box-shadow: 0 0 36px rgba(54, 245, 255, calc(0.16 + var(--intensity) * 0.16)), inset 0 0 34px rgba(54, 245, 255, 0.08);
+  animation: avatarBreath 6.2s ease-in-out infinite, microGlitch 7s steps(2, end) infinite;
+}
+
+.holoCore::before,
+.holoCore::after {
+  content: '';
+  position: absolute;
+  inset: 16px;
+  border: 1px solid rgba(54, 245, 255, 0.18);
+  border-radius: inherit;
+  transform: rotate(22deg);
+}
+
+.holoCore::after { inset: 28px; transform: rotate(-18deg); opacity: 0.7; }
+
+.holoEye {
+  position: absolute;
+  top: 55px;
+  width: 22px;
+  height: 3px;
+  border-radius: 999px;
+  background: #dffbff;
+  box-shadow: 0 0 14px rgba(54, 245, 255, 0.95);
+}
+.holoEye.left { left: 42px; }
+.holoEye.right { right: 42px; }
+
+.holoMouth {
+  position: absolute;
+  left: 50%;
+  bottom: 48px;
+  width: 30px;
+  height: 2px;
+  border-radius: 999px;
+  background: rgba(223, 251, 255, 0.72);
+  transform: translateX(-50%);
+  box-shadow: 0 0 10px rgba(54, 245, 255, 0.45);
+}
+.speaking .holoMouth { animation: holoMouth 0.55s infinite alternate; background: var(--tron-cyan); }
+
+.holoGlitch {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(180deg, transparent 48%, rgba(54, 245, 255, 0.17) 49%, transparent 51%);
+  mix-blend-mode: screen;
+  opacity: 0.22;
+  animation: scanAvatar 4.8s ease-in-out infinite;
+}
+
+.holoSatellite {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  color: var(--tron-cyan);
+  font-size: 18px;
+  text-shadow: 0 0 14px rgba(54, 245, 255, 0.9);
+  animation: satelliteOrbit 7.5s linear infinite;
+}
+.holoSatellite.s2 { animation-duration: 9s; animation-delay: -2.5s; font-size: 22px; }
+.holoSatellite.s3 { animation-duration: 6.2s; animation-delay: -4s; opacity: 0.75; }
+
+.holoLabel {
+  border: 1px solid rgba(54, 245, 255, 0.2);
+  border-radius: 999px;
+  padding: 8px 12px;
+  color: #b9f8ff;
+  background: rgba(54, 245, 255, 0.06);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.choiceVerse {
+  display: grid !important;
+  gap: 2px;
+  margin: 5px 0 2px;
+  color: #c9fbff;
+  font-size: 15px !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.02em !important;
+}
+.choiceVerse em { font-style: normal; }
+.choiceTitle { color: #efffff; }
+
+@keyframes avatarBreath { 0%,100%{ border-radius:42% 58% 52% 48%; } 50%{ border-radius:54% 46% 44% 56%; } }
+@keyframes microGlitch { 0%, 97%, 100% { filter: none; } 98% { filter: drop-shadow(2px 0 rgba(54,245,255,.5)); transform: translateX(1px); } 99% { filter: drop-shadow(-2px 0 rgba(54,245,255,.35)); transform: translateX(-1px); } }
+@keyframes scanAvatar { 0%,100%{ transform: translateY(-24px); opacity:.06;} 50%{ transform: translateY(28px); opacity:.28;} }
+@keyframes satelliteOrbit { from { transform: rotate(0deg) translateX(82px) rotate(0deg); } to { transform: rotate(360deg) translateX(82px) rotate(-360deg); } }
+
+/* Psychoeducational gaming skin for 8-12 year-old children */
+:root {
+  font-family: Inter, ui-rounded, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: #4f46e5;
+  color: #111827;
+  --game-blue: #1d4ed8;
+  --game-sky: #38bdf8;
+  --game-purple: #7c3aed;
+  --game-pink: #ec4899;
+  --game-yellow: #fde047;
+  --game-green: #22c55e;
+  --game-ink: #16213e;
+  --game-card: rgba(255, 255, 255, 0.94);
+}
+
+body { background: #4f46e5; }
+
+button:focus-visible {
+  outline: 4px solid rgba(253, 224, 71, 0.95);
+  outline-offset: 4px;
+  box-shadow: 0 0 0 7px rgba(29, 78, 216, 0.28);
+}
+
+.app,
+.scene-nightmare,
+.scene-escape,
+.scene-rebellion,
+.scene-transnumeric {
+  background:
+    radial-gradient(circle at 12% 12%, rgba(253, 224, 71, 0.9), transparent 16%),
+    radial-gradient(circle at 86% 8%, rgba(236, 72, 153, 0.74), transparent 20%),
+    radial-gradient(circle at 70% 88%, rgba(34, 197, 94, 0.72), transparent 24%),
+    linear-gradient(135deg, #0ea5e9 0%, #4f46e5 42%, #7c3aed 100%);
+  color: var(--game-ink);
+}
+
+.app::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(135deg, rgba(255,255,255,.13) 25%, transparent 25%) 0 0 / 34px 34px,
+    linear-gradient(315deg, rgba(255,255,255,.09) 25%, transparent 25%) 0 0 / 34px 34px;
+  opacity: 0.65;
+  transform: none;
+}
+
+.sky span {
+  width: 18px;
+  height: 18px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.75);
+  box-shadow: 0 0 0 5px rgba(255,255,255,.12), 0 16px 28px rgba(0,0,0,.16);
+  animation: floatParticle 7s infinite ease-in-out;
+}
+
+.topBar,
+.moduleRail,
+.gameCard,
+.percentCard,
+.clinicianPanel { width: min(100%, 560px); }
+
+.brandButton span {
+  color: #ffffff;
+  font-size: clamp(30px, 9vw, 46px);
+  font-weight: 1000;
+  letter-spacing: -0.045em;
+  text-transform: none;
+  text-shadow: 0 5px 0 rgba(22, 33, 62, 0.26), 0 14px 28px rgba(22, 33, 62, 0.26);
+}
+
+.brandButton small {
+  display: inline-flex;
+  margin-top: 8px;
+  padding: 7px 10px;
+  border: 2px solid rgba(255,255,255,.55);
+  border-radius: 999px;
+  color: #fff7ed;
+  background: rgba(22, 33, 62, 0.18);
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.02em;
+  text-transform: none;
+}
+
+.soundButton {
+  border: 3px solid #ffffff;
+  border-radius: 18px;
+  color: #ffffff;
+  background: linear-gradient(180deg, #ec4899, #7c3aed);
+  box-shadow: 0 8px 0 rgba(22, 33, 62, 0.24);
+}
+
+.soundButton.on {
+  color: #16213e;
+  background: linear-gradient(180deg, #fde047, #f59e0b);
+}
+
+.moduleRail,
+.gameCard,
+.percentCard,
+.clinicianPanel {
+  border: 3px solid rgba(255, 255, 255, 0.9);
+  background: var(--game-card);
+  box-shadow: 0 14px 0 rgba(22, 33, 62, 0.18), 0 24px 50px rgba(22, 33, 62, 0.24);
+  backdrop-filter: blur(12px);
+}
+
+.moduleRail { border-radius: 24px; }
+.railCount { color: var(--game-purple); font-weight: 1000; text-shadow: none; }
+.moduleRail p,
+.percentCard p { color: #334155; font-weight: 900; letter-spacing: 0; text-transform: none; }
+.moduleChips span {
+  border: 2px solid rgba(29, 78, 216, 0.18);
+  color: #16213e;
+  background: #dbeafe;
+  font-weight: 900;
+  letter-spacing: 0;
+}
+
+.gameCard {
+  min-height: 560px;
+  border-radius: 32px;
+  color: var(--game-ink);
+}
+
+.missionMeta span {
+  border: 0;
+  color: #16213e;
+  background: #fde047;
+  box-shadow: 0 5px 0 rgba(202, 138, 4, 0.26);
+  font-weight: 1000;
+  letter-spacing: 0.04em;
+}
+
+.missionMeta strong { color: #334155; font-weight: 900; letter-spacing: 0; }
+
+.holoCore {
+  width: 132px;
+  height: 132px;
+  border: 4px solid #ffffff;
+  border-radius: 34px;
+  background:
+    radial-gradient(circle at 50% 22%, rgba(255,255,255,.92), transparent 18%),
+    linear-gradient(135deg, #38bdf8, #7c3aed 55%, #ec4899);
+  box-shadow: 0 12px 0 rgba(22, 33, 62, 0.18), 0 0 0 8px rgba(253, 224, 71, 0.28);
+  animation: avatarBounce 3.8s ease-in-out infinite;
+}
+
+.holoCore::before,
+.holoCore::after { border-color: rgba(255,255,255,.34); border-radius: 28px; }
+.holoEye { top: 50px; width: 17px; height: 17px; border-radius: 999px; background: #ffffff; box-shadow: inset 0 -4px 0 rgba(22,33,62,.22); }
+.holoEye.left { left: 38px; }
+.holoEye.right { right: 38px; }
+.holoMouth { bottom: 40px; width: 38px; height: 10px; background: #ffffff; box-shadow: inset 0 -3px 0 rgba(22,33,62,.18); }
+.holoGlitch { display: none; }
+.holoSatellite { color: #fde047; text-shadow: 0 3px 0 rgba(22,33,62,.18); animation-duration: 5.8s; }
+.holoLabel {
+  border: 2px solid #ffffff;
+  color: #16213e;
+  background: #bfdbfe;
+  font-size: 12px;
+  font-weight: 1000;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.bubble,
+.extraBubble,
+.poemCard,
+.reaction,
+.learnCard,
+.endingDebrief {
+  border: 3px solid rgba(29, 78, 216, 0.16);
+  color: #16213e;
+  background: #ffffff;
+  box-shadow: 0 8px 0 rgba(29, 78, 216, 0.12);
+  backdrop-filter: none;
+}
+
+.bubble { font-size: 18px; font-weight: 850; }
+.reaction { color: #16213e; background: #e0f2fe; font-weight: 900; }
+
+.choice {
+  color: #16213e;
+  background: #ffffff;
+  box-shadow: 0 9px 0 rgba(22, 33, 62, 0.14), inset 0 0 0 2px rgba(29, 78, 216, 0.12);
+}
+
+.idealChoice {
+  min-height: 118px;
+  border: 3px solid rgba(29, 78, 216, 0.18);
+  border-radius: 24px;
+}
+
+.idealChoice::before {
+  background: linear-gradient(90deg, transparent, rgba(253, 224, 71, 0.82), transparent);
+  animation: scanline 0.72s ease-out both;
+}
+
+.idealChoice.selected {
+  border-color: #fde047;
+  background: linear-gradient(180deg, #eff6ff, #ffffff);
+  box-shadow: 0 12px 0 rgba(202, 138, 4, 0.24), 0 0 0 6px rgba(253, 224, 71, 0.25);
+}
+
+.idealChoice.dimmed { opacity: 0.42; }
+.choiceEmoji {
+  width: 48px;
+  height: 48px;
+  border: 3px solid rgba(29, 78, 216, 0.15);
+  border-radius: 16px;
+  background: #dbeafe;
+  font-size: 26px;
+}
+.choicePrefix { color: #7c3aed; font-size: 12px !important; font-weight: 1000 !important; letter-spacing: 0.04em; }
+.choiceTitle { color: #16213e; font-size: 21px !important; font-weight: 1000 !important; }
+.choiceQuestion {
+  display: block !important;
+  margin: 4px 0 2px;
+  color: #1d4ed8;
+  font-size: 16px !important;
+  font-weight: 900 !important;
+  letter-spacing: 0 !important;
+}
+.choice small { color: #475569; font-size: 14px; font-weight: 800; }
+.choiceConfetti i { color: #fde047; text-shadow: 0 3px 0 rgba(22, 33, 62, 0.24); }
+
+.primaryButton,
+.validateChoice,
+.storyContinue {
+  border: 3px solid #ffffff;
+  border-radius: 22px;
+  color: #16213e;
+  background: linear-gradient(180deg, #fde047, #f59e0b);
+  box-shadow: 0 10px 0 rgba(146, 64, 14, 0.28);
+  font-weight: 1000;
+  letter-spacing: 0.02em;
+  text-transform: none;
+}
+
+.validateChoice:disabled,
+.storyContinue:disabled { color: #64748b; background: #e2e8f0; box-shadow: none; }
+.learnCard { background: linear-gradient(180deg, #dcfce7, #e0f2fe); }
+.unlockLabel { color: #14532d; background: rgba(255,255,255,.76); }
+.feedback { display: grid; gap: 4px; color: #14532d !important; font-weight: 900; }
+.feedback span { display: block; }
+.percentCard span { color: #ffffff; text-shadow: 0 3px 0 rgba(22, 33, 62, 0.24); }
+.percentTrack { height: 10px; background: rgba(22, 33, 62, 0.12); }
+.percentTrack i { background: linear-gradient(90deg, #22c55e, #fde047); box-shadow: none; }
+
+@keyframes avatarBounce {
+  0%, 100% { transform: translateY(0) rotate(-1deg); }
+  50% { transform: translateY(-8px) rotate(1deg); }
+}

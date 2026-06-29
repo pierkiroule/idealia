@@ -2,6 +2,8 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import game from './data/game.js'
 import Voice from './components/Voice.jsx'
+import IdealiaAvatar3D from './components/IdealiaAvatar3D.jsx'
+import { interfacePsychoeducation, educationChoice } from './content/idealiaPsychoeducation.js'
 
 const emptySignals = {
   boundaries: 0,
@@ -38,11 +40,7 @@ const clinicianLabels = {
   sobriety: 'Sobriété numérique'
 }
 
-const stageCopy = {
-  story: 'Situation',
-  choice: 'Décision coach',
-  learn: 'Dilemme en suspens'
-}
+const stageCopy = interfacePsychoeducation.stages
 
 function useHapticsAndSound(enabled) {
   const audioRef = useRef(null)
@@ -86,7 +84,7 @@ function useHapticsAndSound(enabled) {
 }
 
 function TypeText({ lines = [], speed = 28, onDone }) {
-  const text = Array.isArray(lines) ? lines.join(' ') : lines
+  const text = Array.isArray(lines) ? lines.join('\n') : lines
   const [shown, setShown] = useState('')
   const onDoneRef = useRef(onDone)
 
@@ -112,7 +110,7 @@ function TypeText({ lines = [], speed = 28, onDone }) {
   }, [text, speed])
 
   return (
-    <span>
+    <span className="typedText">
       {shown}
       {shown.length < text.length && <span className="cursor" aria-hidden="true">▌</span>}
     </span>
@@ -160,37 +158,26 @@ function MissionBubbles({ lines, extra, poem, onDone, ready, waitingForVoice, on
   )
 }
 
-const fallbackChoiceEmojis = ['🤝', '🪞', '🌱']
-
-function getChoiceEmoji(choice, index) {
-  if (choice.emoji) return choice.emoji
-  if (choice.themes?.includes('aide humaine')) return '🤝'
-  if (choice.themes?.includes('limites') || choice.themes?.includes('cadre')) return '🧭'
-  if (choice.themes?.includes('esprit critique')) return '🪞'
-  if (choice.themes?.includes('autonomie')) return '🕹️'
-  if (choice.themes?.includes('sobriété') || choice.themes?.includes('écologie numérique')) return '🌱'
-  return fallbackChoiceEmojis[index % fallbackChoiceEmojis.length]
-}
-
-function ChoicePanel({ mission, onChoose }) {
+function ChoicePanel({ mission, onChoose, onPreview }) {
   const [selectedIndex, setSelectedIndex] = useState(null)
   const selectedChoice = selectedIndex === null ? null : mission.choices[selectedIndex]
+  const selectedCard = selectedIndex === null ? null : educationChoice(selectedChoice, selectedIndex)
 
   function validateChoice() {
     if (!selectedChoice) return
-    onChoose(selectedChoice)
+    onChoose({ ...selectedChoice, selectedEmoji: selectedCard.emoji, feedback: selectedCard.feedback })
   }
 
   return (
-    <section className="choicePanel" aria-label="Choisir une aide pour Idealia">
+    <section className="choicePanel" aria-label="Choisir une réponse pour Idealia">
       <p className="reaction">{mission.reaction}</p>
-      <div className={`choices ${selectedIndex !== null ? 'hasSelection' : ''}`} role="radiogroup" aria-label="Vision du joueur pour une IA idéale">
+      <div className={`choices ${selectedIndex !== null ? 'hasSelection' : ''}`} role="radiogroup" aria-label="Réponses possibles">
         {mission.choices.map((choice, index) => (
           <motion.button
             key={`${mission.id}-${choice.label}`}
             type="button"
             className={`choice idealChoice ${selectedIndex === index ? 'selected' : ''} ${selectedIndex !== null && selectedIndex !== index ? 'dimmed' : ''}`}
-            onClick={() => setSelectedIndex(index)}
+            onClick={() => { setSelectedIndex(index); onPreview?.(educationChoice(choice, index).emoji) }}
             role="radio"
             aria-checked={selectedIndex === index}
             whileTap={{ scale: 0.98 }}
@@ -204,13 +191,14 @@ function ChoicePanel({ mission, onChoose }) {
           >
             {selectedIndex === index && (
               <span className="choiceConfetti" aria-hidden="true">
-                <i>✦</i><i>✨</i><i>💫</i><i>✧</i>
+                <i>✦</i><i>{educationChoice(choice, index).emoji}</i><i>·</i><i>✧</i>
               </span>
             )}
-            <span className="choiceEmoji" aria-hidden="true">{getChoiceEmoji(choice, index)}</span>
-            <span className="choicePrefix">Pour toi, dans cette situation…</span>
-            <span>{choice.label}</span>
-            <small>{choice.hint}</small>
+            <span className="choiceEmoji" aria-hidden="true">{educationChoice(choice, index).emoji}</span>
+            <span className="choicePrefix">Réponse possible</span>
+            <span className="choiceTitle">{educationChoice(choice, index).title}</span>
+            <span className="choiceQuestion">{educationChoice(choice, index).question}</span>
+            <small>{educationChoice(choice, index).sense}</small>
           </motion.button>
         ))}
       </div>
@@ -222,7 +210,7 @@ function ChoicePanel({ mission, onChoose }) {
         initial={false}
         animate={{ opacity: selectedChoice ? 1 : 0.52, y: selectedChoice ? 0 : 6 }}
       >
-        Valider ce choix
+        {interfacePsychoeducation.buttons.validate}
       </motion.button>
     </section>
   )
@@ -240,11 +228,12 @@ function LearnCard({ choice, onNext, isFinal, voiceEnabled }) {
         <span>✦</span><span>●</span><span>◆</span><span>✧</span>
       </div>
       {choice.laugh && <Voice text={choice.laugh} role="idealia" emotion="laugh" enabled={voiceEnabled} />}
-      <span className="unlockLabel">Énigme transnumériste</span>
+      <span className="unlockLabel">Réponse validée</span>
       <h2>{choice.module}</h2>
+      <p className="feedback">{(choice.feedback || []).map(line => <span key={line}>{line}</span>)}</p>
       <p>{choice.learn}</p>
       <button type="button" className="primaryButton" onClick={onNext}>
-        {isFinal ? 'Voir la synthèse' : 'Continuer avec ce doute'}
+        {isFinal ? interfacePsychoeducation.buttons.final : interfacePsychoeducation.buttons.next}
       </button>
     </motion.section>
   )
@@ -252,16 +241,16 @@ function LearnCard({ choice, onNext, isFinal, voiceEnabled }) {
 
 function ModuleRail({ modules, total }) {
   return (
-    <section className="moduleRail" aria-label="Modules débloqués">
+    <section className="moduleRail" aria-label="Notions apprises">
       <div>
         <span className="railCount">{modules.length}/{total}</span>
-        <p>modules débloqués</p>
+        <p>{interfacePsychoeducation.progression.label}</p>
       </div>
       <div className="moduleChips">
         {modules.slice(-4).map((module, index) => (
           <span key={`${module}-${index}`}>✨ {module}</span>
         ))}
-        {modules.length === 0 && <span>Coach en attente</span>}
+        {modules.length === 0 && <span>{interfacePsychoeducation.progression.empty}</span>}
       </div>
     </section>
   )
@@ -299,7 +288,7 @@ function ClinicianPanel({ modules, choices, signals }) {
 function EndingDebrief({ modules, choices }) {
   return (
     <section className="endingDebrief">
-      <h2>Ce qu’Idealia garde en mémoire courte</h2>
+      <h2>{interfacePsychoeducation.endingTitle}</h2>
       <div className="moduleGrid">
         {modules.map((module, index) => (
           <span key={`${module}-${index}`}>🔓 {module}</span>
@@ -324,6 +313,7 @@ export default function App() {
   const [voiceEnabled, setVoiceEnabled] = useState(false)
   const [clinicianOpen, setClinicianOpen] = useState(false)
   const [speaking, setSpeaking] = useState(false)
+  const [previewEmoji, setPreviewEmoji] = useState(null)
 
   const mission = game[missionId]
   const missionIds = useMemo(() => Object.keys(game).filter(id => id !== 'ending'), [])
@@ -337,6 +327,7 @@ export default function App() {
     setStoryTyped(false)
     setVoiceDone(!voiceEnabled)
     setSpeaking(false)
+    setPreviewEmoji(null)
   }, [missionId])
 
   const canContinueStory = storyTyped && (!voiceEnabled || voiceDone)
@@ -384,7 +375,7 @@ export default function App() {
           aria-label="Idealia Ado, double clic pour le mode clinicien"
         >
           <span>Idealia Ado</span>
-          <small>coach officiel d’une IA pas encore parfaite</small>
+          <small>{interfacePsychoeducation.brandKicker}</small>
         </button>
 
         <button
@@ -415,16 +406,7 @@ export default function App() {
           <strong>{mission.title}</strong>
         </div>
 
-        <div className="idealiaAvatar" aria-hidden="true">
-          <motion.div
-            className={`botFace ${speaking ? 'speaking' : ''}`}
-            animate={{ y: [0, -4, 0] }}
-            transition={{ duration: 2.3, repeat: Infinity, ease: 'easeInOut' }}
-          >
-            <i /><i /><b />
-          </motion.div>
-          <span>{mission.sticker}</span>
-        </div>
+        <IdealiaAvatar3D mood={mission.type === 'nightmare' ? 'pressure' : stage === 'learn' ? 'happy' : 'dream'} speaking={speaking} selectedEmoji={selectedChoice?.selectedEmoji || previewEmoji} intensity={stage === 'choice' ? 0.75 : 0.45} label={mission.sticker} />
 
         <Voice
           text={[...mission.setup, ...(mission.extra || []), mission.laugh || ''].join(' ')}
@@ -451,7 +433,7 @@ export default function App() {
                 ready={canContinueStory}
                 waitingForVoice={storyTyped && voiceEnabled && !voiceDone}
                 onDone={() => setStoryTyped(true)}
-                continueLabel={mission.type === 'poem' ? 'Cacher le poème' : 'Continuer'}
+                continueLabel={mission.type === 'poem' ? interfacePsychoeducation.buttons.poem : interfacePsychoeducation.buttons.continue}
                 onContinue={() => {
                   blip('tap')
                   setStage(getNextStageAfterStory())
@@ -462,7 +444,7 @@ export default function App() {
 
           {stage === 'choice' && (
             <motion.div key="choice" className="stageWrap" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -16 }}>
-              <ChoicePanel mission={mission} onChoose={recordChoice} />
+              <ChoicePanel mission={mission} onChoose={recordChoice} onPreview={setPreviewEmoji} />
               {mission.id === 'ending' && <EndingDebrief modules={modules} choices={choices} />}
             </motion.div>
           )}
@@ -478,7 +460,7 @@ export default function App() {
       <section className="percentCard" aria-label="Progression finale d’Idealia">
         <span>{completion}%</span>
         <div className="percentTrack"><motion.i animate={{ width: `${completion}%` }} /></div>
-        <p>Idealia n’ira jamais à 100 %. Le dernier 1 % reste humain.</p>
+        <p>{interfacePsychoeducation.progression.finalLine}</p>
       </section>
 
       {clinicianOpen && <ClinicianPanel modules={modules} choices={choices} signals={signals} />}
