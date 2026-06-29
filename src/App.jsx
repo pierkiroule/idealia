@@ -195,6 +195,7 @@ function IdAlgoVoice({ text, voiceEnabled, onDone, onPulse }) {
         <Voice
           text={text}
           role="boss"
+          emotion="angry"
           enabled={voiceEnabled}
           onEnd={() => {
             setPlaying(false)
@@ -262,7 +263,7 @@ function LearnCard({ choice, onNext, isFinal, voiceEnabled }) {
       <div className={`confetti ${choice.laugh ? 'laughBurst' : ''}`} aria-hidden="true">
         <span>✦</span><span>●</span><span>◆</span><span>✧</span>
       </div>
-      {choice.laugh && <Voice text={choice.laugh} role="idealia" enabled={voiceEnabled} />}
+      {choice.laugh && <Voice text={choice.laugh} role="idealia" emotion="laugh" enabled={voiceEnabled} />}
       <span className="unlockLabel">Module débloqué</span>
       <h2>{choice.module}</h2>
       <p>{choice.learn}</p>
@@ -458,6 +459,7 @@ export default function App() {
         <Voice
           text={[...mission.setup, ...(mission.extra || []), mission.laugh || ''].join(' ')}
           role="idealia"
+          emotion={mission.type === 'poem' ? 'poem' : mission.type === 'panic' ? 'stress' : 'neutral'}
           enabled={voiceEnabled && stage === 'story'}
           onStart={() => {
             setVoiceDone(false)
