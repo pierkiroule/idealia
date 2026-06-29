@@ -1,5 +1,4 @@
 const KOKORO_MODEL = 'onnx-community/Kokoro-82M-ONNX'
-const KOKORO_MODULE_URL = 'https://esm.sh/kokoro-js'
 
 const characterProfiles = {
   idealia: {
@@ -60,9 +59,13 @@ function canTryKokoro() {
 }
 
 function loadKokoroModule() {
+  if (!canTryKokoro()) return Promise.resolve(null)
+
+  if (window.KokoroTTS) return Promise.resolve({ KokoroTTS: window.KokoroTTS })
+  if (!window.__KOKORO_MODULE_URL__) return Promise.resolve(null)
+
   if (!kokoroModulePromise) {
-    const configuredUrl = window.__KOKORO_MODULE_URL__ || KOKORO_MODULE_URL
-    kokoroModulePromise = import(/* @vite-ignore */ configuredUrl).catch(() => null)
+    kokoroModulePromise = import(/* @vite-ignore */ window.__KOKORO_MODULE_URL__).catch(() => null)
   }
 
   return kokoroModulePromise
@@ -163,6 +166,7 @@ async function speakWithWebSpeech(text, options, token) {
     await new Promise(resolve => {
       utterance.onend = resolve
       utterance.onerror = resolve
+      synth.resume?.()
       synth.speak(utterance)
     })
 
