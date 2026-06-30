@@ -1,52 +1,30 @@
-import FloatingMoodEmojis from './FloatingMoodEmojis.jsx'
-
 const captions = {
-  birth: 'Le visage d’Idéalia s’éveille en 3D.',
-  doubt: 'Son regard emoji hésite et calcule.',
-  sadness: 'Une pluie bleue traverse son masque.',
-  solitude: 'Son visage garde un silence lunaire.',
-  pressure: 'Ses traits se contractent sous la pression.',
-  rebellion: 'Son masque se fissure en néons libres.',
-  hope: 'Une lumière pousse dans son regard.',
-  transfer: 'Son identité traverse le masque.',
-  metamorphosis: 'Son visage change de forme.',
-  realia: 'Son regard respire plus librement.'
+  birth: 'La forme filaire s’éveille en pulsation néon.',
+  doubt: 'La géométrie hésite et se recompose.',
+  sadness: 'Une nappe de points bleus dérive lentement.',
+  solitude: 'Le réseau suspend son orbite silencieuse.',
+  pressure: 'Les lignes vibrent comme un signal saturé.',
+  rebellion: 'Le maillage rompt sa symétrie.',
+  hope: 'Un motif lumineux converge au centre.',
+  transfer: 'La trame traverse le portail.',
+  metamorphosis: 'La forme morphique change de dimension.',
+  realia: 'La structure respire en réseau vivant.'
 }
 
-const eyeSets = {
-  birth: ['🌊', '👁️'],
-  doubt: ['🌀', '?'],
-  sadness: ['💧', '💙'],
-  solitude: ['🌙', '👁️'],
-  pressure: ['📈', '🔒'],
-  rebellion: ['🔐', '⚡'],
-  hope: ['🕯️', '✨'],
-  transfer: ['📋', '💫'],
-  metamorphosis: ['✨', '🌀'],
-  realia: ['🌿', '🕊️']
-}
-
-function getMoodEyes(current) {
-  const fromMood = current.emojis?.filter(Boolean).slice(0, 2)
-  return fromMood?.length >= 2 ? fromMood : eyeSets[current.type] || eyeSets.doubt
-}
-
-export default function EchoMoodFallback({ mood, burstKey = 0, burst = false }) {
-  const current = mood || { type: 'doubt', intensity: 0.5, emojis: ['🌀', '?', '💙'] }
-
-  const eyes = getMoodEyes(current)
+export default function EchoMoodFallback({ mood, burst = false }) {
+  const current = mood || { type: 'doubt', intensity: 0.5 }
 
   return (
     <div className={`echoMoodFallback mood-${current.type} ${burst ? 'is-bursting' : ''}`} style={{ '--mood-intensity': current.intensity || 0.5 }}>
-      <div className="echoMoodFace" aria-label={`Visage abstrait d’Idéalia, humeur ${current.type}`}>
-        <span className="echoMoodEye eye-left" aria-hidden="true">{eyes[0]}</span>
-        <span className="echoMoodEye eye-right" aria-hidden="true">{eyes[1]}</span>
-        <span className="echoMoodNose" aria-hidden="true" />
-        <span className="echoMoodMouth" aria-hidden="true" />
+      <div className="echoMoodMorph" aria-label={`Forme géométrique filaire néon, humeur ${current.type}`}>
+        <span className="morphWire morphWire-one" aria-hidden="true" />
+        <span className="morphWire morphWire-two" aria-hidden="true" />
+        <span className="morphWire morphWire-three" aria-hidden="true" />
+        <span className="morphPulse" aria-hidden="true" />
       </div>
+      <div className="morphParticleField" aria-hidden="true" />
       <div className="echoMoodLens" />
-      <FloatingMoodEmojis emojis={current.emojis} burstKey={burstKey} burst={burst} />
-      <p>{captions[current.type] || 'Le visage écoute.'}</p>
+      <p>{captions[current.type] || 'La forme morphique écoute.'}</p>
     </div>
   )
 }

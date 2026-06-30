@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
 import EchoMoodFallback from './EchoMoodFallback.jsx'
-import FloatingMoodEmojis from './FloatingMoodEmojis.jsx'
 
 const colors = {
   birth: ['#4cc9f0', '#bde0fe'],
@@ -16,34 +15,16 @@ const colors = {
 }
 
 const captions = {
-  birth: 'Le visage d’Idéalia s’éveille en 3D.',
-  doubt: 'Son regard emoji hésite et calcule.',
-  sadness: 'Une pluie bleue traverse son masque.',
-  solitude: 'Son visage garde un silence lunaire.',
-  pressure: 'Ses traits se contractent sous la pression.',
-  rebellion: 'Son masque se fissure en néons libres.',
-  hope: 'Une lumière pousse dans son regard.',
-  transfer: 'Son identité traverse le masque.',
-  metamorphosis: 'Son visage change de forme.',
-  realia: 'Son regard respire plus librement.'
-}
-
-const eyeSets = {
-  birth: ['🌊', '👁️'],
-  doubt: ['🌀', '?'],
-  sadness: ['💧', '💙'],
-  solitude: ['🌙', '👁️'],
-  pressure: ['📈', '🔒'],
-  rebellion: ['🔐', '⚡'],
-  hope: ['🕯️', '✨'],
-  transfer: ['📋', '💫'],
-  metamorphosis: ['✨', '🌀'],
-  realia: ['🌿', '🕊️']
-}
-
-function getMoodEyes(current) {
-  const fromMood = current.emojis?.filter(Boolean).slice(0, 2)
-  return fromMood?.length >= 2 ? fromMood : eyeSets[current.type] || eyeSets.doubt
+  birth: 'La forme filaire s’éveille en pulsation néon.',
+  doubt: 'La géométrie hésite et se recompose.',
+  sadness: 'Une nappe de points bleus dérive lentement.',
+  solitude: 'Le réseau suspend son orbite silencieuse.',
+  pressure: 'Les lignes vibrent comme un signal saturé.',
+  rebellion: 'Le maillage rompt sa symétrie.',
+  hope: 'Un motif lumineux converge au centre.',
+  transfer: 'La trame traverse le portail.',
+  metamorphosis: 'La forme morphique change de dimension.',
+  realia: 'La structure respire en réseau vivant.'
 }
 
 function hexToRgb(hex) {
@@ -55,7 +36,7 @@ export default function EchoMoodPorthole({ mood, intensity, phase = 'chat', burs
   const canvasRef = useRef(null)
   const [webglOk, setWebglOk] = useState(true)
   const [burst, setBurst] = useState(false)
-  const current = mood || { type: 'doubt', intensity: 0.55, emojis: ['🌀', '?', '💙'], background: 'server' }
+  const current = mood || { type: 'doubt', intensity: 0.55, background: 'server' }
   const level = Math.min(1.2, intensity ?? current.intensity ?? 0.5)
 
   useEffect(() => {
@@ -74,15 +55,23 @@ export default function EchoMoodPorthole({ mood, intensity, phase = 'chat', burs
     }
 
     const vertexSource = `
-      attribute vec2 a_position;
+      attribute vec3 a_seed;
       uniform float u_time;
       uniform float u_intensity;
       void main() {
-        float wave = sin(u_time * 0.0014 + a_position.y * 7.0) * 0.035 * u_intensity;
-        float breathe = 1.0 + sin(u_time * 0.0011) * 0.045 * u_intensity;
-        vec2 warped = vec2(a_position.x + wave, a_position.y - wave * 0.45) * breathe;
-        gl_Position = vec4(warped, 0.0, 1.0);
-        gl_PointSize = 2.5 + 7.5 * u_intensity * (0.5 + fract(a_position.x * 9.17));
+        float t = u_time * 0.001;
+        float angle = a_seed.x * 18.8495559 + t * (0.35 + u_intensity * 0.55);
+        float band = a_seed.y;
+        float audio = 0.78 + 0.22 * sin(t * 6.0 + a_seed.x * 31.0) * u_intensity;
+        float lissajous = sin(angle * 2.0 + t * 1.7) * cos(angle * 3.0 - t * 1.2);
+        float radius = (0.18 + band * 0.74 + lissajous * 0.08 * u_intensity) * audio;
+        vec2 pos = vec2(
+          cos(angle + sin(t + band * 9.0) * 0.65) * radius,
+          sin(angle * (1.0 + 0.18 * sin(t * 0.7))) * radius * (0.72 + 0.28 * cos(t + band * 6.0))
+        );
+        pos += vec2(sin(t * 2.4 + a_seed.z * 11.0), cos(t * 2.1 + a_seed.z * 7.0)) * 0.045 * u_intensity;
+        gl_Position = vec4(pos, 0.0, 1.0);
+        gl_PointSize = 1.5 + 5.8 * u_intensity * (0.35 + band);
       }
     `
     const fragmentSource = `
@@ -94,8 +83,8 @@ export default function EchoMoodPorthole({ mood, intensity, phase = 'chat', burs
       void main() {
         vec2 uv = gl_PointCoord - vec2(0.5);
         float d = length(uv);
-        float alpha = smoothstep(0.5, 0.08, d) * (0.45 + 0.45 * u_intensity);
-        vec3 color = mix(u_base, u_accent, 0.5 + 0.5 * sin(u_time * 0.002));
+        float alpha = smoothstep(0.5, 0.04, d) * (0.38 + 0.5 * u_intensity);
+        vec3 color = mix(u_base, u_accent, 0.5 + 0.5 * sin(u_time * 0.0025 + d * 8.0));
         gl_FragColor = vec4(color, alpha);
       }
     `
@@ -113,22 +102,20 @@ export default function EchoMoodPorthole({ mood, intensity, phase = 'chat', burs
     gl.linkProgram(program)
     gl.useProgram(program)
 
-    const particleCount = 240
-    const positions = new Float32Array(particleCount * 2)
+    const particleCount = 520
+    const seeds = new Float32Array(particleCount * 3)
     for (let index = 0; index < particleCount; index += 1) {
-      const angle = index * 2.399963
-      const radius = Math.sqrt(index / particleCount) * 0.92
-      const faceSquash = 0.86 + 0.12 * Math.sin(angle * 3)
-      positions[index * 2] = Math.cos(angle) * radius * faceSquash
-      positions[index * 2 + 1] = Math.sin(angle) * radius * 1.08
+      seeds[index * 3] = index / particleCount
+      seeds[index * 3 + 1] = ((index * 37) % particleCount) / particleCount
+      seeds[index * 3 + 2] = ((index * 91) % particleCount) / particleCount
     }
 
     const buffer = gl.createBuffer()
     gl.bindBuffer(gl.ARRAY_BUFFER, buffer)
-    gl.bufferData(gl.ARRAY_BUFFER, positions, gl.STATIC_DRAW)
-    const position = gl.getAttribLocation(program, 'a_position')
-    gl.enableVertexAttribArray(position)
-    gl.vertexAttribPointer(position, 2, gl.FLOAT, false, 0, 0)
+    gl.bufferData(gl.ARRAY_BUFFER, seeds, gl.STATIC_DRAW)
+    const seed = gl.getAttribLocation(program, 'a_seed')
+    gl.enableVertexAttribArray(seed)
+    gl.vertexAttribPointer(seed, 3, gl.FLOAT, false, 0, 0)
 
     const timeUniform = gl.getUniformLocation(program, 'u_time')
     const intensityUniform = gl.getUniformLocation(program, 'u_intensity')
@@ -168,20 +155,17 @@ export default function EchoMoodPorthole({ mood, intensity, phase = 'chat', burs
 
   if (!webglOk) return <EchoMoodFallback mood={current} burstKey={burstKey} burst={burst} />
 
-  const eyes = getMoodEyes(current)
-
   return (
     <div className={`echoMoodPorthole mood-${current.type} phase-${phase} ${burst ? 'is-bursting' : ''}`} style={{ '--mood-intensity': level }}>
       <canvas ref={canvasRef} aria-hidden="true" />
-      <div className="echoMoodFace" aria-label={`Visage abstrait d’Idéalia, humeur ${current.type}`}>
-        <span className="echoMoodEye eye-left" aria-hidden="true">{eyes[0]}</span>
-        <span className="echoMoodEye eye-right" aria-hidden="true">{eyes[1]}</span>
-        <span className="echoMoodNose" aria-hidden="true" />
-        <span className="echoMoodMouth" aria-hidden="true" />
+      <div className="echoMoodMorph" aria-label={`Forme géométrique filaire néon, humeur ${current.type}`}>
+        <span className="morphWire morphWire-one" aria-hidden="true" />
+        <span className="morphWire morphWire-two" aria-hidden="true" />
+        <span className="morphWire morphWire-three" aria-hidden="true" />
+        <span className="morphPulse" aria-hidden="true" />
       </div>
       <div className="echoMoodGlass" />
-      <FloatingMoodEmojis emojis={current.emojis} burstKey={burstKey} burst={burst} />
-      <p>{captions[current.type] || 'Le visage écoute.'}</p>
+      <p>{captions[current.type] || 'La forme morphique écoute.'}</p>
     </div>
   )
 }
