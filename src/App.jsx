@@ -10,6 +10,8 @@ import ProMap from './components/ProMap.jsx'
 import EchoMoodPorthole from './components/EchoMoodPorthole.jsx'
 
 const INTRO_VIDEO_SRC = 'https://raw.githubusercontent.com/pierkiroule/idealia/refs/heads/main/public/videos/intro.mp4'
+const AMBIENT_AUDIO_SRC = '/audio/music/Idalgo.mp3'
+const AMBIENT_AUDIO_VOLUME = 0.3
 
 export default function App() {
   const [step, setStep] = useState('home')
@@ -22,6 +24,7 @@ export default function App() {
   const [burstKey, setBurstKey] = useState(0)
   const [introPlaying, setIntroPlaying] = useState(false)
   const introVideoRef = useRef(null)
+  const ambientAudioRef = useRef(null)
   const introAudioRef = useRef({ audioContext: null, analyser: null, source: null, frame: null })
   const scene = scenes[sceneIndex]
   const progress = `${Math.min(sceneIndex + 1, scenes.length)}/${scenes.length}`
@@ -35,6 +38,17 @@ export default function App() {
     setPact('')
     setNewName('Réalia')
     setBurstKey(0)
+  }
+
+  function startAmbientAudio() {
+    const audio = ambientAudioRef.current
+    if (!audio) return
+
+    audio.volume = AMBIENT_AUDIO_VOLUME
+    audio.loop = true
+
+    const playback = audio.play()
+    if (playback?.catch) playback.catch(() => undefined)
   }
 
   function chooseScene(choice) {
@@ -87,6 +101,16 @@ export default function App() {
   }
 
   useEffect(() => {
+    const audio = ambientAudioRef.current
+    if (!audio) return
+
+    audio.volume = AMBIENT_AUDIO_VOLUME
+    audio.loop = true
+
+    if (step !== 'home') startAmbientAudio()
+  }, [step])
+
+  useEffect(() => {
     if (!reaction || typeof window === 'undefined' || !('speechSynthesis' in window)) return undefined
 
     setVoiceOn(true)
@@ -118,6 +142,7 @@ export default function App() {
 
   return (
     <main className={`app consultationApp ${step.includes('realia') || step === 'mirror' || step === 'map' ? 'gardenMode' : ''}`}>
+      <audio ref={ambientAudioRef} src={AMBIENT_AUDIO_SRC} preload="auto" loop aria-hidden="true" />
       <div className="grid" />
       <div className="glow g1" />
       <div className="glow g2" />
@@ -147,7 +172,7 @@ export default function App() {
           </div>
           <h1>IDEALIA</h1>
           <p>I'M NOT A PSYBOT !</p>
-          <button onClick={() => setStep('prologue')}>Commencer</button>
+          <button onClick={() => { startAmbientAudio(); setStep('prologue') }}>Commencer</button>
           <small>Expérience de réflexion. Ne remplace pas un professionnel de santé.</small>
         </section>
       )}
