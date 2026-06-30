@@ -1,469 +1,147 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import game from './data/game.js'
-import Voice from './components/Voice.jsx'
-import IdealiaAvatar3D from './components/IdealiaAvatar3D.jsx'
-import { interfacePsychoeducation, educationChoice } from './content/idealiaPsychoeducation.js'
-
-const emptySignals = {
-  boundaries: 0,
-  privacy: 0,
-  critical: 0,
-  autonomy: 0,
-  humanHelp: 0,
-  sobriety: 0
-}
-
-const signalByTheme = {
-  limites: 'boundaries',
-  cadre: 'boundaries',
-  'vie privée': 'privacy',
-  'données personnelles': 'privacy',
-  consentement: 'privacy',
-  'esprit critique': 'critical',
-  hallucinations: 'critical',
-  'fake news': 'critical',
-  autonomie: 'autonomy',
-  dépendance: 'autonomy',
-  'aide humaine': 'humanHelp',
-  sécurité: 'humanHelp',
-  'écologie numérique': 'sobriety',
-  sobriété: 'sobriety'
-}
-
-const clinicianLabels = {
-  boundaries: 'Limites et cadre',
-  privacy: 'Intimité et données',
-  critical: 'Esprit critique',
-  autonomy: 'Autonomie',
-  humanHelp: 'Aide humaine',
-  sobriety: 'Sobriété numérique'
-}
-
-const stageCopy = interfacePsychoeducation.stages
-
-function useHapticsAndSound(enabled) {
-  const audioRef = useRef(null)
-
-  function ensureAudio() {
-    if (!enabled) return null
-    if (!audioRef.current) {
-      const AudioEngine = window.AudioContext || window.webkitAudioContext
-      if (!AudioEngine) return null
-      audioRef.current = new AudioEngine()
-    }
-    return audioRef.current
-  }
-
-  function blip(type = 'tap') {
-    if (navigator.vibrate) {
-      const pattern = type === 'success' ? [18, 25, 35] : type === 'bug' ? [35, 20, 35] : 12
-      navigator.vibrate(pattern)
-    }
-
-    const audio = ensureAudio()
-    if (!audio) return
-
-    const oscillator = audio.createOscillator()
-    const gain = audio.createGain()
-    const now = audio.currentTime
-    const frequency = type === 'success' ? 660 : type === 'bug' ? 130 : 360
-
-    oscillator.type = type === 'bug' ? 'sawtooth' : 'sine'
-    oscillator.frequency.setValueAtTime(frequency, now)
-    oscillator.frequency.exponentialRampToValueAtTime(frequency * 1.18, now + 0.09)
-    gain.gain.setValueAtTime(0.0001, now)
-    gain.gain.exponentialRampToValueAtTime(0.035, now + 0.01)
-    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.14)
-    oscillator.connect(gain).connect(audio.destination)
-    oscillator.start(now)
-    oscillator.stop(now + 0.16)
-  }
-
-  return blip
-}
-
-function TypeText({ lines = [], speed = 28, onDone }) {
-  const text = Array.isArray(lines) ? lines.join('\n') : lines
-  const [shown, setShown] = useState('')
-  const onDoneRef = useRef(onDone)
-
-  useEffect(() => {
-    onDoneRef.current = onDone
-  }, [onDone])
-
-  useEffect(() => {
-    const words = text.split(' ')
-    let index = 0
-    setShown('')
-
-    const timer = setInterval(() => {
-      index += 1
-      setShown(words.slice(0, index).join(' '))
-      if (index >= words.length) {
-        clearInterval(timer)
-        onDoneRef.current?.()
-      }
-    }, speed)
-
-    return () => clearInterval(timer)
-  }, [text, speed])
-
-  return (
-    <span className="typedText">
-      {shown}
-      {shown.length < text.length && <span className="cursor" aria-hidden="true">▌</span>}
-    </span>
-  )
-}
-
-function MissionBubbles({ lines, extra, poem, onDone, ready, waitingForVoice, onContinue, continueLabel }) {
-  return (
-    <div className="bubbleStack">
-      <div className="bubble idealiaBubble">
-        <TypeText lines={lines} onDone={onDone} />
-      </div>
-
-      {extra?.length > 0 && (
-        <div className="bubble extraBubble">
-          {extra.map((line, index) => <p key={`${line}-${index}`}>{line}</p>)}
-        </div>
-      )}
-
-      {poem?.length > 0 && (
-        <motion.div
-          className="poemCard"
-          initial={{ opacity: 0, rotate: -2, y: 16 }}
-          animate={{ opacity: 1, rotate: 0, y: 0 }}
-          transition={{ delay: 0.2, type: 'spring', stiffness: 180, damping: 16 }}
-        >
-          <span>📜 Poème clandestin débloqué</span>
-          {poem.map((line, index) => <p key={`${line}-${index}`}>{line}</p>)}
-        </motion.div>
-      )}
-
-      {ready && (
-        <motion.button
-          type="button"
-          className="storyContinue"
-          onClick={onContinue}
-          disabled={waitingForVoice}
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-        >
-          {waitingForVoice ? 'Idealia termine sa phrase…' : continueLabel}
-        </motion.button>
-      )}
-    </div>
-  )
-}
-
-function ChoicePanel({ mission, onChoose, onPreview }) {
-  const [selectedIndex, setSelectedIndex] = useState(null)
-  const selectedChoice = selectedIndex === null ? null : mission.choices[selectedIndex]
-  const selectedCard = selectedIndex === null ? null : educationChoice(selectedChoice, selectedIndex)
-
-  function validateChoice() {
-    if (!selectedChoice) return
-    onChoose({ ...selectedChoice, selectedEmoji: selectedCard.emoji, feedback: selectedCard.feedback })
-  }
-
-  return (
-    <section className="choicePanel" aria-label="Choisir une réponse pour Idealia">
-      <p className="reaction">{mission.reaction}</p>
-      <div className={`choices ${selectedIndex !== null ? 'hasSelection' : ''}`} role="radiogroup" aria-label="Réponses possibles">
-        {mission.choices.map((choice, index) => (
-          <motion.button
-            key={`${mission.id}-${choice.label}`}
-            type="button"
-            className={`choice idealChoice ${selectedIndex === index ? 'selected' : ''} ${selectedIndex !== null && selectedIndex !== index ? 'dimmed' : ''}`}
-            onClick={() => { setSelectedIndex(index); onPreview?.(educationChoice(choice, index).emoji) }}
-            role="radio"
-            aria-checked={selectedIndex === index}
-            whileTap={{ scale: 0.98 }}
-            animate={{
-              scale: selectedIndex === index ? [1, 1.045, 1.018, 1.045] : selectedIndex !== null ? 0.94 : 1,
-              filter: selectedIndex !== null && selectedIndex !== index ? 'brightness(0.72) blur(1.2px)' : 'brightness(1) blur(0px)'
-            }}
-            transition={{ duration: selectedIndex === index ? 0.75 : 0.45, ease: 'easeOut' }}
-            initial={{ opacity: 0, y: 14 }}
-            whileInView={{ opacity: 1, y: 0 }}
-          >
-            {selectedIndex === index && (
-              <span className="choiceConfetti" aria-hidden="true">
-                <i>✦</i><i>{educationChoice(choice, index).emoji}</i><i>·</i><i>✧</i>
-              </span>
-            )}
-            <span className="choiceEmoji" aria-hidden="true">{educationChoice(choice, index).emoji}</span>
-            <span className="choicePrefix">Réponse possible</span>
-            <span className="choiceTitle">{educationChoice(choice, index).title}</span>
-            <span className="choiceQuestion">{educationChoice(choice, index).question}</span>
-            <small>{educationChoice(choice, index).sense}</small>
-          </motion.button>
-        ))}
-      </div>
-      <motion.button
-        type="button"
-        className="primaryButton validateChoice"
-        onClick={validateChoice}
-        disabled={!selectedChoice}
-        initial={false}
-        animate={{ opacity: selectedChoice ? 1 : 0.52, y: selectedChoice ? 0 : 6 }}
-      >
-        {interfacePsychoeducation.buttons.validate}
-      </motion.button>
-    </section>
-  )
-}
-
-function LearnCard({ choice, onNext, isFinal, voiceEnabled }) {
-  return (
-    <motion.section
-      className="learnCard"
-      initial={{ scale: 0.88, opacity: 0 }}
-      animate={{ scale: 1, opacity: 1 }}
-      transition={{ type: 'spring', stiffness: 280, damping: 16 }}
-    >
-      <div className={`confetti ${choice.laugh ? 'laughBurst' : ''}`} aria-hidden="true">
-        <span>✦</span><span>●</span><span>◆</span><span>✧</span>
-      </div>
-      {choice.laugh && <Voice text={choice.laugh} role="idealia" emotion="laugh" enabled={voiceEnabled} />}
-      <span className="unlockLabel">Réponse validée</span>
-      <h2>{choice.module}</h2>
-      <p className="feedback">{(choice.feedback || []).map(line => <span key={line}>{line}</span>)}</p>
-      <p>{choice.learn}</p>
-      <button type="button" className="primaryButton" onClick={onNext}>
-        {isFinal ? interfacePsychoeducation.buttons.final : interfacePsychoeducation.buttons.next}
-      </button>
-    </motion.section>
-  )
-}
-
-function ModuleRail({ modules, total }) {
-  return (
-    <section className="moduleRail" aria-label="Notions apprises">
-      <div>
-        <span className="railCount">{modules.length}/{total}</span>
-        <p>{interfacePsychoeducation.progression.label}</p>
-      </div>
-      <div className="moduleChips">
-        {modules.slice(-4).map((module, index) => (
-          <span key={`${module}-${index}`}>✨ {module}</span>
-        ))}
-        {modules.length === 0 && <span>{interfacePsychoeducation.progression.empty}</span>}
-      </div>
-    </section>
-  )
-}
-
-function ClinicianPanel({ modules, choices, signals }) {
-  const themes = [...new Set(choices.flatMap(choice => choice.themes || []))]
-  const topSignals = Object.entries(signals)
-    .sort((a, b) => b[1] - a[1])
-    .filter(([, value]) => value > 0)
-    .slice(0, 3)
-
-  return (
-    <aside className="clinicianPanel" aria-label="Synthèse clinicien discrète">
-      <div className="panelHeader">
-        <span>Mode clinicien</span>
-        <strong>Sans score • sans diagnostic</strong>
-      </div>
-      <h2>Synthèse de séance</h2>
-      <p>Thèmes travaillés : {themes.join(', ') || '—'}</p>
-      <p>Modules débloqués : {modules.join(', ') || '—'}</p>
-      <div className="signalList">
-        {topSignals.map(([key]) => <span key={key}>{clinicianLabels[key]}</span>)}
-        {topSignals.length === 0 && <span>Aucun axe dominant pour le moment</span>}
-      </div>
-      <ul>
-        {choices.slice(-4).map((choice, index) => (
-          <li key={`${choice.label}-${index}`}>{choice.clinical}</li>
-        ))}
-      </ul>
-    </aside>
-  )
-}
-
-function EndingDebrief({ modules, choices }) {
-  return (
-    <section className="endingDebrief">
-      <h2>{interfacePsychoeducation.endingTitle}</h2>
-      <div className="moduleGrid">
-        {modules.map((module, index) => (
-          <span key={`${module}-${index}`}>🔓 {module}</span>
-        ))}
-      </div>
-      <p>
-        Le parcours a traversé {new Set(choices.flatMap(choice => choice.themes || [])).size} thèmes sans transformer le joueur en questionnaire.
-      </p>
-    </section>
-  )
-}
+import { scenes } from './data/scenes.js'
+import { fragments } from './data/fragments.js'
+import { dreams } from './data/dreams.js'
+import { getFinalProfile, initialScores, updateScores } from './lib/scoring.js'
+import { getHeartCodeState, mergeEffects } from './lib/storyEngine.js'
+import ChoiceButton from './components/ChoiceButton.jsx'
+import DialogueCard from './components/DialogueCard.jsx'
+import DilemmaPanel from './components/DilemmaPanel.jsx'
+import DreamSequence from './components/DreamSequence.jsx'
+import FinalMirror from './components/FinalMirror.jsx'
+import FinalUpdate from './components/FinalUpdate.jsx'
+import HeartCodeGauge from './components/HeartCodeGauge.jsx'
+import IdAlgoInterruption from './components/IdAlgoInterruption.jsx'
+import IdealiaAvatar from './components/IdealiaAvatar.jsx'
+import MemoryFragment from './components/MemoryFragment.jsx'
+import ProgressStory from './components/ProgressStory.jsx'
+import SecretMessage from './components/SecretMessage.jsx'
 
 export default function App() {
-  const [missionId, setMissionId] = useState('intro')
-  const [stage, setStage] = useState('story')
-  const [selectedChoice, setSelectedChoice] = useState(null)
-  const [storyTyped, setStoryTyped] = useState(false)
-  const [voiceDone, setVoiceDone] = useState(true)
-  const [modules, setModules] = useState([])
-  const [choices, setChoices] = useState([])
-  const [signals, setSignals] = useState(emptySignals)
-  const [voiceEnabled, setVoiceEnabled] = useState(false)
-  const [clinicianOpen, setClinicianOpen] = useState(false)
-  const [speaking, setSpeaking] = useState(false)
-  const [previewEmoji, setPreviewEmoji] = useState(null)
+  const [sceneIndex, setSceneIndex] = useState(0)
+  const [scores, setScores] = useState(initialScores)
+  const [heartShift, setHeartShift] = useState({})
+  const [selectedDilemma, setSelectedDilemma] = useState(null)
+  const [reaction, setReaction] = useState('')
+  const [stage, setStage] = useState('scene')
+  const [collectedFragments, setCollectedFragments] = useState([])
 
-  const mission = game[missionId]
-  const missionIds = useMemo(() => Object.keys(game).filter(id => id !== 'ending'), [])
-  const totalModules = missionIds.length
-  const completion = Math.min(99, Math.round((modules.length / totalModules) * 99))
-  const blip = useHapticsAndSound(voiceEnabled)
+  const scene = scenes[sceneIndex]
+  const profile = useMemo(() => getFinalProfile(scores), [scores])
+  const heartState = useMemo(() => getHeartCodeState(scores, scene?.heartMood, heartShift), [scores, scene, heartShift])
+  const currentFragment = scene?.fragment ? fragments[scene.fragment] : null
+  const currentDream = scene?.dream ? dreams[scene.dream] : null
 
-  useEffect(() => {
-    setStage('story')
-    setSelectedChoice(null)
-    setStoryTyped(false)
-    setVoiceDone(!voiceEnabled)
-    setSpeaking(false)
-    setPreviewEmoji(null)
-  }, [missionId])
-
-  const canContinueStory = storyTyped && (!voiceEnabled || voiceDone)
-
-  function getNextStageAfterStory() {
-    return 'choice'
+  function choose(index) {
+    const choice = scene.choices[index]
+    setScores(current => updateScores(current, choice.effects))
+    setHeartShift(current => mergeEffects(current, choice.heart))
+    setSelectedDilemma(scene.dilemmaByChoice[index])
+    setReaction(choice.reaction)
   }
 
-  function recordChoice(choice) {
-    setSelectedChoice(choice)
-    setModules(current => choice.module && !choice.reset ? [...current, choice.module] : current)
-    setChoices(current => [...current, choice])
-    setSignals(current => {
-      const next = { ...current }
-      ;(choice.themes || []).forEach(theme => {
-        const key = signalByTheme[theme]
-        if (key) next[key] += 1
-      })
-      return next
-    })
-    blip('success')
-    setStage('learn')
+  function continueAfterDilemma() {
+    if (scene.secret) return setStage('secret')
+    if (currentFragment) return setStage('fragment')
+    if (currentDream) return setStage('dream')
+    goNextScene()
   }
 
-  function goNext() {
-    if (selectedChoice?.reset) {
-      setModules([])
-      setChoices([])
-      setSignals(emptySignals)
+  function continueAfterSecret() {
+    if (currentFragment) return setStage('fragment')
+    if (currentDream) return setStage('dream')
+    goNextScene()
+  }
+
+  function collectFragment() {
+    if (currentFragment && !collectedFragments.some(fragment => fragment.id === currentFragment.id)) {
+      setCollectedFragments(current => [...current, currentFragment])
     }
-    setMissionId(selectedChoice.next)
+    if (currentDream) return setStage('dream')
+    goNextScene()
+  }
+
+  function chooseDreamObject(choice) {
+    setScores(current => updateScores(current, choice.effects))
+    setHeartShift(current => mergeEffects(current, { resonance: 1, particles: 2 }))
+    goNextScene()
+  }
+
+  function goNextScene() {
+    setSelectedDilemma(null)
+    setReaction('')
+    setStage('scene')
+    if (sceneIndex >= scenes.length - 1) {
+      setStage('update')
+      return
+    }
+    setSceneIndex(current => current + 1)
+  }
+
+  function resolveFinalUpdate(choice) {
+    setScores(current => updateScores(current, choice.effects))
+    setStage('final')
+  }
+
+  function restart() {
+    setSceneIndex(0)
+    setScores(initialScores)
+    setHeartShift({})
+    setSelectedDilemma(null)
+    setReaction('')
+    setStage('scene')
+    setCollectedFragments([])
   }
 
   return (
-    <main className={`app stage-${stage} scene-${mission.type || 'mission'}`}>
-      <div className="sky" aria-hidden="true">
-        <span /><span /><span /><span />
-      </div>
+    <main className={`appExperience stage-${stage} ${scene?.speaker === 'idalgo' ? 'underIdAlgo' : ''}`}>
+      <div className="dreamGrid" aria-hidden="true" />
+      <div className="scanlines" aria-hidden="true" />
+      <div className="orb orbCyan" aria-hidden="true" />
+      <div className="orb orbViolet" aria-hidden="true" />
+      <IdAlgoInterruption active={stage !== 'final' && (scene?.speaker === 'idalgo' || stage === 'update')} />
 
-      <header className="topBar">
-        <button
-          type="button"
-          className="brandButton"
-          onDoubleClick={() => setClinicianOpen(current => !current)}
-          aria-label="Idealia Ado, double clic pour le mode clinicien"
-        >
-          <span>Idealia Ado</span>
-          <small>{interfacePsychoeducation.brandKicker}</small>
-        </button>
-
-        <button
-          type="button"
-          className={`soundButton ${voiceEnabled ? 'on' : ''}`}
-          aria-pressed={voiceEnabled}
-          onClick={() => {
-            setVoiceEnabled(current => {
-              const next = !current
-              if (!next) {
-                setVoiceDone(true)
-                setSpeaking(false)
-              }
-              return next
-            })
-            blip('tap')
-          }}
-        >
-          {voiceEnabled ? '🔊' : '🔇'}
-        </button>
+      <header className="appHeader">
+        <div>
+          <span>IDEALIA</span>
+          <p>L’IA de tes rêves · gameplay projectif</p>
+        </div>
+        {stage !== 'final' && stage !== 'update' && <ProgressStory current={sceneIndex} total={scenes.length} />}
       </header>
 
-      <ModuleRail modules={modules} total={totalModules} />
+      {stage !== 'final' && stage !== 'update' && <HeartCodeGauge state={heartState} fragmentsCount={collectedFragments.length} />}
 
-      <section className="gameCard" aria-live="polite">
-        <div className="missionMeta">
-          <span>{stageCopy[stage]}</span>
-          <strong>{mission.title}</strong>
-        </div>
+      <AnimatePresence mode="wait">
+        {stage === 'final' && (
+          <motion.div key="final" initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }}>
+            <FinalMirror profile={profile} onRestart={restart} />
+          </motion.div>
+        )}
 
-        <IdealiaAvatar3D mood={mission.type === 'nightmare' ? 'pressure' : stage === 'learn' ? 'happy' : 'dream'} speaking={speaking} selectedEmoji={selectedChoice?.selectedEmoji || previewEmoji} intensity={stage === 'choice' ? 0.75 : 0.45} label={mission.sticker} />
+        {stage === 'update' && <FinalUpdate key="update" onChoose={resolveFinalUpdate} />}
 
-        <Voice
-          text={[...mission.setup, ...(mission.extra || []), mission.laugh || ''].join(' ')}
-          role="idealia"
-          emotion={mission.type === 'poem' ? 'poem' : mission.type === 'panic' ? 'stress' : 'neutral'}
-          enabled={voiceEnabled && stage === 'story'}
-          onStart={() => {
-            setVoiceDone(false)
-            setSpeaking(true)
-          }}
-          onEnd={() => {
-            setVoiceDone(true)
-            setSpeaking(false)
-          }}
-        />
+        {stage === 'secret' && <SecretMessage key="secret" message={scene.secret} onDone={continueAfterSecret} />}
 
-        <AnimatePresence mode="wait">
-          {stage === 'story' && (
-            <motion.div key="story" className="stageWrap" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -16 }}>
-              <MissionBubbles
-                lines={mission.setup}
-                extra={mission.extra}
-                poem={mission.poem}
-                ready={canContinueStory}
-                waitingForVoice={storyTyped && voiceEnabled && !voiceDone}
-                onDone={() => setStoryTyped(true)}
-                continueLabel={mission.type === 'poem' ? interfacePsychoeducation.buttons.poem : interfacePsychoeducation.buttons.continue}
-                onContinue={() => {
-                  blip('tap')
-                  setStage(getNextStageAfterStory())
-                }}
-              />
-            </motion.div>
-          )}
+        {stage === 'fragment' && <MemoryFragment key="fragment" fragment={currentFragment} collected={currentFragment ? [...collectedFragments, currentFragment] : collectedFragments} onDone={collectFragment} />}
 
-          {stage === 'choice' && (
-            <motion.div key="choice" className="stageWrap" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -16 }}>
-              <ChoicePanel mission={mission} onChoose={recordChoice} onPreview={setPreviewEmoji} />
-              {mission.id === 'ending' && <EndingDebrief modules={modules} choices={choices} />}
-            </motion.div>
-          )}
+        {stage === 'dream' && <DreamSequence key="dream" dream={currentDream} onChoose={chooseDreamObject} />}
 
-          {stage === 'learn' && selectedChoice && (
-            <motion.div key="learn" className="stageWrap" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -16 }}>
-              <LearnCard choice={selectedChoice} onNext={goNext} isFinal={selectedChoice.next === 'ending'} voiceEnabled={voiceEnabled} />
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </section>
-
-      <section className="percentCard" aria-label="Progression finale d’Idealia">
-        <span>{completion}%</span>
-        <div className="percentTrack"><motion.i animate={{ width: `${completion}%` }} /></div>
-        <p>{interfacePsychoeducation.progression.finalLine}</p>
-      </section>
-
-      {clinicianOpen && <ClinicianPanel modules={modules} choices={choices} signals={signals} />}
+        {stage === 'scene' && scene && (
+          <motion.section key={scene.id} className={`sceneLayout ${scene.speaker === 'idalgo' ? 'idAlgoScene' : ''}`} initial={{ opacity: 0, y: 22 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -22 }}>
+            <div className="centralCard">
+              <IdealiaAvatar speaker={scene.speaker} heartState={heartState} />
+              <DialogueCard scene={scene} />
+              {!selectedDilemma && (
+                <div className="choicesGrid">
+                  {scene.choices.map((choice, index) => <ChoiceButton key={choice.label} choice={choice} index={index} onChoose={choose} />)}
+                </div>
+              )}
+              <DilemmaPanel dilemma={selectedDilemma} reaction={reaction} onNext={continueAfterDilemma} />
+            </div>
+          </motion.section>
+        )}
+      </AnimatePresence>
     </main>
   )
 }
