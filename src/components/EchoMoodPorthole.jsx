@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import EchoMoodFallback from './EchoMoodFallback.jsx'
+import { useAmbientAudioMotion } from '../utils/ambientAudio.js'
 
 const colors = {
   birth: ['#4cc9f0', '#bde0fe'],
@@ -36,8 +37,12 @@ export default function EchoMoodPorthole({ mood, intensity, phase = 'chat', burs
   const canvasRef = useRef(null)
   const [webglOk, setWebglOk] = useState(true)
   const [burst, setBurst] = useState(false)
+  const audioMotion = useAmbientAudioMotion()
+  const audioMotionRef = useRef(audioMotion)
+  audioMotionRef.current = audioMotion
   const current = mood || { type: 'doubt', intensity: 0.55, background: 'server' }
-  const level = Math.min(1.2, intensity ?? current.intensity ?? 0.5)
+  const baseLevel = Math.min(1.2, intensity ?? current.intensity ?? 0.5)
+  const level = Math.min(1.3, baseLevel + audioMotion.level * 0.28 + audioMotion.flux * 0.14)
 
   useEffect(() => {
     if (!burstKey) return undefined
@@ -58,20 +63,28 @@ export default function EchoMoodPorthole({ mood, intensity, phase = 'chat', burs
       attribute vec3 a_seed;
       uniform float u_time;
       uniform float u_intensity;
+      uniform vec4 u_audio;
+      uniform float u_drift;
       void main() {
         float t = u_time * 0.001;
-        float angle = a_seed.x * 18.8495559 + t * (0.35 + u_intensity * 0.55);
         float band = a_seed.y;
-        float audio = 0.78 + 0.22 * sin(t * 6.0 + a_seed.x * 31.0) * u_intensity;
-        float lissajous = sin(angle * 2.0 + t * 1.7) * cos(angle * 3.0 - t * 1.2);
-        float radius = (0.18 + band * 0.74 + lissajous * 0.08 * u_intensity) * audio;
+        float bass = u_audio.x;
+        float mids = u_audio.y;
+        float treble = u_audio.z;
+        float flux = u_audio.w;
+        float morph = sin(u_drift * 2.7 + a_seed.z * 12.0) * cos(t * 0.19 + band * 8.0);
+        float turn = 0.23 + u_intensity * 0.38 + bass * 0.8 + flux * 0.35;
+        float angle = a_seed.x * 18.8495559 + t * turn + morph * (0.55 + mids);
+        float breathe = 0.72 + bass * 0.55 + treble * 0.28 + sin(t * (1.2 + mids * 2.6) + a_seed.x * 31.0 + u_drift) * (0.08 + flux * 0.18);
+        float lissajous = sin(angle * (1.4 + mids * 1.6) + t * (0.8 + treble)) * cos(angle * (2.6 + bass) - t * (0.65 + flux));
+        float radius = (0.16 + band * (0.65 + bass * 0.35) + lissajous * (0.08 + treble * 0.16) * u_intensity) * breathe;
         vec2 pos = vec2(
-          cos(angle + sin(t + band * 9.0) * 0.65) * radius,
-          sin(angle * (1.0 + 0.18 * sin(t * 0.7))) * radius * (0.72 + 0.28 * cos(t + band * 6.0))
+          cos(angle + sin(t * (0.55 + flux) + band * 9.0 + u_drift) * (0.45 + treble)) * radius,
+          sin(angle * (0.92 + 0.25 * sin(u_drift + treble * 4.0))) * radius * (0.66 + 0.22 * cos(t + band * 6.0) + mids * 0.22)
         );
-        pos += vec2(sin(t * 2.4 + a_seed.z * 11.0), cos(t * 2.1 + a_seed.z * 7.0)) * 0.045 * u_intensity;
+        pos += vec2(sin(t * (1.8 + treble * 3.4) + a_seed.z * 11.0), cos(t * (1.4 + bass * 3.0) + a_seed.z * 7.0)) * (0.035 + flux * 0.085) * u_intensity;
         gl_Position = vec4(pos, 0.0, 1.0);
-        gl_PointSize = 1.5 + 5.8 * u_intensity * (0.35 + band);
+        gl_PointSize = 1.4 + 5.6 * u_intensity * (0.28 + band) + flux * 4.0 + treble * 2.2;
       }
     `
     const fragmentSource = `
@@ -80,11 +93,12 @@ export default function EchoMoodPorthole({ mood, intensity, phase = 'chat', burs
       uniform vec3 u_accent;
       uniform float u_time;
       uniform float u_intensity;
+      uniform vec4 u_audio;
       void main() {
         vec2 uv = gl_PointCoord - vec2(0.5);
         float d = length(uv);
-        float alpha = smoothstep(0.5, 0.04, d) * (0.38 + 0.5 * u_intensity);
-        vec3 color = mix(u_base, u_accent, 0.5 + 0.5 * sin(u_time * 0.0025 + d * 8.0));
+        float alpha = smoothstep(0.5, 0.04, d) * (0.34 + 0.42 * u_intensity + u_audio.w * 0.36);
+        vec3 color = mix(u_base, u_accent, 0.5 + 0.5 * sin(u_time * (0.0018 + u_audio.z * 0.004) + d * (7.0 + u_audio.y * 9.0)));
         gl_FragColor = vec4(color, alpha);
       }
     `
@@ -119,6 +133,8 @@ export default function EchoMoodPorthole({ mood, intensity, phase = 'chat', burs
 
     const timeUniform = gl.getUniformLocation(program, 'u_time')
     const intensityUniform = gl.getUniformLocation(program, 'u_intensity')
+    const audioUniform = gl.getUniformLocation(program, 'u_audio')
+    const driftUniform = gl.getUniformLocation(program, 'u_drift')
     const baseUniform = gl.getUniformLocation(program, 'u_base')
     const accentUniform = gl.getUniformLocation(program, 'u_accent')
     let frame
@@ -135,7 +151,11 @@ export default function EchoMoodPorthole({ mood, intensity, phase = 'chat', burs
       gl.clearColor(0, 0, 0, 0)
       gl.clear(gl.COLOR_BUFFER_BIT)
       gl.uniform1f(timeUniform, time)
-      gl.uniform1f(intensityUniform, burst ? Math.min(1.25, level + 0.35) : level)
+      const motion = audioMotionRef.current
+      const reactiveLevel = Math.min(1.3, baseLevel + motion.level * 0.28 + motion.flux * 0.14)
+      gl.uniform1f(intensityUniform, burst ? Math.min(1.35, reactiveLevel + 0.35) : reactiveLevel)
+      gl.uniform4f(audioUniform, motion.low, motion.mid, motion.high, motion.flux)
+      gl.uniform1f(driftUniform, motion.drift)
       gl.uniform3fv(baseUniform, hexToRgb(base))
       gl.uniform3fv(accentUniform, hexToRgb(accent))
       gl.drawArrays(gl.POINTS, 0, particleCount)
@@ -151,12 +171,12 @@ export default function EchoMoodPorthole({ mood, intensity, phase = 'chat', burs
       gl.deleteBuffer(buffer)
       gl.deleteProgram(program)
     }
-  }, [current.type, level, burst])
+  }, [current.type, baseLevel, burst])
 
-  if (!webglOk) return <EchoMoodFallback mood={current} burstKey={burstKey} burst={burst} />
+  if (!webglOk) return <EchoMoodFallback mood={current} burstKey={burstKey} burst={burst} audioMotion={audioMotion} />
 
   return (
-    <div className={`echoMoodPorthole mood-${current.type} phase-${phase} ${burst ? 'is-bursting' : ''}`} style={{ '--mood-intensity': level }}>
+    <div className={`echoMoodPorthole mood-${current.type} phase-${phase} ${burst ? 'is-bursting' : ''}`} style={{ '--mood-intensity': level, '--audio-level': audioMotion.level, '--audio-flux': audioMotion.flux, '--audio-drift': audioMotion.drift }}>
       <canvas ref={canvasRef} aria-hidden="true" />
       <div className="echoMoodMorph" aria-label={`Forme géométrique filaire néon, humeur ${current.type}`}>
         <span className="morphWire morphWire-one" aria-hidden="true" />
