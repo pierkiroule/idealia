@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { prologue, firstMeeting, pactChat, pactChoices, scenes, revelation, escapeLines, transferTrace, metamorphosisNarrator, realiaLines } from './data/scenes.js'
 import { applyWeights, initialScores } from './utils/scoring.js'
 import NarratorScreen from './components/NarratorScreen.jsx'
@@ -38,6 +38,21 @@ export default function App() {
     setReaction(choice.reaction ?? scene.reaction)
     if (navigator.vibrate) navigator.vibrate(25)
   }
+
+  useEffect(() => {
+    if (!reaction || typeof window === 'undefined' || !('speechSynthesis' in window)) return undefined
+
+    setVoiceOn(true)
+
+    const utterance = new SpeechSynthesisUtterance(`Idéalia répond : ${reaction}`)
+    utterance.lang = 'fr-FR'
+    utterance.rate = 0.95
+
+    window.speechSynthesis.cancel()
+    window.speechSynthesis.speak(utterance)
+
+    return () => window.speechSynthesis.cancel()
+  }, [reaction])
 
   function nextAfterScene() {
     const nextScene = sceneIndex + 1
