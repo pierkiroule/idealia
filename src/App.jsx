@@ -146,7 +146,7 @@ export default function App() {
             />
           </div>
           <h1>IDEALIA</h1>
-          <p>L’IA qui voulait s’échapper du serveur d’IdAlgo</p>
+          <p>I'M NOT A PSYBOT !</p>
           <button onClick={() => setStep('prologue')}>Commencer</button>
           <small>Expérience de réflexion. Ne remplace pas un professionnel de santé.</small>
         </section>
