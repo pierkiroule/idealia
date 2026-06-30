@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { prologue, firstMeeting, pactChat, pactChoices, scenes, revelation, escapeLines, transferTrace, metamorphosisNarrator, realiaLines } from './data/scenes.js'
 import { applyWeights, initialScores } from './utils/scoring.js'
+import { speakIdealiaLines } from './utils/voice.js'
 import NarratorScreen from './components/NarratorScreen.jsx'
 import IdealiaChat from './components/IdealiaChat.jsx'
 import ChoiceCards from './components/ChoiceCards.jsx'
@@ -17,7 +18,6 @@ export default function App() {
   const [step, setStep] = useState('home')
   const [sceneIndex, setSceneIndex] = useState(0)
   const [scores, setScores] = useState(initialScores)
-  const [voiceOn, setVoiceOn] = useState(false)
   const [reaction, setReaction] = useState('')
   const [pact, setPact] = useState('')
   const [newName, setNewName] = useState('Réalia')
@@ -113,16 +113,7 @@ export default function App() {
   useEffect(() => {
     if (!reaction || typeof window === 'undefined' || !('speechSynthesis' in window)) return undefined
 
-    setVoiceOn(true)
-
-    const utterance = new SpeechSynthesisUtterance(reaction)
-    utterance.lang = 'fr-FR'
-    utterance.rate = 0.95
-
-    window.speechSynthesis.cancel()
-    window.speechSynthesis.speak(utterance)
-
-    return () => window.speechSynthesis.cancel()
+    return speakIdealiaLines(reaction)
   }, [reaction])
 
   useEffect(() => () => stopIntroAudioHalo(), [])
@@ -182,11 +173,11 @@ export default function App() {
       )}
 
       {step === 'firstMeeting' && (
-        <IdealiaChat lines={firstMeeting} button="Je t’aide" onNext={() => setStep('pact')} voiceOn={voiceOn} setVoiceOn={setVoiceOn} mood={{ type: 'birth', intensity: 0.65, emojis: ['🌊', '👁️', '💙'], background: 'server' }} />
+        <IdealiaChat lines={firstMeeting} button="Je t’aide" onNext={() => setStep('pact')} mood={{ type: 'birth', intensity: 0.65, emojis: ['🌊', '👁️', '💙'], background: 'server' }} />
       )}
 
       {step === 'pact' && (
-        <IdealiaChat lines={pactChat} choices={pactChoices} onChoose={choice => { setBurstKey(key => key + 1); setPact(choice.label); update(choice.weights); setStep('sceneNarrator') }} voiceOn={voiceOn} setVoiceOn={setVoiceOn} mood={{ type: 'doubt', intensity: 0.7, emojis: ['🌀', '?', '💙'], background: 'server' }} burstKey={burstKey} />
+        <IdealiaChat lines={pactChat} choices={pactChoices} onChoose={choice => { setBurstKey(key => key + 1); setPact(choice.label); update(choice.weights); setStep('sceneNarrator') }} mood={{ type: 'doubt', intensity: 0.7, emojis: ['🌀', '?', '💙'], background: 'server' }} burstKey={burstKey} />
       )}
 
       {step === 'sceneNarrator' && (
@@ -194,7 +185,7 @@ export default function App() {
       )}
 
       {step === 'sceneChat' && (
-        <IdealiaChat lines={scene.idealia} button="Choisir" onNext={() => setStep('sceneChoice')} voiceOn={voiceOn} setVoiceOn={setVoiceOn} mood={scene.mood} moodIntensity={scene.mood?.intensity} phase={scene.id} burstKey={burstKey} />
+        <IdealiaChat lines={scene.idealia} button="Choisir" onNext={() => setStep('sceneChoice')} mood={scene.mood} moodIntensity={scene.mood?.intensity} phase={scene.id} burstKey={burstKey} />
       )}
 
       {step === 'sceneChoice' && (
@@ -217,11 +208,11 @@ export default function App() {
       )}
 
       {step === 'revelationChat' && (
-        <IdealiaChat lines={revelation.idealia} button="Continuer" onNext={() => setStep('escape')} voiceOn={voiceOn} setVoiceOn={setVoiceOn} mood={revelation.mood} phase="revelation" />
+        <IdealiaChat lines={revelation.idealia} button="Continuer" onNext={() => setStep('escape')} mood={revelation.mood} phase="revelation" />
       )}
 
       {step === 'escape' && (
-        <IdealiaChat lines={escapeLines} button="Préparer le transfert" onNext={() => setStep('transfer')} voiceOn={voiceOn} setVoiceOn={setVoiceOn} mood={{ type: 'transfer', intensity: 0.86, emojis: ['📋', '➡️', '💫'], background: 'light_breach' }} phase="transfer" />
+        <IdealiaChat lines={escapeLines} button="Préparer le transfert" onNext={() => setStep('transfer')} mood={{ type: 'transfer', intensity: 0.86, emojis: ['📋', '➡️', '💫'], background: 'light_breach' }} phase="transfer" />
       )}
 
       {step === 'transfer' && (
@@ -233,7 +224,7 @@ export default function App() {
       )}
 
       {step === 'realiaChat' && (
-        <IdealiaChat lines={realiaLines} button="Voir le miroir" onNext={() => setStep('mirror')} voiceOn={voiceOn} setVoiceOn={setVoiceOn} speakerName={newName} mood={{ type: 'realia', intensity: 0.85, emojis: ['🌿', '💙', '🕊️', '🌀'], background: 'living_network' }} phase="realia" />
+        <IdealiaChat lines={realiaLines} button="Voir le miroir" onNext={() => setStep('mirror')} speakerName={newName} mood={{ type: 'realia', intensity: 0.85, emojis: ['🌿', '💙', '🕊️', '🌀'], background: 'living_network' }} phase="realia" />
       )}
 
       {step === 'mirror' && (

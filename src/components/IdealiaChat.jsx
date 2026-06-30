@@ -1,6 +1,7 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import ChoiceCards from './ChoiceCards.jsx'
 import EchoMoodPorthole from './EchoMoodPorthole.jsx'
+import { speakIdealiaLines } from '../utils/voice.js'
 
 function wait(ms) {
   return new Promise(resolve => setTimeout(resolve, ms))
@@ -44,33 +45,16 @@ function useTyped(lines) {
   return currentLine ? [...completed, currentLine] : completed
 }
 
-export default function IdealiaChat({ lines, onNext, button, choices, onChoose, voiceOn, setVoiceOn, speakerName = 'Idéalia', mood, moodIntensity, phase = 'chat', burstKey = 0 }) {
+export default function IdealiaChat({ lines, onNext, button, choices, onChoose, speakerName = 'Idéalia', mood, moodIntensity, phase = 'chat', burstKey = 0 }) {
   const typedLines = useTyped(lines)
-  const isTyping = typedLines.length > 0 && typedLines[typedLines.length - 1] !== lines[lines.length - 1]
-  const avatarSpeaking = voiceOn || isTyping
-  const canSpeak = useMemo(() => typeof window !== 'undefined' && 'speechSynthesis' in window, [])
+  const avatarIntensity = Math.min(1.15, (moodIntensity ?? mood?.intensity ?? 0.55) + 0.18)
 
-  useEffect(() => {
-    if (!voiceOn || !canSpeak) return undefined
-
-    const utterance = new SpeechSynthesisUtterance(lines.join(' '))
-    utterance.lang = 'fr-FR'
-    utterance.rate = 0.95
-
-    window.speechSynthesis.cancel()
-    window.speechSynthesis.speak(utterance)
-
-    return () => window.speechSynthesis.cancel()
-  }, [lines, voiceOn, canSpeak])
+  useEffect(() => speakIdealiaLines(lines), [lines])
 
   return (
     <section className="screen chat">
-      <button className="voice" onClick={() => setVoiceOn(!voiceOn)}>
-        {voiceOn ? 'Voix activée' : 'Voix coupée'}
-      </button>
-
       <div className="chatPresence" aria-live="polite">
-        <EchoMoodPorthole mood={mood} intensity={avatarSpeaking ? Math.min(1.15, (moodIntensity ?? mood?.intensity ?? 0.55) + 0.18) : moodIntensity} phase={phase} burstKey={burstKey} />
+        <EchoMoodPorthole mood={mood} intensity={avatarIntensity} phase={phase} burstKey={burstKey} />
         <div className="presenceCopy">
           <span>{speakerName}</span>
           <small>hublot projectif · paysage intérieur</small>

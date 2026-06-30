@@ -187,11 +187,6 @@ button {
   align-items: stretch;
 }
 
-.voice {
-  align-self: flex-end;
-  font-size: 0.8rem;
-  padding: 8px 12px;
-}
 
 .chatCard {
   background: rgba(5, 14, 30, 0.76);
