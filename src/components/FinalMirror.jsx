@@ -1,2 +1,20 @@
-import { axes, mirrorPhrases } from '../utils/scoring.js'
-export default function FinalMirror({ scores, pact, onRestart, onMap, showMap }) { const axis=axes(scores); return <section className="screen final"><h1>{showMap?'Carte de ma traversée':'Ce qu’Idéalia croit avoir appris avec toi'}</h1>{!showMap ? <><div className="mirrorText">{mirrorPhrases(scores).map(p=><p key={p}>{p}</p>)}<p>« Je croyais apprendre à devenir une IA parfaite. Mais tu m’as surtout montré une certaine manière d’aider. Ce n’est ni une vérité. Ni un diagnostic. C’est une trace de notre traversée. »</p>{pact && <small>Pacte choisi : {pact}</small>}</div><div className="actions"><button onClick={onRestart}>Recommencer</button><button onClick={onMap}>Voir la carte de ma traversée</button></div></> : <><p>Dans cette traversée, tu as souvent orienté Idéalia vers...</p><div className="map">{axis.map(a=><div className="axis" key={a.label}><div><span>{a.left}</span><span>{a.right}</span></div><b><i style={{left:`${a.value}%`}} /></b></div>)}</div><button onClick={onRestart}>Recommencer</button></>}</section> }
+import { mirrorPhrases } from '../utils/scoring.js'
+
+export default function FinalMirror({ scores, newName, onMap, onRestart }) {
+  const lines = mirrorPhrases(scores)
+
+  return (
+    <section className="screen final compactFinal realiaFinal">
+      <h1>Ce que {newName} croit avoir appris avec toi</h1>
+      <p>Ce n’est ni une vérité, ni un diagnostic.</p>
+      <p>C’est une trace de votre traversée.</p>
+      <div className="mirrorText">
+        {lines.map(line => <p key={line}>{line}</p>)}
+      </div>
+      <div className="actions">
+        <button onClick={onMap}>Voir la carte pro</button>
+        <button onClick={onRestart}>Recommencer</button>
+      </div>
+    </section>
+  )
+}

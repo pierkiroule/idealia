@@ -44,7 +44,7 @@ function useTyped(lines) {
   return currentLine ? [...completed, currentLine] : completed
 }
 
-export default function ChatScreen({ lines, onNext, button, choices, onChoose, voiceOn, setVoiceOn }) {
+export default function ChatScreen({ lines, onNext, button, choices, onChoose, voiceOn, setVoiceOn, speakerName = 'Idéalia', avatarVariant = 'idealia' }) {
   const typedLines = useTyped(lines)
   const isTyping = typedLines.length > 0 && typedLines[typedLines.length - 1] !== lines[lines.length - 1]
   const avatarSpeaking = voiceOn || isTyping
@@ -70,9 +70,9 @@ export default function ChatScreen({ lines, onNext, button, choices, onChoose, v
       </button>
 
       <div className="chatPresence" aria-live="polite">
-        <IdealiaAvatar speaking={avatarSpeaking} />
+        <IdealiaAvatar speaking={avatarSpeaking} variant={avatarVariant} />
         <div className="presenceCopy">
-          <span>Idéalia</span>
+          <span>{speakerName}</span>
           <small>visage audio-réactif · halo résonant</small>
         </div>
       </div>
@@ -85,9 +85,9 @@ export default function ChatScreen({ lines, onNext, button, choices, onChoose, v
 
       {choices ? (
         <ChoiceCards choices={choices} onChoose={onChoose} />
-      ) : (
+      ) : button ? (
         <button onClick={onNext}>{button}</button>
-      )}
+      ) : null}
     </section>
   )
 }

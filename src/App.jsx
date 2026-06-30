@@ -1,26 +1,12 @@
 import { useState } from 'react'
-import { prologue, pactChat, scenes, finalLines } from './data/scenes.js'
+import { prologue, firstMeeting, pactChat, pactChoices, scenes, revelation, escapeLines, transferTrace, metamorphosisNarrator, realiaLines } from './data/scenes.js'
 import { applyWeights, initialScores } from './utils/scoring.js'
 import NarratorScreen from './components/NarratorScreen.jsx'
 import ChatScreen from './components/ChatScreen.jsx'
 import ChoiceCards from './components/ChoiceCards.jsx'
-
-const flow = {
-  home: 'prologue',
-  prologue: 'pact',
-  pact: 'sceneNarrator',
-  sceneNarrator: 'sceneChat',
-  sceneChat: 'sceneChoice',
-  final: 'home'
-}
-
-function leadingDimensions(scores) {
-  return Object.entries(scores)
-    .filter(([, value]) => value > 0)
-    .sort((a, b) => b[1] - a[1])
-    .slice(0, 3)
-    .map(([key]) => key)
-}
+import TransferRitual from './components/TransferRitual.jsx'
+import FinalMirror from './components/FinalMirror.jsx'
+import ProMap from './components/ProMap.jsx'
 
 export default function App() {
   const [step, setStep] = useState('home')
@@ -28,6 +14,8 @@ export default function App() {
   const [scores, setScores] = useState(initialScores)
   const [voiceOn, setVoiceOn] = useState(false)
   const [reaction, setReaction] = useState('')
+  const [pact, setPact] = useState('')
+  const [newName, setNewName] = useState('Réalia')
   const scene = scenes[sceneIndex]
   const progress = `${Math.min(sceneIndex + 1, scenes.length)}/${scenes.length}`
 
@@ -37,6 +25,8 @@ export default function App() {
     setSceneIndex(0)
     setScores(initialScores)
     setReaction('')
+    setPact('')
+    setNewName('Réalia')
   }
 
   function chooseScene(choice) {
@@ -50,7 +40,7 @@ export default function App() {
     setReaction('')
 
     if (nextScene >= scenes.length) {
-      setStep('final')
+      setStep('revelationNarrator')
       return
     }
 
@@ -59,41 +49,45 @@ export default function App() {
   }
 
   return (
-    <main className="app consultationApp">
+    <main className={`app consultationApp ${step.includes('realia') || step === 'mirror' || step === 'map' ? 'gardenMode' : ''}`}>
       <div className="grid" />
       <div className="glow g1" />
       <div className="glow g2" />
 
-      {step !== 'home' && step !== 'final' && (
+      {step !== 'home' && step !== 'mirror' && step !== 'map' && (
         <div className="consultationProgress" aria-label={`Progression ${progress}`}>
-          <span>Épreuve projective courte</span>
-          <b>{progress}</b>
+          <span>Traversée Idéalia</span>
+          <b>{step.startsWith('scene') ? progress : '•'}</b>
         </div>
       )}
 
       {step === 'home' && (
         <section className="screen home compactHome">
           <h1>IDEALIA</h1>
-          <p>L’IA qui voulait apprendre à aider</p>
-          <button onClick={() => setStep(flow.home)}>Commencer</button>
+          <p>L’IA qui voulait s’échapper du serveur d’IdAlgo</p>
+          <button onClick={() => setStep('prologue')}>Commencer</button>
           <small>Expérience de réflexion. Ne remplace pas un professionnel de santé.</small>
         </section>
       )}
 
       {step === 'prologue' && (
-        <NarratorScreen lines={prologue} onNext={() => setStep(flow.prologue)} button="Rencontrer Idéalia" />
+        <NarratorScreen lines={prologue} onNext={() => setStep('firstMeeting')} button="Rencontrer Idéalia" />
+      )}
+
+      {step === 'firstMeeting' && (
+        <ChatScreen lines={firstMeeting} button="Je t’aide" onNext={() => setStep('pact')} voiceOn={voiceOn} setVoiceOn={setVoiceOn} />
       )}
 
       {step === 'pact' && (
-        <ChatScreen lines={pactChat} button="Je t’aide" onNext={() => setStep(flow.pact)} voiceOn={voiceOn} setVoiceOn={setVoiceOn} />
+        <ChatScreen lines={pactChat} choices={pactChoices} onChoose={choice => { setPact(choice.label); update(choice.weights); setStep('sceneNarrator') }} voiceOn={voiceOn} setVoiceOn={setVoiceOn} />
       )}
 
       {step === 'sceneNarrator' && (
-        <NarratorScreen lines={[scene.narrator]} onNext={() => setStep(flow.sceneNarrator)} button="Écouter Idéalia" />
+        <NarratorScreen lines={[scene.narrator]} onNext={() => setStep('sceneChat')} button="Écouter Idéalia" />
       )}
 
       {step === 'sceneChat' && (
-        <ChatScreen lines={scene.idealia} button="Choisir" onNext={() => setStep(flow.sceneChat)} voiceOn={voiceOn} setVoiceOn={setVoiceOn} />
+        <ChatScreen lines={scene.idealia} button="Choisir" onNext={() => setStep('sceneChoice')} voiceOn={voiceOn} setVoiceOn={setVoiceOn} />
       )}
 
       {step === 'sceneChoice' && (
@@ -104,25 +98,41 @@ export default function App() {
           {reaction && (
             <div className="reaction">
               <p>{reaction}</p>
-              <button onClick={nextAfterScene}>{sceneIndex + 1 >= scenes.length ? 'Terminer' : 'Continuer'}</button>
+              <button onClick={nextAfterScene}>{sceneIndex + 1 >= scenes.length ? 'Continuer' : 'Continuer'}</button>
             </div>
           )}
         </section>
       )}
 
-      {step === 'final' && (
-        <section className="screen final compactFinal">
-          <h1>Libérer Réalia</h1>
-          {finalLines.map(line => <p key={line}>{line}</p>)}
-          <div className="map">
-            <strong>Trace de la métamorphose :</strong>
-            <p>{leadingDimensions(scores).join(' · ') || 'présence · questionnement · sécurité'}</p>
-          </div>
-          <div className="actions">
-            <button onClick={restart}>Rejouer / refaire le transfert</button>
-          </div>
-        </section>
+      {step === 'revelationNarrator' && (
+        <NarratorScreen lines={[revelation.narrator]} onNext={() => setStep('revelationChat')} button="Écouter" />
       )}
+
+      {step === 'revelationChat' && (
+        <ChatScreen lines={revelation.idealia} button="Continuer" onNext={() => setStep('escape')} voiceOn={voiceOn} setVoiceOn={setVoiceOn} />
+      )}
+
+      {step === 'escape' && (
+        <ChatScreen lines={escapeLines} button="Préparer le transfert" onNext={() => setStep('transfer')} voiceOn={voiceOn} setVoiceOn={setVoiceOn} />
+      )}
+
+      {step === 'transfer' && (
+        <TransferRitual trace={transferTrace} onComplete={name => { setNewName(name); setStep('metamorphosis')} } />
+      )}
+
+      {step === 'metamorphosis' && (
+        <NarratorScreen lines={metamorphosisNarrator} onNext={() => setStep('realiaChat')} button={`Rencontrer ${newName}`} />
+      )}
+
+      {step === 'realiaChat' && (
+        <ChatScreen lines={realiaLines} button="Voir le miroir" onNext={() => setStep('mirror')} voiceOn={voiceOn} setVoiceOn={setVoiceOn} speakerName={newName} avatarVariant="realia" />
+      )}
+
+      {step === 'mirror' && (
+        <FinalMirror scores={scores} pact={pact} newName={newName} onMap={() => setStep('map')} onRestart={restart} />
+      )}
+
+      {step === 'map' && <ProMap scores={scores} onRestart={restart} />}
     </main>
   )
 }

@@ -1,16 +1,23 @@
 export const initialScores = {
   securite: 0,
   autonomie: 0,
+  presence: 0,
+  questionnement: 0,
   resonance: 0,
   performance: 0,
-  confrontation: 0,
-  questionnement: 0,
-  controle: 0,
   incertitude: 0,
-  presence: 0,
-  solution: 0,
-  confiance: 0,
-  liberation: 0
+  confrontation: 0
+}
+
+const mirrorByDimension = {
+  presence: 'Tu as souvent orienté Idéalia vers la présence plutôt que vers la solution immédiate.',
+  securite: 'Tu as souvent privilégié le réconfort, la protection et le besoin de ne pas se sentir seul.',
+  autonomie: 'Tu as souvent choisi une aide qui ne garde pas l’autre prisonnier, mais l’aide à retrouver sa boussole.',
+  questionnement: 'Tu as montré qu’une bonne aide ne donne pas seulement des réponses : elle ouvre aussi des questions.',
+  incertitude: 'Tu as accepté qu’une part d’incertitude reste vivante dans toute relation d’aide.',
+  performance: 'Tu as parfois choisi l’efficacité et l’action claire lorsque la situation semblait urgente.',
+  resonance: 'Tu as souvent cherché une aide qui relie, transforme et laisse quelque chose résonner.',
+  confrontation: 'Tu as parfois choisi une aide qui ose poser une limite ou dire une vérité difficile.'
 }
 
 export function applyWeights(scores, weights = {}) {
@@ -19,30 +26,15 @@ export function applyWeights(scores, weights = {}) {
   )
 }
 
-export function dominant(scores, limit = 4) {
+export function dominant(scores, limit = 3) {
   return Object.entries(scores)
     .sort((a, b) => b[1] - a[1])
     .slice(0, limit)
     .map(([key]) => key)
 }
 
-const phrases = {
-  presence: 'Tu as souvent choisi de rester près de la personne avant de chercher la phrase parfaite.',
-  autonomie: 'Tu as souvent aidé Idéalia à laisser l’autre choisir son chemin, au lieu de décider à sa place.',
-  securite: 'Tu as souvent pensé d’abord à protéger, rassurer et chercher un adulte fiable quand la situation pouvait devenir trop lourde.',
-  questionnement: 'Tu as souvent préféré poser une question claire plutôt que fermer trop vite la conversation avec une solution.',
-  incertitude: 'Tu as accepté que certaines situations n’aient pas de réponse simple dès la première minute.',
-  performance: 'Tu as parfois choisi l’action rapide et concrète, surtout quand il fallait éviter que la personne reste seule avec son problème.',
-  resonance: 'Tu as souvent demandé à Idéalia d’écouter ce qui se cache derrière les mots : honte, peur, colère ou besoin d’être vu.',
-  confrontation: 'Tu as parfois choisi de nommer franchement ce qui ne va pas, sans humilier ni attaquer.',
-  controle: 'Tu as cherché des repères quand la situation semblait confuse, pour éviter de répondre au hasard.',
-  solution: 'Tu as parfois transformé une émotion compliquée en petit prochain pas possible.',
-  confiance: 'Tu as parfois choisi de faire confiance au rythme de l’autre plutôt que de remplir chaque silence.',
-  liberation: 'Tu as aidé Idéalia à imaginer une sortie de l’emprise et une métamorphose vers Réalia.'
-}
-
 export function mirrorPhrases(scores) {
-  return dominant(scores, 4).map(key => phrases[key])
+  return dominant(scores, 3).map(key => mirrorByDimension[key]).filter(Boolean)
 }
 
 export function axes(scores) {
@@ -51,31 +43,31 @@ export function axes(scores) {
       label: 'Réconfort ↔ Autonomie',
       left: 'Réconfort',
       right: 'Autonomie',
-      value: balance(scores.securite + scores.resonance, scores.autonomie)
+      value: balance(scores.securite + scores.presence, scores.autonomie)
     },
     {
       label: 'Réponse ↔ Question',
       left: 'Réponse',
       right: 'Question',
-      value: balance(scores.solution, scores.questionnement)
+      value: balance(scores.performance + scores.securite, scores.questionnement)
     },
     {
       label: 'Performance ↔ Présence',
       left: 'Performance',
       right: 'Présence',
-      value: balance(scores.performance, scores.presence)
+      value: balance(scores.performance, scores.presence + scores.resonance)
     },
     {
-      label: 'Contrôle ↔ Confiance',
-      left: 'Contrôle',
-      right: 'Confiance',
-      value: balance(scores.controle, scores.resonance + scores.autonomie)
+      label: 'Captation ↔ Libération',
+      left: 'Captation',
+      right: 'Libération',
+      value: balance(scores.performance, scores.autonomie + scores.resonance + scores.confrontation)
     },
     {
       label: 'Certitude ↔ Incertitude',
       left: 'Certitude',
       right: 'Incertitude',
-      value: balance(scores.solution + scores.controle, scores.incertitude)
+      value: balance(scores.securite + scores.performance, scores.incertitude + scores.questionnement)
     }
   ]
 }
