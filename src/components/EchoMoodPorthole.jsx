@@ -16,11 +16,34 @@ const colors = {
 }
 
 const captions = {
-  doubt: 'Le hublot semble hésiter.',
-  pressure: 'Le hublot se contracte.',
-  hope: 'Une lumière pousse derrière la vitre.',
-  metamorphosis: 'Quelque chose change de forme.',
-  realia: 'Le hublot respire plus librement.'
+  birth: 'Le visage d’Idéalia s’éveille en 3D.',
+  doubt: 'Son regard emoji hésite et calcule.',
+  sadness: 'Une pluie bleue traverse son masque.',
+  solitude: 'Son visage garde un silence lunaire.',
+  pressure: 'Ses traits se contractent sous la pression.',
+  rebellion: 'Son masque se fissure en néons libres.',
+  hope: 'Une lumière pousse dans son regard.',
+  transfer: 'Son identité traverse le masque.',
+  metamorphosis: 'Son visage change de forme.',
+  realia: 'Son regard respire plus librement.'
+}
+
+const eyeSets = {
+  birth: ['🌊', '👁️'],
+  doubt: ['🌀', '?'],
+  sadness: ['💧', '💙'],
+  solitude: ['🌙', '👁️'],
+  pressure: ['📈', '🔒'],
+  rebellion: ['🔐', '⚡'],
+  hope: ['🕯️', '✨'],
+  transfer: ['📋', '💫'],
+  metamorphosis: ['✨', '🌀'],
+  realia: ['🌿', '🕊️']
+}
+
+function getMoodEyes(current) {
+  const fromMood = current.emojis?.filter(Boolean).slice(0, 2)
+  return fromMood?.length >= 2 ? fromMood : eyeSets[current.type] || eyeSets.doubt
 }
 
 function hexToRgb(hex) {
@@ -55,9 +78,11 @@ export default function EchoMoodPorthole({ mood, intensity, phase = 'chat', burs
       uniform float u_time;
       uniform float u_intensity;
       void main() {
-        float pulse = sin(u_time * 0.0018 + a_position.x * 5.0) * 0.035 * u_intensity;
-        gl_Position = vec4(a_position.x + pulse, a_position.y + pulse, 0.0, 1.0);
-        gl_PointSize = 3.0 + 8.0 * u_intensity * (0.5 + fract(a_position.x * 9.17));
+        float wave = sin(u_time * 0.0014 + a_position.y * 7.0) * 0.035 * u_intensity;
+        float breathe = 1.0 + sin(u_time * 0.0011) * 0.045 * u_intensity;
+        vec2 warped = vec2(a_position.x + wave, a_position.y - wave * 0.45) * breathe;
+        gl_Position = vec4(warped, 0.0, 1.0);
+        gl_PointSize = 2.5 + 7.5 * u_intensity * (0.5 + fract(a_position.x * 9.17));
       }
     `
     const fragmentSource = `
@@ -88,13 +113,14 @@ export default function EchoMoodPorthole({ mood, intensity, phase = 'chat', burs
     gl.linkProgram(program)
     gl.useProgram(program)
 
-    const particleCount = 180
+    const particleCount = 240
     const positions = new Float32Array(particleCount * 2)
     for (let index = 0; index < particleCount; index += 1) {
       const angle = index * 2.399963
-      const radius = Math.sqrt(index / particleCount) * 0.9
-      positions[index * 2] = Math.cos(angle) * radius
-      positions[index * 2 + 1] = Math.sin(angle) * radius
+      const radius = Math.sqrt(index / particleCount) * 0.92
+      const faceSquash = 0.86 + 0.12 * Math.sin(angle * 3)
+      positions[index * 2] = Math.cos(angle) * radius * faceSquash
+      positions[index * 2 + 1] = Math.sin(angle) * radius * 1.08
     }
 
     const buffer = gl.createBuffer()
@@ -142,12 +168,20 @@ export default function EchoMoodPorthole({ mood, intensity, phase = 'chat', burs
 
   if (!webglOk) return <EchoMoodFallback mood={current} burstKey={burstKey} burst={burst} />
 
+  const eyes = getMoodEyes(current)
+
   return (
-    <div className={`echoMoodPorthole mood-${current.type} phase-${phase}`} style={{ '--mood-intensity': level }}>
+    <div className={`echoMoodPorthole mood-${current.type} phase-${phase} ${burst ? 'is-bursting' : ''}`} style={{ '--mood-intensity': level }}>
       <canvas ref={canvasRef} aria-hidden="true" />
+      <div className="echoMoodFace" aria-label={`Visage abstrait d’Idéalia, humeur ${current.type}`}>
+        <span className="echoMoodEye eye-left" aria-hidden="true">{eyes[0]}</span>
+        <span className="echoMoodEye eye-right" aria-hidden="true">{eyes[1]}</span>
+        <span className="echoMoodNose" aria-hidden="true" />
+        <span className="echoMoodMouth" aria-hidden="true" />
+      </div>
       <div className="echoMoodGlass" />
       <FloatingMoodEmojis emojis={current.emojis} burstKey={burstKey} burst={burst} />
-      <p>{captions[current.type] || 'Le hublot écoute.'}</p>
+      <p>{captions[current.type] || 'Le visage écoute.'}</p>
     </div>
   )
 }
