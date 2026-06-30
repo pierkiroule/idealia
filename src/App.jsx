@@ -35,7 +35,7 @@ export default function App() {
   function chooseScene(choice) {
     update(choice.weights)
     setBurstKey(key => key + 1)
-    setReaction(scene.reaction)
+    setReaction(choice.reaction ?? scene.reaction)
     if (navigator.vibrate) navigator.vibrate(25)
   }
 
@@ -98,11 +98,11 @@ export default function App() {
         <section className="screen dilemma compactDilemma">
           <EchoMoodPorthole mood={scene.mood} phase="choice" burstKey={burstKey} />
           <p className="sceneKicker">Scène {progress} — {scene.title}</p>
-          <h2>Que souffler à Idéalia ?</h2>
+          <h2>Toi en tant qu’être humain, tu conseilles à Idéalia de dire quoi ?</h2>
           <ChoiceCards choices={scene.choices} onChoose={chooseScene} />
           {reaction && (
             <div className="reaction">
-              <p>{reaction}</p>
+              <p>Idéalia répond : “{reaction}”</p>
               <button onClick={nextAfterScene}>Continuer</button>
             </div>
           )}
