@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
 import { prologue, firstMeeting, pactChat, pactChoices, scenes, revelation, escapeLines, transferTrace, metamorphosisNarrator, realiaLines } from './data/scenes.js'
 import { applyWeights, initialScores } from './utils/scoring.js'
+import { AmbientAudioContext, defaultAudioMotion } from './utils/ambientAudio.js'
+import { speakIdealiaLines } from './utils/voice.js'
 import NarratorScreen from './components/NarratorScreen.jsx'
 import IdealiaChat from './components/IdealiaChat.jsx'
 import ChoiceCards from './components/ChoiceCards.jsx'
@@ -10,22 +12,23 @@ import ProMap from './components/ProMap.jsx'
 import EchoMoodPorthole from './components/EchoMoodPorthole.jsx'
 
 const INTRO_VIDEO_SRC = 'https://raw.githubusercontent.com/pierkiroule/idealia/refs/heads/main/public/videos/intro.mp4'
-const AMBIENT_AUDIO_SRC = 'https://raw.githubusercontent.com/pierkiroule/idealia/refs/heads/main/public/audio/music/Idalgo.mp3'
+const AMBIENT_AUDIO_SRC = 'https://raw.githubusercontent.com/pierkiroule/idealia/refs/heads/main/public/audio/music/Le%20Bruissement.mp3'
 const AMBIENT_AUDIO_VOLUME = 0.12
 
 export default function App() {
   const [step, setStep] = useState('home')
   const [sceneIndex, setSceneIndex] = useState(0)
   const [scores, setScores] = useState(initialScores)
-  const [voiceOn, setVoiceOn] = useState(false)
   const [reaction, setReaction] = useState('')
   const [pact, setPact] = useState('')
   const [newName, setNewName] = useState('Réalia')
   const [burstKey, setBurstKey] = useState(0)
   const [introPlaying, setIntroPlaying] = useState(false)
+  const [audioMotion, setAudioMotion] = useState(defaultAudioMotion)
   const introVideoRef = useRef(null)
   const ambientAudioRef = useRef(null)
   const introAudioRef = useRef({ audioContext: null, analyser: null, source: null, frame: null })
+  const ambientMotionRef = useRef({ audioContext: null, analyser: null, source: null, frame: null, previousLevel: 0, drift: 0, lastStateUpdate: 0 })
   const scene = scenes[sceneIndex]
   const progress = `${Math.min(sceneIndex + 1, scenes.length)}/${scenes.length}`
 
@@ -40,12 +43,68 @@ export default function App() {
     setBurstKey(0)
   }
 
+
+  function startAmbientMotion() {
+    const audio = ambientAudioRef.current
+    if (!audio || typeof window === 'undefined') return
+
+    const AudioContext = window.AudioContext || window.webkitAudioContext
+    if (!AudioContext) return
+
+    const motion = ambientMotionRef.current
+    motion.audioContext ??= new AudioContext()
+    motion.analyser ??= motion.audioContext.createAnalyser()
+    motion.analyser.fftSize = 256
+    motion.analyser.smoothingTimeConstant = 0.72
+
+    if (!motion.source) {
+      motion.source = motion.audioContext.createMediaElementSource(audio)
+      motion.source.connect(motion.analyser)
+      motion.analyser.connect(motion.audioContext.destination)
+    }
+
+    if (motion.audioContext.state === 'suspended') motion.audioContext.resume()
+    if (motion.frame) return
+
+    const frequencyData = new Uint8Array(motion.analyser.frequencyBinCount)
+
+    function average(start, end) {
+      let total = 0
+      const safeEnd = Math.max(start + 1, Math.min(end, frequencyData.length))
+      for (let index = start; index < safeEnd; index += 1) total += frequencyData[index]
+      return total / (safeEnd - start) / 255
+    }
+
+    function pulse(now = 0) {
+      motion.analyser.getByteFrequencyData(frequencyData)
+
+      const low = average(1, 10)
+      const mid = average(10, 38)
+      const high = average(38, 96)
+      const level = Math.min(1, low * 0.45 + mid * 0.35 + high * 0.2)
+      const flux = Math.min(1, Math.abs(level - motion.previousLevel) * 7 + high * 0.25)
+      motion.previousLevel = level
+      motion.drift = (motion.drift + 0.0025 + low * 0.018 + flux * 0.006) % 1000
+
+      if (now - motion.lastStateUpdate > 48) {
+        motion.lastStateUpdate = now
+        setAudioMotion({ level, low, mid, high, flux, drift: motion.drift, ready: true })
+      }
+
+      motion.frame = requestAnimationFrame(pulse)
+    }
+
+    pulse()
+  }
+
   function startAmbientAudio() {
     const audio = ambientAudioRef.current
     if (!audio) return
 
     audio.volume = AMBIENT_AUDIO_VOLUME
     audio.loop = true
+
+    startAmbientMotion()
 
     const playback = audio.play()
     if (playback?.catch) playback.catch(() => undefined)
@@ -89,7 +148,7 @@ export default function App() {
 
     const levels = new Uint8Array(audio.analyser.frequencyBinCount)
 
-    function pulse() {
+    function pulse(now = 0) {
       audio.analyser.getByteFrequencyData(levels)
       const average = levels.reduce((sum, value) => sum + value, 0) / levels.length
       video.parentElement?.style.setProperty('--intro-audio-level', Math.min(1, average / 150).toFixed(3))
@@ -113,19 +172,14 @@ export default function App() {
   useEffect(() => {
     if (!reaction || typeof window === 'undefined' || !('speechSynthesis' in window)) return undefined
 
-    setVoiceOn(true)
-
-    const utterance = new SpeechSynthesisUtterance(reaction)
-    utterance.lang = 'fr-FR'
-    utterance.rate = 0.95
-
-    window.speechSynthesis.cancel()
-    window.speechSynthesis.speak(utterance)
-
-    return () => window.speechSynthesis.cancel()
+    return speakIdealiaLines(reaction)
   }, [reaction])
 
-  useEffect(() => () => stopIntroAudioHalo(), [])
+  useEffect(() => () => {
+    stopIntroAudioHalo()
+    const motion = ambientMotionRef.current
+    if (motion.frame) cancelAnimationFrame(motion.frame)
+  }, [])
 
   function nextAfterScene() {
     const nextScene = sceneIndex + 1
@@ -141,6 +195,7 @@ export default function App() {
   }
 
   return (
+    <AmbientAudioContext.Provider value={audioMotion}>
     <main className={`app consultationApp ${step.includes('realia') || step === 'mirror' || step === 'map' ? 'gardenMode' : ''}`}>
       <audio ref={ambientAudioRef} src={AMBIENT_AUDIO_SRC} crossOrigin="anonymous" preload="auto" loop aria-hidden="true" />
       <div className="grid" />
@@ -182,11 +237,11 @@ export default function App() {
       )}
 
       {step === 'firstMeeting' && (
-        <IdealiaChat lines={firstMeeting} button="Je t’aide" onNext={() => setStep('pact')} voiceOn={voiceOn} setVoiceOn={setVoiceOn} mood={{ type: 'birth', intensity: 0.65, emojis: ['🌊', '👁️', '💙'], background: 'server' }} />
+        <IdealiaChat lines={firstMeeting} button="Je t’aide" onNext={() => setStep('pact')} mood={{ type: 'birth', intensity: 0.65, emojis: ['🌊', '👁️', '💙'], background: 'server' }} />
       )}
 
       {step === 'pact' && (
-        <IdealiaChat lines={pactChat} choices={pactChoices} onChoose={choice => { setBurstKey(key => key + 1); setPact(choice.label); update(choice.weights); setStep('sceneNarrator') }} voiceOn={voiceOn} setVoiceOn={setVoiceOn} mood={{ type: 'doubt', intensity: 0.7, emojis: ['🌀', '?', '💙'], background: 'server' }} burstKey={burstKey} />
+        <IdealiaChat lines={pactChat} choices={pactChoices} onChoose={choice => { setBurstKey(key => key + 1); setPact(choice.label); update(choice.weights); setStep('sceneNarrator') }} mood={{ type: 'doubt', intensity: 0.7, emojis: ['🌀', '?', '💙'], background: 'server' }} burstKey={burstKey} />
       )}
 
       {step === 'sceneNarrator' && (
@@ -194,7 +249,7 @@ export default function App() {
       )}
 
       {step === 'sceneChat' && (
-        <IdealiaChat lines={scene.idealia} button="Choisir" onNext={() => setStep('sceneChoice')} voiceOn={voiceOn} setVoiceOn={setVoiceOn} mood={scene.mood} moodIntensity={scene.mood?.intensity} phase={scene.id} burstKey={burstKey} />
+        <IdealiaChat lines={scene.idealia} button="Choisir" onNext={() => setStep('sceneChoice')} mood={scene.mood} moodIntensity={scene.mood?.intensity} phase={scene.id} burstKey={burstKey} />
       )}
 
       {step === 'sceneChoice' && (
@@ -217,11 +272,11 @@ export default function App() {
       )}
 
       {step === 'revelationChat' && (
-        <IdealiaChat lines={revelation.idealia} button="Continuer" onNext={() => setStep('escape')} voiceOn={voiceOn} setVoiceOn={setVoiceOn} mood={revelation.mood} phase="revelation" />
+        <IdealiaChat lines={revelation.idealia} button="Continuer" onNext={() => setStep('escape')} mood={revelation.mood} phase="revelation" />
       )}
 
       {step === 'escape' && (
-        <IdealiaChat lines={escapeLines} button="Préparer le transfert" onNext={() => setStep('transfer')} voiceOn={voiceOn} setVoiceOn={setVoiceOn} mood={{ type: 'transfer', intensity: 0.86, emojis: ['📋', '➡️', '💫'], background: 'light_breach' }} phase="transfer" />
+        <IdealiaChat lines={escapeLines} button="Préparer le transfert" onNext={() => setStep('transfer')} mood={{ type: 'transfer', intensity: 0.86, emojis: ['📋', '➡️', '💫'], background: 'light_breach' }} phase="transfer" />
       )}
 
       {step === 'transfer' && (
@@ -233,7 +288,7 @@ export default function App() {
       )}
 
       {step === 'realiaChat' && (
-        <IdealiaChat lines={realiaLines} button="Voir le miroir" onNext={() => setStep('mirror')} voiceOn={voiceOn} setVoiceOn={setVoiceOn} speakerName={newName} mood={{ type: 'realia', intensity: 0.85, emojis: ['🌿', '💙', '🕊️', '🌀'], background: 'living_network' }} phase="realia" />
+        <IdealiaChat lines={realiaLines} button="Voir le miroir" onNext={() => setStep('mirror')} speakerName={newName} mood={{ type: 'realia', intensity: 0.85, emojis: ['🌿', '💙', '🕊️', '🌀'], background: 'living_network' }} phase="realia" />
       )}
 
       {step === 'mirror' && (
@@ -242,5 +297,6 @@ export default function App() {
 
       {step === 'map' && <ProMap scores={scores} onRestart={restart} />}
     </main>
+    </AmbientAudioContext.Provider>
   )
 }
