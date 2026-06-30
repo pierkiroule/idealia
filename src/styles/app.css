@@ -74,6 +74,84 @@ body {
   text-shadow: 0 0 26px #00e5ff;
 }
 
+.introPorthole {
+  --intro-audio-level: 0;
+  position: relative;
+  width: clamp(190px, 46vw, 330px);
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 50% 50%, rgba(238, 252, 255, 0.1), rgba(0, 229, 255, 0.06) 46%, transparent 68%),
+    conic-gradient(from 120deg, rgba(97, 246, 255, 0.2), rgba(255, 126, 243, 0.16), rgba(157, 255, 223, 0.18), rgba(97, 246, 255, 0.2));
+  box-shadow: 0 0 56px rgba(0, 229, 255, 0.26), inset 0 0 34px rgba(255, 255, 255, 0.05);
+  isolation: isolate;
+}
+
+.introPorthole::before,
+.introPorthole::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.introPorthole::before {
+  inset: -9%;
+  border: 1px solid rgba(97, 246, 255, 0.38);
+  background: conic-gradient(from 0deg, transparent, rgba(97, 246, 255, 0.34), rgba(255, 126, 243, 0.24), transparent);
+  filter: blur(1px) drop-shadow(0 0 24px rgba(97, 246, 255, 0.34));
+  opacity: 0.72;
+  animation: introHaloBreath 3.2s ease-in-out infinite;
+  z-index: -1;
+}
+
+.introPorthole::after {
+  inset: 5%;
+  border: 1px solid rgba(238, 252, 255, 0.18);
+  box-shadow: inset 0 0 26px rgba(2, 6, 17, 0.56), 0 0 30px rgba(0, 229, 255, 0.16);
+}
+
+.introPorthole.isPlaying::before {
+  animation: introAudioPulse 0.92s ease-in-out infinite;
+  opacity: 0.95;
+  transform: scale(calc(1 + (var(--intro-audio-level) * 0.16)));
+  filter: blur(1px) drop-shadow(0 0 calc(22px + (var(--intro-audio-level) * 34px)) rgba(255, 126, 243, 0.44));
+}
+
+.introPorthole video {
+  width: 84%;
+  height: 84%;
+  display: block;
+  object-fit: cover;
+  border: 1px solid rgba(238, 252, 255, 0.24);
+  border-radius: 50%;
+  background: rgba(2, 6, 17, 0.9);
+  box-shadow: 0 0 34px rgba(0, 229, 255, 0.2);
+  overflow: hidden;
+}
+
+@keyframes introHaloBreath {
+  50% {
+    transform: scale(1.04) rotate(16deg);
+    opacity: 0.48;
+  }
+}
+
+@keyframes introAudioPulse {
+  0%,
+  100% {
+    transform: scale(calc(1 + (var(--intro-audio-level) * 0.12))) rotate(0deg);
+    filter: blur(1px) drop-shadow(0 0 calc(20px + (var(--intro-audio-level) * 24px)) rgba(97, 246, 255, 0.38));
+  }
+
+  50% {
+    transform: scale(calc(1.08 + (var(--intro-audio-level) * 0.18))) rotate(22deg);
+    filter: blur(1px) drop-shadow(0 0 calc(34px + (var(--intro-audio-level) * 42px)) rgba(255, 126, 243, 0.42));
+  }
+}
+
 .home p,
 .narrator p {
   font-size: clamp(1.2rem, 4vw, 2rem);

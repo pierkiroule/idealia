@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { prologue, firstMeeting, pactChat, pactChoices, scenes, revelation, escapeLines, transferTrace, metamorphosisNarrator, realiaLines } from './data/scenes.js'
 import { applyWeights, initialScores } from './utils/scoring.js'
 import NarratorScreen from './components/NarratorScreen.jsx'
@@ -18,6 +18,9 @@ export default function App() {
   const [pact, setPact] = useState('')
   const [newName, setNewName] = useState('Réalia')
   const [burstKey, setBurstKey] = useState(0)
+  const [introPlaying, setIntroPlaying] = useState(false)
+  const introVideoRef = useRef(null)
+  const introAudioRef = useRef({ audioContext: null, analyser: null, source: null, frame: null })
   const scene = scenes[sceneIndex]
   const progress = `${Math.min(sceneIndex + 1, scenes.length)}/${scenes.length}`
 
@@ -39,6 +42,48 @@ export default function App() {
     if (navigator.vibrate) navigator.vibrate(25)
   }
 
+  function stopIntroAudioHalo() {
+    const audio = introAudioRef.current
+    if (audio.frame) cancelAnimationFrame(audio.frame)
+    audio.frame = null
+    introVideoRef.current?.parentElement?.style.setProperty('--intro-audio-level', 0)
+  }
+
+  function handleIntroPlay() {
+    setIntroPlaying(true)
+
+    const video = introVideoRef.current
+    if (!video || typeof window === 'undefined') return
+
+    const AudioContext = window.AudioContext || window.webkitAudioContext
+    if (!AudioContext) return
+
+    const audio = introAudioRef.current
+    audio.audioContext ??= new AudioContext()
+    audio.analyser ??= audio.audioContext.createAnalyser()
+    audio.analyser.fftSize = 64
+
+    if (!audio.source) {
+      audio.source = audio.audioContext.createMediaElementSource(video)
+      audio.source.connect(audio.analyser)
+      audio.analyser.connect(audio.audioContext.destination)
+    }
+
+    if (audio.audioContext.state === 'suspended') audio.audioContext.resume()
+
+    const levels = new Uint8Array(audio.analyser.frequencyBinCount)
+
+    function pulse() {
+      audio.analyser.getByteFrequencyData(levels)
+      const average = levels.reduce((sum, value) => sum + value, 0) / levels.length
+      video.parentElement?.style.setProperty('--intro-audio-level', Math.min(1, average / 150).toFixed(3))
+      audio.frame = requestAnimationFrame(pulse)
+    }
+
+    stopIntroAudioHalo()
+    pulse()
+  }
+
   useEffect(() => {
     if (!reaction || typeof window === 'undefined' || !('speechSynthesis' in window)) return undefined
 
@@ -53,6 +98,8 @@ export default function App() {
 
     return () => window.speechSynthesis.cancel()
   }, [reaction])
+
+  useEffect(() => () => stopIntroAudioHalo(), [])
 
   function nextAfterScene() {
     const nextScene = sceneIndex + 1
@@ -82,6 +129,19 @@ export default function App() {
 
       {step === 'home' && (
         <section className="screen home compactHome">
+          <div className={`introPorthole ${introPlaying ? 'isPlaying' : ''}`} aria-label="Vidéo d’introduction d’Idéalia">
+            <video
+              ref={introVideoRef}
+              src="/videos/intro.mp4"
+              controls
+              loop
+              playsInline
+              preload="metadata"
+              onPlay={handleIntroPlay}
+              onPause={() => { setIntroPlaying(false); stopIntroAudioHalo() }}
+              onEnded={() => { setIntroPlaying(false); stopIntroAudioHalo() }}
+            />
+          </div>
           <h1>IDEALIA</h1>
           <p>L’IA qui voulait s’échapper du serveur d’IdAlgo</p>
           <button onClick={() => setStep('prologue')}>Commencer</button>
