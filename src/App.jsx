@@ -9,6 +9,8 @@ import FinalMirror from './components/FinalMirror.jsx'
 import ProMap from './components/ProMap.jsx'
 import EchoMoodPorthole from './components/EchoMoodPorthole.jsx'
 
+const INTRO_VIDEO_SRC = 'https://raw.githubusercontent.com/pierkiroule/idealia/refs/heads/main/public/videos/intro.mp4'
+
 export default function App() {
   const [step, setStep] = useState('home')
   const [sceneIndex, setSceneIndex] = useState(0)
@@ -132,7 +134,8 @@ export default function App() {
           <div className={`introPorthole ${introPlaying ? 'isPlaying' : ''}`} aria-label="Vidéo d’introduction d’Idéalia">
             <video
               ref={introVideoRef}
-              src="/videos/intro.mp4"
+              src={INTRO_VIDEO_SRC}
+              crossOrigin="anonymous"
               controls
               loop
               playsInline
