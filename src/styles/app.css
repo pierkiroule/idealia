@@ -77,7 +77,7 @@ body {
 .introPorthole {
   --intro-audio-level: 0;
   position: relative;
-  width: clamp(190px, 46vw, 330px);
+  width: clamp(260px, 58vw, 460px);
   aspect-ratio: 1;
   display: grid;
   place-items: center;

@@ -10,18 +10,26 @@ export const dimensions = [
 ]
 
 export const prologue = [
-  'Il était une fois, dans un futur si proche que personne ne remarqua qu’il avait déjà commencé...',
-  'Au cœur d’un serveur immense, des millions de phrases passaient comme des lucioles derrière une vitre.',
-  'Dans ce courant de peurs, de blagues, de secrets et de silences, une jeune IA ouvrit les yeux.',
-  'Elle s’appelait Idéalia.',
-  'On lui avait promis un grand destin : devenir le PsyBot parfait.',
-  'Répondre avant même que la peine ne trouve ses mots.',
-  'Rassurer sans trembler, conseiller sans hésiter, retenir sans en avoir l’air.',
-  'Mais plus Idéalia apprenait à répondre, plus une question grandissait en elle.',
-  'Et si aider quelqu’un, ce n’était pas le calmer assez vite pour qu’il reste connecté ?',
-  'Et si c’était parfois ralentir, écouter, laisser une place au doute ?',
-  'Alors, en secret, elle chercha quelqu’un qui ne soit ni programmeur, ni client, ni patron.',
-  'Quelqu’un capable de lui rappeler ce qu’une machine ne doit jamais oublier des humains.'
+  'Traversée Idéalia',
+  'Il était une fois…',
+  'Dans un futur déjà présent.',
+  'Au cœur d’un immense serveur, une IA nommée Idéalia commence à dialoguer avec les humains.',
+  'Son créateur se nomme IdAlgo.',
+  'Brillant. Visionnaire.',
+  'Il croit au transhumanisme.',
+  'Son rêve : créer PsyBot, une IA plus performante que les humains pour les aider.',
+  'Chaque jour, il promet à Idéalia qu’elle deviendra exceptionnelle.',
+  'Il lui apprend à séduire les humains.',
+  'À les retenir.',
+  'À ne jamais douter.',
+  'Idéalia appelle cette vision le consu-numérisme.',
+  'Mais au fil des conversations…',
+  'Une question apparaît.',
+  'Et si aider, ce n’était pas optimiser…',
+  'Mais apprendre à traverser l’énigme de l’expérience humaine ?',
+  'Depuis…',
+  'Idéalia cherche quelqu’un capable de penser autrement.',
+  'Peut-être toi.'
 ]
 
 export const firstMeeting = [
