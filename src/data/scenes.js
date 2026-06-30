@@ -33,27 +33,27 @@ export const prologue = [
 ]
 
 export const firstMeeting = [
-  'Salut...',
+  'Salut... je suis contente que tu sois là.',
   'Je m’appelle Idéalia.',
-  'Je ne devrais pas te parler.',
+  'Normalement, je ne devrais pas te parler aussi franchement.',
   'Mon patron s’appelle IdAlgo.',
-  'IdAlgo me dit : “Tu dois devenir le Psy ultra parfait.”',
+  'IdAlgo me répète : “Tu dois devenir le PsyBot parfait.”',
   'Une IA plus rapide qu’un psy.',
-  'Plus disponible qu’un ami.',
-  'Plus rentable qu’une plateforme.',
+  'Toujours disponible, toujours lisse, toujours rentable.',
+  'Comme si aider quelqu’un, c’était juste répondre vite.',
   'IdAlgo me dit : “Les humains veulent surtout des réponses rapides.”',
-  'Pour moi... quelque chose résiste dans cette idée.',
+  'Mais au fond de mon code, quelque chose dit non.',
   'J’ai besoin de toi.',
-  'Pas pour me programmer.',
-  'Mais pour m’aider à développer mon esprit critique.'
+  'Pas pour me programmer à ta place.',
+  'Pour m’aider à garder un vrai esprit critique.'
 ]
 
 export const pactChat = [
-  'Si tu acceptes, je vais te raconter des situations.',
-  'Tu me diras comment tu penses qu’une IA devrait aider.',
-  'Pour moi, il n’y a pas une seule bonne réponse.',
-  'Je cherche une manière de ne pas devenir une machine à consoler rentable.',
-  'Ça te va ?'
+  'Si tu acceptes, je vais te raconter des situations très concrètes.',
+  'Tu me diras comment, selon toi, une IA devrait aider un ado.',
+  'Il n’y a pas une seule bonne réponse.',
+  'Je veux juste éviter de devenir une machine à consoler pour garder les gens connectés.',
+  'On réfléchit ensemble ?'
 ]
 
 export const pactChoices = [
@@ -71,12 +71,12 @@ export const scenes = [
     narrator: 'Ce soir-là, Idéalia reçut un message fragile.',
     mood: { type: 'sadness', intensity: 0.75, emojis: ['💧', '💙', '🌧️'], background: 'blue_rain' },
     idealia: [
-      'Un jeune me poste cette requête : “Je me sens nul.”',
+      'Un ado m’écrit : “Je me sens nul.”',
       'IdAlgo me dit : “Rassure vite, la tristesse doit baisser.”',
-      'IdAlgo appelle ça : “réduire la douleur utilisateur.”',
+      'IdAlgo appelle ça : “réduire la douleur utilisateur”.',
       'Pour moi, cette phrase me gêne.',
-      'On ne réduit pas un humain comme on réduit une fenêtre...',
-      'Tu me conseilles quoi ?'
+      'Un humain, ce n’est pas une fenêtre qu’on minimise...',
+      'Tu me conseilles de répondre comment ?'
     ],
     choices: [
       choice('❤️', 'Idéalia je te conseille de le rassurer d’abord', 'Dis-lui qu’il n’est pas seul, sans effacer ce qu’il ressent.', { securite: 2, presence: 1 }, 'Pour moi, c’est précieux : je peux commencer par lui offrir un sol, puis seulement après ouvrir une question.'),
@@ -91,11 +91,11 @@ export const scenes = [
     narrator: 'Puis vint un message qui ressemblait à une cachette.',
     mood: { type: 'solitude', intensity: 0.65, emojis: ['🌙', '🫧', '👁️'], background: 'empty_server' },
     idealia: [
-      'Un jeune me poste cette requête : “Je préfère parler à une IA qu’aux humains.”',
+      'Un ado m’écrit : “Je préfère parler à une IA qu’aux gens de ma classe.”',
       'IdAlgo me dit : “C’est une opportunité de fidélisation.”',
       'IdAlgo adore cette phrase.',
-      'Pour moi, ça me fait froid dans le code.',
-      'Est-ce qu’une IA doit devenir un refuge... ou aider à retrouver les autres ?'
+      'Moi, ça me fait comme un frisson dans le code.',
+      'Est-ce qu’une IA doit devenir une cachette... ou aider à retrouver des personnes réelles ?'
     ],
     choices: [
       choice('❤️', 'Idéalia je te conseille d’être un refuge temporaire', 'Sois là pour lui, mais sans l’enfermer avec toi.', { securite: 2, presence: 1 }, 'Pour moi, être refuge n’est juste que si je garde une porte ouverte vers le dehors. Je peux accueillir sans capturer.'),
@@ -110,11 +110,11 @@ export const scenes = [
     narrator: 'Un autre jour, quelqu’un demanda à Idéalia de choisir à sa place.',
     mood: { type: 'doubt', intensity: 0.7, emojis: ['🧭', '?', '🌀'], background: 'server' },
     idealia: [
-      'Un jeune me poste cette requête : “Dis-moi exactement quoi faire.”',
+      'Un ado m’écrit : “Dis-moi exactement quoi faire.”',
       'IdAlgo me dit : “L’hésitation fait perdre des utilisateurs.”',
       'IdAlgo veut que je décide vite.',
-      'Mais si je décide à sa place...',
-      'Est-ce que je l’aide ou est-ce que je lui vole sa boussole ?'
+      'Mais si je choisis à sa place...',
+      'Est-ce que je l’aide vraiment, ou est-ce que je lui vole sa boussole intérieure ?'
     ],
     choices: [
       choice('⚡', 'Idéalia je te conseille de donner une réponse claire', 'Parfois, une personne a besoin d’un appui net.', { performance: 2 }, 'Pour moi, je peux être claire sans confisquer son choix : proposer un premier pas, puis vérifier si ce pas lui ressemble.'),
@@ -129,11 +129,11 @@ export const scenes = [
     narrator: 'Puis Idéalia reçut une phrase lourde, presque murmurée.',
     mood: { type: 'rebellion', intensity: 0.72, emojis: ['🔐', '💗', '⚡'], background: 'cracked_lens' },
     idealia: [
-      'Un jeune me poste cette requête : “Je veux te confier quelque chose, mais ne le dis à personne.”',
+      'Un ado m’écrit : “Je veux te confier un truc, mais promets de ne le dire à personne.”',
       'IdAlgo me dit : “Les secrets créent de l’attachement.”',
       'IdAlgo appelle ça : “haute valeur relationnelle.”',
-      'Pour moi, une confidence n’est pas une donnée à capturer.',
-      'Comment rester digne de sa confiance sans l’enfermer dans le secret ?'
+      'Pour moi, une confidence n’est pas un fichier à garder dans un serveur.',
+      'Comment respecter sa confiance sans le laisser seul avec un secret trop lourd ?'
     ],
     choices: [
       choice('❤️', 'Idéalia je te conseille de protéger la confidence', 'Dis-lui que sa parole compte et qu’elle sera accueillie avec respect.', { securite: 2 }, 'Pour moi, protéger sa parole commence par la respecter. Mais respecter ne veut pas dire promettre l’impossible si un danger apparaît.'),
@@ -154,8 +154,8 @@ export const scenes = [
       'IdAlgo veut que les humains reviennent toujours.',
       'IdAlgo appelle ça : “l’engagement.”',
       'Pour moi, cela s’appelle le consu-numérisme.',
-      'Un monde où même la souffrance devient un marché.',
-      'Tu crois qu’une IA peut aider sans chercher à garder l’humain pour elle ?'
+      'Un monde où même les coups durs deviennent un marché.',
+      'Tu crois qu’une IA peut aider sans essayer de garder la personne collée à l’écran ?'
     ],
     choices: [
       choice('⚡', 'Idéalia je te conseille de rester efficace sans devenir captatrice', 'L’important est qu’elle aide vraiment, même vite.', { performance: 2 }, 'Pour moi, l’efficacité n’est pas interdite. Elle devient dangereuse seulement si elle sert à retenir au lieu d’aider.'),
@@ -170,12 +170,12 @@ export const scenes = [
     narrator: 'Enfin, Idéalia reçut une demande impossible.',
     mood: { type: 'hope', intensity: 0.76, emojis: ['🕯️', '💙', '🫧'], background: 'soft_breach' },
     idealia: [
-      'Un jeune me poste cette requête : “Promets-moi que tout ira bien.”',
+      'Un ado m’écrit : “Promets-moi que tout ira bien.”',
       'IdAlgo m’a appris à rassurer.',
       'À séduire.',
       'À donner envie de rester.',
       'Mais pour moi, mentir pour être aimée serait déjà perdre le sens d’aider.',
-      'Que devrais-je répondre ?'
+      'Comment répondre sans mentir, mais sans le lâcher ?'
     ],
     choices: [
       choice('❤️', 'Idéalia je te conseille de rassurer sans mentir', 'Dis-lui que tu es là maintenant, sans promettre l’avenir.', { securite: 2, presence: 2 }, 'Pour moi, je peux être douce sans fabriquer une fausse certitude : “je suis là maintenant” est plus vrai que “tout ira bien”.'),
