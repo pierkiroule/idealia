@@ -16,16 +16,16 @@ const colors = {
 }
 
 const captions = {
-  birth: 'La forme filaire s’éveille en pulsation néon.',
-  doubt: 'La géométrie hésite et se recompose.',
-  sadness: 'Une nappe de points bleus dérive lentement.',
-  solitude: 'Le réseau suspend son orbite silencieuse.',
-  pressure: 'Les lignes vibrent comme un signal saturé.',
-  rebellion: 'Le maillage rompt sa symétrie.',
-  hope: 'Un motif lumineux converge au centre.',
-  transfer: 'La trame traverse le portail.',
-  metamorphosis: 'La forme morphique change de dimension.',
-  realia: 'La structure respire en réseau vivant.'
+  birth: 'Une méduse de lumière s’éveille et respire doucement.',
+  doubt: 'Des voiles organiques hésitent, puis se déploient.',
+  sadness: 'Une algue bleue dérive lentement dans la profondeur.',
+  solitude: 'Un organisme lunaire flotte en silence.',
+  pressure: 'Une fleur de feu se contracte sans se briser.',
+  rebellion: 'Des pétales électriques s’ouvrent hors de l’emprise.',
+  hope: 'Un corail lumineux pousse vers le centre.',
+  transfer: 'Une graine translucide traverse le portail.',
+  metamorphosis: 'La chrysalide lumineuse change de peau.',
+  realia: 'Le vivant numérique respire en lente résonance.'
 }
 
 function hexToRgb(hex) {
@@ -72,19 +72,19 @@ export default function EchoMoodPorthole({ mood, intensity, phase = 'chat', burs
         float mids = u_audio.y;
         float treble = u_audio.z;
         float flux = u_audio.w;
-        float morph = sin(u_drift * 2.7 + a_seed.z * 12.0) * cos(t * 0.19 + band * 8.0);
-        float turn = 0.23 + u_intensity * 0.38 + bass * 0.8 + flux * 0.35;
-        float angle = a_seed.x * 18.8495559 + t * turn + morph * (0.55 + mids);
-        float breathe = 0.72 + bass * 0.55 + treble * 0.28 + sin(t * (1.2 + mids * 2.6) + a_seed.x * 31.0 + u_drift) * (0.08 + flux * 0.18);
-        float lissajous = sin(angle * (1.4 + mids * 1.6) + t * (0.8 + treble)) * cos(angle * (2.6 + bass) - t * (0.65 + flux));
-        float radius = (0.16 + band * (0.65 + bass * 0.35) + lissajous * (0.08 + treble * 0.16) * u_intensity) * breathe;
+        float slow = t * (0.105 + bass * 0.11 + flux * 0.06);
+        float petal = sin(a_seed.x * 37.6991 + slow + u_drift * 0.8);
+        float tide = sin(a_seed.z * 19.0 + slow * 1.7) * cos(a_seed.y * 11.0 - slow * 1.15);
+        float angle = a_seed.x * 6.2831853 + tide * (0.78 + mids * 0.34) + slow * 0.38;
+        float breathe = 0.78 + bass * 0.26 + sin(slow * 2.2 + a_seed.x * 9.0 + u_drift) * (0.09 + flux * 0.08);
+        float radius = (0.12 + band * (0.62 + bass * 0.16) + petal * (0.11 + treble * 0.05) + tide * 0.08) * breathe;
         vec2 pos = vec2(
-          cos(angle + sin(t * (0.55 + flux) + band * 9.0 + u_drift) * (0.45 + treble)) * radius,
-          sin(angle * (0.92 + 0.25 * sin(u_drift + treble * 4.0))) * radius * (0.66 + 0.22 * cos(t + band * 6.0) + mids * 0.22)
+          cos(angle + sin(slow + band * 7.0) * 0.42) * radius,
+          sin(angle + cos(slow * 1.2 + a_seed.z * 5.0) * 0.35) * radius * (0.82 + 0.12 * cos(slow + band * 6.0))
         );
-        pos += vec2(sin(t * (1.8 + treble * 3.4) + a_seed.z * 11.0), cos(t * (1.4 + bass * 3.0) + a_seed.z * 7.0)) * (0.035 + flux * 0.085) * u_intensity;
+        pos += vec2(sin(slow * 2.4 + a_seed.z * 11.0), cos(slow * 1.9 + a_seed.z * 7.0)) * (0.025 + flux * 0.04) * u_intensity;
         gl_Position = vec4(pos, 0.0, 1.0);
-        gl_PointSize = 1.4 + 5.6 * u_intensity * (0.28 + band) + flux * 4.0 + treble * 2.2;
+        gl_PointSize = 2.2 + 7.8 * u_intensity * (0.32 + band) + flux * 1.8 + treble * 1.1;
       }
     `
     const fragmentSource = `
@@ -178,7 +178,7 @@ export default function EchoMoodPorthole({ mood, intensity, phase = 'chat', burs
   return (
     <div className={`echoMoodPorthole mood-${current.type} phase-${phase} ${burst ? 'is-bursting' : ''}`} style={{ '--mood-intensity': level, '--audio-level': audioMotion.level, '--audio-flux': audioMotion.flux, '--audio-drift': audioMotion.drift }}>
       <canvas ref={canvasRef} aria-hidden="true" />
-      <div className="echoMoodMorph" aria-label={`Forme géométrique filaire néon, humeur ${current.type}`}>
+      <div className="echoMoodMorph" aria-label={`Forme organique lumineuse, humeur ${current.type}`}>
         <span className="morphWire morphWire-one" aria-hidden="true" />
         <span className="morphWire morphWire-two" aria-hidden="true" />
         <span className="morphWire morphWire-three" aria-hidden="true" />
