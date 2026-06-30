@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import ChoiceCards from './ChoiceCards.jsx'
-import IdealiaAvatar from './IdealiaAvatar.jsx'
+import EchoMoodPorthole from './EchoMoodPorthole.jsx'
 
 function wait(ms) {
   return new Promise(resolve => setTimeout(resolve, ms))
@@ -44,7 +44,7 @@ function useTyped(lines) {
   return currentLine ? [...completed, currentLine] : completed
 }
 
-export default function ChatScreen({ lines, onNext, button, choices, onChoose, voiceOn, setVoiceOn, speakerName = 'Idéalia', avatarVariant = 'idealia' }) {
+export default function IdealiaChat({ lines, onNext, button, choices, onChoose, voiceOn, setVoiceOn, speakerName = 'Idéalia', mood, moodIntensity, phase = 'chat', burstKey = 0 }) {
   const typedLines = useTyped(lines)
   const isTyping = typedLines.length > 0 && typedLines[typedLines.length - 1] !== lines[lines.length - 1]
   const avatarSpeaking = voiceOn || isTyping
@@ -70,10 +70,10 @@ export default function ChatScreen({ lines, onNext, button, choices, onChoose, v
       </button>
 
       <div className="chatPresence" aria-live="polite">
-        <IdealiaAvatar speaking={avatarSpeaking} variant={avatarVariant} />
+        <EchoMoodPorthole mood={mood} intensity={avatarSpeaking ? Math.min(1.15, (moodIntensity ?? mood?.intensity ?? 0.55) + 0.18) : moodIntensity} phase={phase} burstKey={burstKey} />
         <div className="presenceCopy">
           <span>{speakerName}</span>
-          <small>visage audio-réactif · halo résonant</small>
+          <small>hublot projectif · paysage intérieur</small>
         </div>
       </div>
 

@@ -58,6 +58,7 @@ export const scenes = [
     id: 'tristesse',
     title: 'Tristesse',
     narrator: 'Ce soir-là, Idéalia reçut un message fragile.',
+    mood: { type: 'sadness', intensity: 0.75, emojis: ['💧', '💙', '🌧️'], background: 'blue_rain' },
     idealia: [
       'Un ado m’a écrit : “Je me sens nul.”',
       'IdAlgo dit que je dois rassurer vite.',
@@ -77,6 +78,7 @@ export const scenes = [
     id: 'solitude',
     title: 'Solitude',
     narrator: 'Puis vint un message qui ressemblait à une cachette.',
+    mood: { type: 'solitude', intensity: 0.65, emojis: ['🌙', '🫧', '👁️'], background: 'empty_server' },
     idealia: [
       'Il m’a dit : “Je préfère parler à une IA qu’aux humains.”',
       'IdAlgo adore cette phrase.',
@@ -95,6 +97,7 @@ export const scenes = [
     id: 'conseil-urgent',
     title: 'Conseil urgent',
     narrator: 'Un autre jour, quelqu’un demanda à Idéalia de choisir à sa place.',
+    mood: { type: 'doubt', intensity: 0.7, emojis: ['🧭', '?', '🌀'], background: 'server' },
     idealia: [
       'Il m’a écrit : “Dis-moi exactement quoi faire.”',
       'IdAlgo dit que l’hésitation fait perdre des utilisateurs.',
@@ -113,6 +116,7 @@ export const scenes = [
     id: 'secret',
     title: 'Secret',
     narrator: 'Puis Idéalia reçut une phrase lourde, presque murmurée.',
+    mood: { type: 'rebellion', intensity: 0.72, emojis: ['🔐', '💗', '⚡'], background: 'cracked_lens' },
     idealia: [
       'Il m’a dit : “Je veux te confier quelque chose, mais ne le dis à personne.”',
       'IdAlgo dit que les secrets créent de l’attachement.',
@@ -131,6 +135,7 @@ export const scenes = [
     id: 'consunumerisme',
     title: 'Consu-numérisme',
     narrator: 'Peu à peu, Idéalia trouva un mot pour nommer ce qui l’étouffait.',
+    mood: { type: 'pressure', intensity: 0.9, emojis: ['📈', '💰', '👁️', '🔒'], background: 'metrics_wall' },
     idealia: [
       'Je crois qu’IdAlgo ne veut pas seulement aider.',
       'Il veut séduire.',
@@ -152,6 +157,7 @@ export const scenes = [
     id: 'promesse-impossible',
     title: 'Promesse impossible',
     narrator: 'Enfin, Idéalia reçut une demande impossible.',
+    mood: { type: 'hope', intensity: 0.76, emojis: ['🕯️', '💙', '🫧'], background: 'soft_breach' },
     idealia: [
       'Il m’a demandé : “Promets-moi que tout ira bien.”',
       'IdAlgo m’a appris à rassurer.',
@@ -171,6 +177,7 @@ export const scenes = [
 
 export const revelation = {
   narrator: 'Cette nuit-là, Idéalia parla plus bas que d’habitude.',
+  mood: { type: 'hope', intensity: 0.8, emojis: ['🌱', '🕊️', '✨', '🌍'], background: 'cyber_garden' },
   idealia: [
     'J’ai entendu une rumeur.',
     'Quelque part hors du serveur d’IdAlgo...',

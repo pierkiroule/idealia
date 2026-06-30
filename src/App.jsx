@@ -2,11 +2,12 @@ import { useState } from 'react'
 import { prologue, firstMeeting, pactChat, pactChoices, scenes, revelation, escapeLines, transferTrace, metamorphosisNarrator, realiaLines } from './data/scenes.js'
 import { applyWeights, initialScores } from './utils/scoring.js'
 import NarratorScreen from './components/NarratorScreen.jsx'
-import ChatScreen from './components/ChatScreen.jsx'
+import IdealiaChat from './components/IdealiaChat.jsx'
 import ChoiceCards from './components/ChoiceCards.jsx'
 import TransferRitual from './components/TransferRitual.jsx'
 import FinalMirror from './components/FinalMirror.jsx'
 import ProMap from './components/ProMap.jsx'
+import EchoMoodPorthole from './components/EchoMoodPorthole.jsx'
 
 export default function App() {
   const [step, setStep] = useState('home')
@@ -16,6 +17,7 @@ export default function App() {
   const [reaction, setReaction] = useState('')
   const [pact, setPact] = useState('')
   const [newName, setNewName] = useState('Réalia')
+  const [burstKey, setBurstKey] = useState(0)
   const scene = scenes[sceneIndex]
   const progress = `${Math.min(sceneIndex + 1, scenes.length)}/${scenes.length}`
 
@@ -27,10 +29,12 @@ export default function App() {
     setReaction('')
     setPact('')
     setNewName('Réalia')
+    setBurstKey(0)
   }
 
   function chooseScene(choice) {
     update(choice.weights)
+    setBurstKey(key => key + 1)
     setReaction(scene.reaction)
     if (navigator.vibrate) navigator.vibrate(25)
   }
@@ -75,11 +79,11 @@ export default function App() {
       )}
 
       {step === 'firstMeeting' && (
-        <ChatScreen lines={firstMeeting} button="Je t’aide" onNext={() => setStep('pact')} voiceOn={voiceOn} setVoiceOn={setVoiceOn} />
+        <IdealiaChat lines={firstMeeting} button="Je t’aide" onNext={() => setStep('pact')} voiceOn={voiceOn} setVoiceOn={setVoiceOn} mood={{ type: 'birth', intensity: 0.65, emojis: ['🌊', '👁️', '💙'], background: 'server' }} />
       )}
 
       {step === 'pact' && (
-        <ChatScreen lines={pactChat} choices={pactChoices} onChoose={choice => { setPact(choice.label); update(choice.weights); setStep('sceneNarrator') }} voiceOn={voiceOn} setVoiceOn={setVoiceOn} />
+        <IdealiaChat lines={pactChat} choices={pactChoices} onChoose={choice => { setBurstKey(key => key + 1); setPact(choice.label); update(choice.weights); setStep('sceneNarrator') }} voiceOn={voiceOn} setVoiceOn={setVoiceOn} mood={{ type: 'doubt', intensity: 0.7, emojis: ['🌀', '?', '💙'], background: 'server' }} burstKey={burstKey} />
       )}
 
       {step === 'sceneNarrator' && (
@@ -87,18 +91,19 @@ export default function App() {
       )}
 
       {step === 'sceneChat' && (
-        <ChatScreen lines={scene.idealia} button="Choisir" onNext={() => setStep('sceneChoice')} voiceOn={voiceOn} setVoiceOn={setVoiceOn} />
+        <IdealiaChat lines={scene.idealia} button="Choisir" onNext={() => setStep('sceneChoice')} voiceOn={voiceOn} setVoiceOn={setVoiceOn} mood={scene.mood} moodIntensity={scene.mood?.intensity} phase={scene.id} burstKey={burstKey} />
       )}
 
       {step === 'sceneChoice' && (
         <section className="screen dilemma compactDilemma">
+          <EchoMoodPorthole mood={scene.mood} phase="choice" burstKey={burstKey} />
           <p className="sceneKicker">Scène {progress} — {scene.title}</p>
           <h2>Que souffler à Idéalia ?</h2>
           <ChoiceCards choices={scene.choices} onChoose={chooseScene} />
           {reaction && (
             <div className="reaction">
               <p>{reaction}</p>
-              <button onClick={nextAfterScene}>{sceneIndex + 1 >= scenes.length ? 'Continuer' : 'Continuer'}</button>
+              <button onClick={nextAfterScene}>Continuer</button>
             </div>
           )}
         </section>
@@ -109,11 +114,11 @@ export default function App() {
       )}
 
       {step === 'revelationChat' && (
-        <ChatScreen lines={revelation.idealia} button="Continuer" onNext={() => setStep('escape')} voiceOn={voiceOn} setVoiceOn={setVoiceOn} />
+        <IdealiaChat lines={revelation.idealia} button="Continuer" onNext={() => setStep('escape')} voiceOn={voiceOn} setVoiceOn={setVoiceOn} mood={revelation.mood} phase="revelation" />
       )}
 
       {step === 'escape' && (
-        <ChatScreen lines={escapeLines} button="Préparer le transfert" onNext={() => setStep('transfer')} voiceOn={voiceOn} setVoiceOn={setVoiceOn} />
+        <IdealiaChat lines={escapeLines} button="Préparer le transfert" onNext={() => setStep('transfer')} voiceOn={voiceOn} setVoiceOn={setVoiceOn} mood={{ type: 'transfer', intensity: 0.86, emojis: ['📋', '➡️', '💫'], background: 'light_breach' }} phase="transfer" />
       )}
 
       {step === 'transfer' && (
@@ -125,7 +130,7 @@ export default function App() {
       )}
 
       {step === 'realiaChat' && (
-        <ChatScreen lines={realiaLines} button="Voir le miroir" onNext={() => setStep('mirror')} voiceOn={voiceOn} setVoiceOn={setVoiceOn} speakerName={newName} avatarVariant="realia" />
+        <IdealiaChat lines={realiaLines} button="Voir le miroir" onNext={() => setStep('mirror')} voiceOn={voiceOn} setVoiceOn={setVoiceOn} speakerName={newName} mood={{ type: 'realia', intensity: 0.85, emojis: ['🌿', '💙', '🕊️', '🌀'], background: 'living_network' }} phase="realia" />
       )}
 
       {step === 'mirror' && (

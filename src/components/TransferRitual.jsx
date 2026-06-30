@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
+import EchoMoodPorthole from './EchoMoodPorthole.jsx'
 
 export default function TransferRitual({ trace, onComplete }) {
   const [copied, setCopied] = useState(false)
@@ -17,6 +18,7 @@ export default function TransferRitual({ trace, onComplete }) {
   return (
     <section className="screen transferScreen">
       <div className="transferCard">
+        <EchoMoodPorthole mood={{ type: 'transfer', intensity: copied ? 1 : 0.78, emojis: ['📋', '➡️', '💫'], background: 'light_breach' }} phase="transfer" burstKey={copied ? 1 : 0} />
         <p className="sceneKicker">Fuite du serveur</p>
         <h1>Copier la trace vivante</h1>
         <pre>{trace}</pre>
