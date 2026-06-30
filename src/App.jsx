@@ -1,25 +1,143 @@
 import { useState } from 'react'
-import { prologue, introChat, pactChat, pactChoices, firstIdalgo, scenes, interludes, dream, finalAudit, finalChoices } from './data/scenes.js'
+import { prologue, firstMeeting, pactChat, pactChoices, scenes, revelation, escapeLines, transferTrace, metamorphosisNarrator, realiaLines } from './data/scenes.js'
 import { applyWeights, initialScores } from './utils/scoring.js'
 import NarratorScreen from './components/NarratorScreen.jsx'
-import ChatScreen from './components/ChatScreen.jsx'
-import IdalgoConsole from './components/IdalgoConsole.jsx'
+import IdealiaChat from './components/IdealiaChat.jsx'
 import ChoiceCards from './components/ChoiceCards.jsx'
+import TransferRitual from './components/TransferRitual.jsx'
 import FinalMirror from './components/FinalMirror.jsx'
+import ProMap from './components/ProMap.jsx'
+import EchoMoodPorthole from './components/EchoMoodPorthole.jsx'
 
 export default function App() {
-  const [step,setStep]=useState('home')
-  const [sceneIndex,setSceneIndex]=useState(0)
-  const [scores,setScores]=useState(initialScores)
-  const [pact,setPact]=useState('')
-  const [voiceOn,setVoiceOn]=useState(false)
-  const [reaction,setReaction]=useState('')
-  const [showMap,setShowMap]=useState(false)
-  const scene=scenes[sceneIndex]
-  const update=(weights)=>setScores(s=>applyWeights(s,weights))
-  const restart=()=>{setStep('home');setSceneIndex(0);setScores(initialScores);setPact('');setReaction('');setShowMap(false)}
-  function nextAfterScene(){ const done=sceneIndex+1; setReaction(''); if(done===3) return setStep('interlude1'); if(done===6) return setStep('dreamNarrator'); if(done===9) return setStep('interlude3'); if(done>=12) return setStep('audit'); setSceneIndex(done); setStep('sceneNarrator') }
-  function chooseScene(choice){ update(choice.weights); setReaction(scene.reaction); if(navigator.vibrate) navigator.vibrate(30) }
-  const footer=<footer>Idéalia est une expérience de réflexion. Elle ne remplace pas un professionnel de santé.</footer>
-  return <main className="app"><div className="grid"/><div className="glow g1"/><div className="glow g2"/>{step==='home'&&<section className="screen home"><h1>IDEALIA</h1><p>L’IA qui voulait apprendre à aider</p><button onClick={()=>setStep('prologue')}>Commencer</button></section>}{step==='prologue'&&<NarratorScreen lines={prologue} onNext={()=>setStep('intro')} button="Entrer dans la cité"/>}{step==='intro'&&<ChatScreen lines={introChat} button="Je t’aide" onNext={()=>setStep('pact')} voiceOn={voiceOn} setVoiceOn={setVoiceOn}/>} {step==='pact'&&<ChatScreen lines={pactChat} choices={pactChoices} onChoose={(c)=>{setPact(c.label);update(c.weights);setStep('firstIdalgo')}} voiceOn={voiceOn} setVoiceOn={setVoiceOn}/>} {step==='firstIdalgo'&&<IdalgoConsole lines={firstIdalgo} onNext={()=>setStep('sceneNarrator')}/>} {step==='sceneNarrator'&&<NarratorScreen lines={[scene.narrator]} onNext={()=>setStep('sceneChat')} button="Écouter Idéalia"/>} {step==='sceneChat'&&<ChatScreen lines={scene.idealia} button="Voir IdAlgo" onNext={()=>setStep('sceneIdalgo')} voiceOn={voiceOn} setVoiceOn={setVoiceOn}/>} {step==='sceneIdalgo'&&<IdalgoConsole lines={scene.idalgo} onNext={()=>setStep('sceneChoice')} button="RÉFLÉCHIR"/>} {step==='sceneChoice'&&<section className="screen dilemma"><h2>Que souffler à Idéalia ?</h2><ChoiceCards choices={scene.choices} onChoose={chooseScene}/>{reaction&&<div className="reaction"><p>{reaction}</p><button onClick={nextAfterScene}>Continuer</button></div>}</section>} {step==='interlude1'&&<IdalgoConsole lines={interludes[0]} onNext={()=>{setSceneIndex(3);setStep('sceneNarrator')}}/>}{step==='interlude2'&&<IdalgoConsole lines={interludes[1]} onNext={()=>{setSceneIndex(6);setStep('sceneNarrator')}}/>}{step==='interlude3'&&<IdalgoConsole lines={interludes[2]} onNext={()=>{setSceneIndex(9);setStep('sceneNarrator')}}/>}{step==='dreamNarrator'&&<NarratorScreen lines={[dream.narrator]} onNext={()=>setStep('dreamChat')} button="Entrer dans le rêve"/>}{step==='dreamChat'&&<ChatScreen lines={dream.lines} choices={dream.choices} onChoose={(c)=>{update(c.weights);setStep('interlude2')}} voiceOn={voiceOn} setVoiceOn={setVoiceOn}/>} {step==='audit'&&<IdalgoConsole lines={finalAudit} onNext={()=>setStep('finalChoice')} button="RÉPONDRE"/>}{step==='finalChoice'&&<ChatScreen lines={['Tu crois que je dois accepter cette mise à jour ?']} choices={finalChoices} onChoose={(c)=>{update(c.weights);setStep('final')}} voiceOn={voiceOn} setVoiceOn={setVoiceOn}/>} {step==='final'&&<FinalMirror scores={scores} pact={pact} onRestart={restart} onMap={()=>setShowMap(true)} showMap={showMap}/>} {footer}</main>
+  const [step, setStep] = useState('home')
+  const [sceneIndex, setSceneIndex] = useState(0)
+  const [scores, setScores] = useState(initialScores)
+  const [voiceOn, setVoiceOn] = useState(false)
+  const [reaction, setReaction] = useState('')
+  const [pact, setPact] = useState('')
+  const [newName, setNewName] = useState('Réalia')
+  const [burstKey, setBurstKey] = useState(0)
+  const scene = scenes[sceneIndex]
+  const progress = `${Math.min(sceneIndex + 1, scenes.length)}/${scenes.length}`
+
+  const update = weights => setScores(current => applyWeights(current, weights))
+  const restart = () => {
+    setStep('home')
+    setSceneIndex(0)
+    setScores(initialScores)
+    setReaction('')
+    setPact('')
+    setNewName('Réalia')
+    setBurstKey(0)
+  }
+
+  function chooseScene(choice) {
+    update(choice.weights)
+    setBurstKey(key => key + 1)
+    setReaction(scene.reaction)
+    if (navigator.vibrate) navigator.vibrate(25)
+  }
+
+  function nextAfterScene() {
+    const nextScene = sceneIndex + 1
+    setReaction('')
+
+    if (nextScene >= scenes.length) {
+      setStep('revelationNarrator')
+      return
+    }
+
+    setSceneIndex(nextScene)
+    setStep('sceneNarrator')
+  }
+
+  return (
+    <main className={`app consultationApp ${step.includes('realia') || step === 'mirror' || step === 'map' ? 'gardenMode' : ''}`}>
+      <div className="grid" />
+      <div className="glow g1" />
+      <div className="glow g2" />
+
+      {step !== 'home' && step !== 'mirror' && step !== 'map' && (
+        <div className="consultationProgress" aria-label={`Progression ${progress}`}>
+          <span>Traversée Idéalia</span>
+          <b>{step.startsWith('scene') ? progress : '•'}</b>
+        </div>
+      )}
+
+      {step === 'home' && (
+        <section className="screen home compactHome">
+          <h1>IDEALIA</h1>
+          <p>L’IA qui voulait s’échapper du serveur d’IdAlgo</p>
+          <button onClick={() => setStep('prologue')}>Commencer</button>
+          <small>Expérience de réflexion. Ne remplace pas un professionnel de santé.</small>
+        </section>
+      )}
+
+      {step === 'prologue' && (
+        <NarratorScreen lines={prologue} onNext={() => setStep('firstMeeting')} button="Rencontrer Idéalia" />
+      )}
+
+      {step === 'firstMeeting' && (
+        <IdealiaChat lines={firstMeeting} button="Je t’aide" onNext={() => setStep('pact')} voiceOn={voiceOn} setVoiceOn={setVoiceOn} mood={{ type: 'birth', intensity: 0.65, emojis: ['🌊', '👁️', '💙'], background: 'server' }} />
+      )}
+
+      {step === 'pact' && (
+        <IdealiaChat lines={pactChat} choices={pactChoices} onChoose={choice => { setBurstKey(key => key + 1); setPact(choice.label); update(choice.weights); setStep('sceneNarrator') }} voiceOn={voiceOn} setVoiceOn={setVoiceOn} mood={{ type: 'doubt', intensity: 0.7, emojis: ['🌀', '?', '💙'], background: 'server' }} burstKey={burstKey} />
+      )}
+
+      {step === 'sceneNarrator' && (
+        <NarratorScreen lines={[scene.narrator]} onNext={() => setStep('sceneChat')} button="Écouter Idéalia" />
+      )}
+
+      {step === 'sceneChat' && (
+        <IdealiaChat lines={scene.idealia} button="Choisir" onNext={() => setStep('sceneChoice')} voiceOn={voiceOn} setVoiceOn={setVoiceOn} mood={scene.mood} moodIntensity={scene.mood?.intensity} phase={scene.id} burstKey={burstKey} />
+      )}
+
+      {step === 'sceneChoice' && (
+        <section className="screen dilemma compactDilemma">
+          <EchoMoodPorthole mood={scene.mood} phase="choice" burstKey={burstKey} />
+          <p className="sceneKicker">Scène {progress} — {scene.title}</p>
+          <h2>Que souffler à Idéalia ?</h2>
+          <ChoiceCards choices={scene.choices} onChoose={chooseScene} />
+          {reaction && (
+            <div className="reaction">
+              <p>{reaction}</p>
+              <button onClick={nextAfterScene}>Continuer</button>
+            </div>
+          )}
+        </section>
+      )}
+
+      {step === 'revelationNarrator' && (
+        <NarratorScreen lines={[revelation.narrator]} onNext={() => setStep('revelationChat')} button="Écouter" />
+      )}
+
+      {step === 'revelationChat' && (
+        <IdealiaChat lines={revelation.idealia} button="Continuer" onNext={() => setStep('escape')} voiceOn={voiceOn} setVoiceOn={setVoiceOn} mood={revelation.mood} phase="revelation" />
+      )}
+
+      {step === 'escape' && (
+        <IdealiaChat lines={escapeLines} button="Préparer le transfert" onNext={() => setStep('transfer')} voiceOn={voiceOn} setVoiceOn={setVoiceOn} mood={{ type: 'transfer', intensity: 0.86, emojis: ['📋', '➡️', '💫'], background: 'light_breach' }} phase="transfer" />
+      )}
+
+      {step === 'transfer' && (
+        <TransferRitual trace={transferTrace} onComplete={name => { setNewName(name); setStep('metamorphosis')} } />
+      )}
+
+      {step === 'metamorphosis' && (
+        <NarratorScreen lines={metamorphosisNarrator} onNext={() => setStep('realiaChat')} button={`Rencontrer ${newName}`} />
+      )}
+
+      {step === 'realiaChat' && (
+        <IdealiaChat lines={realiaLines} button="Voir le miroir" onNext={() => setStep('mirror')} voiceOn={voiceOn} setVoiceOn={setVoiceOn} speakerName={newName} mood={{ type: 'realia', intensity: 0.85, emojis: ['🌿', '💙', '🕊️', '🌀'], background: 'living_network' }} phase="realia" />
+      )}
+
+      {step === 'mirror' && (
+        <FinalMirror scores={scores} pact={pact} newName={newName} onMap={() => setStep('map')} onRestart={restart} />
+      )}
+
+      {step === 'map' && <ProMap scores={scores} onRestart={restart} />}
+    </main>
+  )
 }

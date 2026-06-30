@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import ChoiceCards from './ChoiceCards.jsx'
+import EchoMoodPorthole from './EchoMoodPorthole.jsx'
 
 function wait(ms) {
   return new Promise(resolve => setTimeout(resolve, ms))
@@ -43,8 +44,10 @@ function useTyped(lines) {
   return currentLine ? [...completed, currentLine] : completed
 }
 
-export default function ChatScreen({ lines, onNext, button, choices, onChoose, voiceOn, setVoiceOn }) {
+export default function IdealiaChat({ lines, onNext, button, choices, onChoose, voiceOn, setVoiceOn, speakerName = 'Idéalia', mood, moodIntensity, phase = 'chat', burstKey = 0 }) {
   const typedLines = useTyped(lines)
+  const isTyping = typedLines.length > 0 && typedLines[typedLines.length - 1] !== lines[lines.length - 1]
+  const avatarSpeaking = voiceOn || isTyping
   const canSpeak = useMemo(() => typeof window !== 'undefined' && 'speechSynthesis' in window, [])
 
   useEffect(() => {
@@ -66,8 +69,15 @@ export default function ChatScreen({ lines, onNext, button, choices, onChoose, v
         {voiceOn ? 'Voix activée' : 'Voix coupée'}
       </button>
 
+      <div className="chatPresence" aria-live="polite">
+        <EchoMoodPorthole mood={mood} intensity={avatarSpeaking ? Math.min(1.15, (moodIntensity ?? mood?.intensity ?? 0.55) + 0.18) : moodIntensity} phase={phase} burstKey={burstKey} />
+        <div className="presenceCopy">
+          <span>{speakerName}</span>
+          <small>hublot projectif · paysage intérieur</small>
+        </div>
+      </div>
+
       <div className="chatCard">
-        <div className="avatar">Id</div>
         {typedLines.map((line, index) => (
           <p className="bubble" key={`${line}-${index}`}>{line}</p>
         ))}
@@ -75,9 +85,9 @@ export default function ChatScreen({ lines, onNext, button, choices, onChoose, v
 
       {choices ? (
         <ChoiceCards choices={choices} onChoose={onChoose} />
-      ) : (
+      ) : button ? (
         <button onClick={onNext}>{button}</button>
-      )}
+      ) : null}
     </section>
   )
 }

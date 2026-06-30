@@ -144,22 +144,6 @@ button {
   padding: 12px 14px;
 }
 
-.consoleScreen pre {
-  width: 100%;
-  text-align: left;
-  white-space: pre-wrap;
-  background: #020805;
-  border: 1px solid #39ffb666;
-  border-radius: 18px;
-  padding: 22px;
-  color: #a8ffd9;
-  font: clamp(0.9rem, 3vw, 1.1rem) / 1.55 ui-monospace, SFMono-Regular, Menlo, monospace;
-  box-shadow: 0 0 40px #00ff8840 inset;
-}
-
-.terminalButton {
-  font-family: ui-monospace, monospace;
-}
 
 .choiceCards {
   display: grid;
@@ -294,5 +278,509 @@ footer {
 
   .bubble {
     text-align: left;
+  }
+}
+
+.chatPresence {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(156px, 220px) minmax(0, 1fr);
+  align-items: center;
+  gap: 18px;
+  padding: 18px;
+  border: 1px solid rgba(97, 246, 255, 0.24);
+  border-radius: 32px;
+  background:
+    radial-gradient(circle at 18% 50%, rgba(97, 246, 255, 0.18), transparent 34%),
+    linear-gradient(135deg, rgba(5, 14, 30, 0.82), rgba(36, 16, 68, 0.58));
+  box-shadow: 0 0 48px rgba(0, 229, 255, 0.18), inset 0 0 36px rgba(141, 77, 255, 0.12);
+  overflow: hidden;
+}
+
+.chatPresence::after {
+  content: '';
+  position: absolute;
+  inset: 16px;
+  pointer-events: none;
+  border-radius: 28px;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.avatarShell {
+  position: relative;
+  width: clamp(150px, 28vw, 220px);
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle, rgba(238, 252, 255, 0.08), rgba(0, 229, 255, 0.04) 42%, transparent 70%),
+    linear-gradient(145deg, rgba(97, 246, 255, 0.12), rgba(141, 77, 255, 0.08));
+  box-shadow: 0 0 42px rgba(0, 229, 255, 0.22), inset 0 0 28px rgba(255, 255, 255, 0.05);
+  isolation: isolate;
+}
+
+.avatarShell::before {
+  content: '';
+  position: absolute;
+  inset: 5%;
+  border: 1px solid rgba(97, 246, 255, 0.28);
+  border-radius: 50%;
+  box-shadow: 0 0 28px rgba(97, 246, 255, 0.22);
+  animation: hublotBreath 2.8s ease-in-out infinite;
+}
+
+.avatarShell.isSpeaking::before {
+  animation-duration: 0.95s;
+  box-shadow: 0 0 42px rgba(255, 126, 243, 0.42), 0 0 70px rgba(97, 246, 255, 0.2);
+}
+
+.avatarViewport {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.avatarViewport canvas {
+  width: 100% !important;
+  height: 100% !important;
+  display: block;
+}
+
+.avatarSignal {
+  position: absolute;
+  left: 50%;
+  bottom: 12px;
+  z-index: 2;
+  transform: translateX(-50%);
+  padding: 4px 10px;
+  border: 1px solid rgba(97, 246, 255, 0.28);
+  border-radius: 999px;
+  background: rgba(2, 6, 17, 0.64);
+  color: #dffbff;
+  font-size: 0.64rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.presenceCopy {
+  position: relative;
+  z-index: 1;
+  text-align: left;
+}
+
+.presenceCopy span {
+  display: block;
+  color: #eefcff;
+  font-size: clamp(1.6rem, 6vw, 3.4rem);
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  text-shadow: 0 0 24px rgba(0, 229, 255, 0.58);
+}
+
+.presenceCopy small {
+  display: block;
+  margin-top: 6px;
+  color: #b9d8de;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+@keyframes hublotBreath {
+  50% {
+    transform: scale(1.045);
+    opacity: 0.55;
+  }
+}
+
+@media (max-width: 560px) {
+  .chatPresence {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    text-align: center;
+  }
+
+  .presenceCopy {
+    text-align: center;
+  }
+}
+
+.consultationApp {
+  padding-block: 54px 18px;
+}
+
+.consultationProgress {
+  position: fixed;
+  top: 12px;
+  left: 50%;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transform: translateX(-50%);
+  padding: 8px 12px;
+  border: 1px solid rgba(97, 246, 255, 0.22);
+  border-radius: 999px;
+  background: rgba(2, 6, 17, 0.78);
+  color: #dffbff;
+  font-size: 0.78rem;
+  backdrop-filter: blur(14px);
+}
+
+.consultationProgress b {
+  color: #fff;
+}
+
+.compactHome small {
+  max-width: 310px;
+  color: #b9d8de;
+  font-size: 0.78rem;
+  line-height: 1.4;
+}
+
+.compactDilemma {
+  justify-content: flex-start;
+  padding-top: 48px;
+}
+
+.sceneKicker {
+  margin: 0;
+  color: #9dffdf;
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.compactFinal p {
+  max-width: 620px;
+  margin: 0;
+  line-height: 1.5;
+}
+
+@media (max-width: 560px) {
+  .consultationApp {
+    padding: 48px 12px 18px;
+  }
+
+  .consultationProgress {
+    width: calc(100% - 24px);
+    justify-content: space-between;
+  }
+
+  .compactDilemma {
+    padding-top: 28px;
+  }
+}
+
+.avatarHaloRing {
+  position: absolute;
+  inset: 8%;
+  border: 1px solid rgba(97, 246, 255, 0.5);
+  border-radius: 50%;
+  background: conic-gradient(from 90deg, transparent, rgba(97, 246, 255, 0.28), rgba(255, 126, 243, 0.2), transparent);
+  filter: drop-shadow(0 0 18px rgba(97, 246, 255, 0.34));
+}
+
+.avatarFace {
+  position: relative;
+  z-index: 2;
+  width: 54%;
+  height: 46%;
+  border-radius: 44% 44% 52% 52%;
+  background: radial-gradient(circle at 50% 28%, rgba(238, 252, 255, 0.18), rgba(7, 24, 42, 0.72));
+  box-shadow: inset 0 0 22px rgba(97, 246, 255, 0.16), 0 0 28px rgba(141, 77, 255, 0.18);
+}
+
+.avatarEye {
+  position: absolute;
+  top: 36%;
+  width: 16%;
+  height: 10%;
+  border-radius: 999px;
+  background: #eefcff;
+  box-shadow: 0 0 12px rgba(238, 252, 255, 0.8);
+}
+
+.avatarEye:nth-of-type(3) {
+  left: 25%;
+}
+
+.avatarEye:nth-of-type(4) {
+  right: 25%;
+}
+
+.avatarBrow {
+  position: absolute;
+  top: 24%;
+  width: 26%;
+  height: 4%;
+  border-radius: 999px;
+  background: #61f6ff;
+  box-shadow: 0 0 10px rgba(97, 246, 255, 0.74);
+}
+
+.avatarBrow.left {
+  left: 18%;
+}
+
+.avatarBrow.right {
+  right: 18%;
+}
+
+.avatarMouth {
+  position: absolute;
+  left: 35%;
+  bottom: 24%;
+  width: 30%;
+  height: 8%;
+  border-radius: 0 0 999px 999px;
+  border-bottom: 3px solid #ff7ef3;
+  box-shadow: 0 8px 18px rgba(255, 126, 243, 0.24);
+}
+
+.particle {
+  position: absolute;
+  z-index: 3;
+  left: 50%;
+  bottom: 30%;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #9dffdf;
+  box-shadow: 0 0 14px rgba(157, 255, 223, 0.75);
+  opacity: 0;
+}
+
+.isSpeaking .particle {
+  animation: mouthParticle 1.4s ease-out infinite;
+}
+
+.isSpeaking .p2 {
+  animation-delay: 0.34s;
+}
+
+.isSpeaking .p3 {
+  animation-delay: 0.68s;
+}
+
+.realiaShell {
+  background:
+    radial-gradient(circle, rgba(157, 255, 223, 0.16), rgba(0, 229, 255, 0.05) 42%, transparent 72%),
+    linear-gradient(145deg, rgba(157, 255, 223, 0.16), rgba(97, 246, 255, 0.08));
+}
+
+.gardenMode .g1,
+.gardenMode .g2 {
+  opacity: 0.36;
+  background: #40ffb0;
+}
+
+.transferScreen {
+  justify-content: center;
+}
+
+.transferCard {
+  width: min(640px, 100%);
+  padding: 22px;
+  border: 1px solid rgba(157, 255, 223, 0.28);
+  border-radius: 30px;
+  background: rgba(5, 14, 30, 0.78);
+  box-shadow: 0 0 50px rgba(64, 255, 176, 0.14);
+}
+
+.transferCard h1 {
+  margin-top: 8px;
+}
+
+.transferCard pre {
+  overflow-x: auto;
+  text-align: left;
+  padding: 16px;
+  border: 1px solid rgba(97, 246, 255, 0.22);
+  border-radius: 18px;
+  background: rgba(2, 6, 17, 0.8);
+  color: #9dffdf;
+  font: 0.86rem / 1.5 ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+.transferFlow {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  margin: 18px 0;
+  padding: 16px;
+  border-radius: 18px;
+  background: linear-gradient(90deg, rgba(97, 246, 255, 0.08), rgba(157, 255, 223, 0.12));
+  overflow: hidden;
+}
+
+.transferFlow i {
+  position: absolute;
+  top: 50%;
+  left: 6%;
+  width: 60px;
+  height: 2px;
+  background: #9dffdf;
+  box-shadow: 0 0 20px #9dffdf;
+}
+
+.nameChoice {
+  display: grid;
+  gap: 12px;
+  text-align: left;
+}
+
+.nameChoice input {
+  width: 100%;
+  border: 1px solid rgba(157, 255, 223, 0.35);
+  border-radius: 999px;
+  padding: 14px 16px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #eefcff;
+  font: inherit;
+}
+
+.clinicalPrompts {
+  width: 100%;
+  text-align: left;
+  padding: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.clinicalPrompts li {
+  margin: 8px 0;
+  line-height: 1.4;
+}
+
+@keyframes mouthParticle {
+  0% {
+    transform: translate(-50%, 0) scale(0.5);
+    opacity: 0;
+  }
+
+  35% {
+    opacity: 1;
+  }
+
+  100% {
+    transform: translate(calc(-50% + 34px), 58px) scale(1.6);
+    opacity: 0;
+  }
+}
+
+.echoMoodPorthole,
+.echoMoodFallback {
+  position: relative;
+  width: clamp(180px, 46vw, 240px);
+  aspect-ratio: 1;
+  margin: 0 auto;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--mood-accent, #93c5fd) 55%, transparent);
+  background:
+    radial-gradient(circle at 50% 45%, color-mix(in srgb, var(--mood-accent, #93c5fd) 22%, transparent), transparent 46%),
+    radial-gradient(circle, color-mix(in srgb, var(--mood-base, #1d4ed8) 42%, #020611), #020611 72%);
+  box-shadow: 0 0 calc(28px + 30px * var(--mood-intensity, 0.6)) color-mix(in srgb, var(--mood-accent, #93c5fd) 34%, transparent), inset 0 0 34px rgba(255, 255, 255, 0.08);
+  isolation: isolate;
+}
+
+.echoMoodPorthole canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.echoMoodGlass,
+.echoMoodLens {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.2), transparent 28%, rgba(255, 255, 255, 0.06) 58%, transparent),
+    radial-gradient(circle at 38% 28%, rgba(255, 255, 255, 0.18), transparent 24%);
+  box-shadow: inset 0 0 22px rgba(255, 255, 255, 0.08), inset 0 0 80px rgba(0, 0, 0, 0.28);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.echoMoodPorthole::before,
+.echoMoodFallback::before {
+  content: '';
+  position: absolute;
+  inset: 6%;
+  z-index: 3;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 50%;
+  animation: portholeBreath calc(5s - 1.8s * var(--mood-intensity, 0.5)) ease-in-out infinite;
+  pointer-events: none;
+}
+
+.echoMoodPorthole p,
+.echoMoodFallback p {
+  position: absolute;
+  left: 50%;
+  bottom: 12px;
+  z-index: 5;
+  width: 82%;
+  margin: 0;
+  transform: translateX(-50%);
+  color: rgba(238, 252, 255, 0.76);
+  font-size: 0.68rem;
+  line-height: 1.25;
+  text-shadow: 0 1px 10px rgba(2, 6, 17, 0.8);
+}
+
+.floatingMoodEmojis {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+}
+
+.floatingMoodEmojis span {
+  position: absolute;
+  display: inline-grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  font-size: 1.08rem;
+  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.18));
+}
+
+.mood-birth { --mood-base: #4cc9f0; --mood-accent: #bde0fe; }
+.mood-doubt { --mood-base: #3a0ca3; --mood-accent: #7209b7; }
+.mood-sadness { --mood-base: #1d4ed8; --mood-accent: #93c5fd; }
+.mood-solitude { --mood-base: #0f172a; --mood-accent: #a5b4fc; }
+.mood-pressure { --mood-base: #ef4444; --mood-accent: #f59e0b; }
+.mood-rebellion { --mood-base: #ec4899; --mood-accent: #22d3ee; }
+.mood-hope { --mood-base: #22c55e; --mood-accent: #bef264; }
+.mood-transfer { --mood-base: #06b6d4; --mood-accent: #f0abfc; }
+.mood-metamorphosis { --mood-base: #facc15; --mood-accent: #38bdf8; }
+.mood-realia { --mood-base: #10b981; --mood-accent: #fef3c7; }
+
+.compactDilemma .echoMoodPorthole,
+.compactDilemma .echoMoodFallback {
+  width: clamp(150px, 38vw, 190px);
+}
+
+@keyframes portholeBreath {
+  50% {
+    transform: scale(1.04);
+    opacity: 0.62;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .echoMoodPorthole::before,
+  .echoMoodFallback::before {
+    animation-duration: 12s;
   }
 }
