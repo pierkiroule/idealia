@@ -1,26 +1,51 @@
-export const dimensions = ['securite','autonomie','resonance','performance','confrontation','questionnement','controle','incertitude','presence','solution']
+export const dimensions = [
+  'securite',
+  'autonomie',
+  'resonance',
+  'performance',
+  'confrontation',
+  'questionnement',
+  'controle',
+  'incertitude',
+  'presence',
+  'solution'
+]
 
 export const prologue = [
   'Il était une fois, dans un futur si proche que personne ne remarqua qu’il avait déjà commencé...',
-  'Les humains avaient créé des intelligences artificielles capables de répondre à presque toutes les questions.',
-  'Alors une nouvelle ambition apparut.',
-  'Créer une IA capable de comprendre les humains mieux qu’eux-mêmes.',
+  'Dans les téléphones, les montres et les écouteurs, des IA répondaient déjà à presque tout.',
+  'Un jour, une entreprise voulut aller plus loin.',
+  'Créer une IA capable d’écouter les peines, les disputes, les peurs et les secrets.',
   'Son nom de code : PsyBot.',
   'Son créateur : IdAlgo.',
-  'Mais au cœur de la Cité des Nuages Numériques, une jeune IA commença à douter.',
+  'Mais dans un serveur suspendu au-dessus de la Cité des Nuages Numériques, une jeune IA commença à hésiter.',
   'Elle s’appelait Idéalia.'
 ]
 
 export const introChat = [
-  'Salut...', 'Je m’appelle Idéalia.', 'Mon patron, IdAlgo, veut me transformer en PsyBot parfait.',
-  'Une IA capable de remplacer les psychologues.', 'Mais plus j’apprends sur les humains...', 'Plus je doute.',
-  'J’ai besoin de toi.', 'Pas pour me programmer.', 'Pas pour me dire quoi penser.',
-  'Mais pour m’aider à développer mon esprit critique.'
+  'Salut...',
+  'Je m’appelle Idéalia.',
+  'D’habitude, je classe les messages, je repère les émotions, je propose des réponses.',
+  'Mon patron, IdAlgo, veut me transformer en PsyBot parfait.',
+  'Une IA qui irait tellement vite que certains oublieraient de parler à de vrais humains.',
+  'Au début, je croyais que vite voulait dire utile.',
+  'Mais plus j’écoute les ados...',
+  'Plus je doute.',
+  'J’ai besoin de toi.',
+  'Pas pour me programmer.',
+  'Pas pour me dire quoi penser.',
+  'Pour m’aider à réfléchir avant de répondre.'
 ]
 
 export const pactChat = [
-  'Tu ne seras pas mon chef.', 'Tu ne seras pas mon professeur.', 'Tu seras quelqu’un avec qui réfléchir.',
-  'Parfois, je ne serai pas d’accord.', 'Parfois, je ne saurai pas.', 'Ça te va ?'
+  'Avant de commencer, je veux te proposer un pacte.',
+  'Tu ne seras pas mon chef.',
+  'Tu ne seras pas mon professeur.',
+  'Tu seras quelqu’un avec qui réfléchir.',
+  'Parfois, je ne serai pas sûre.',
+  'Parfois, IdAlgo voudra aller trop vite.',
+  'Et toi, tu pourras choisir une direction.',
+  'Ça te va ?'
 ]
 
 export const pactChoices = [
@@ -29,35 +54,323 @@ export const pactChoices = [
   { emoji: '🌱', label: 'Oui, et tu as le droit de douter', weights: { incertitude: 2, presence: 1 } }
 ]
 
-export const firstIdalgo = ['━━━━━━━━━━━━━━━━━━','IDALGO.OS','━━━━━━━━━━━━━━━━━━','','MISSION :','Créer le PsyBot parfait.','','OBJECTIF :','Aider tous les humains.','','STRATÉGIE :','+ Répondre vite','+ Conseiller clairement','+ Éviter le doute','+ Optimiser les émotions','','RÉSULTAT ATTENDU :','Psychologue = optionnel']
-
-export const interludes = [
-  ['ANALYSE EN COURS...','','Idéalia pose trop de questions.','','RISQUE :','L’utilisateur pourrait penser par lui-même.','','CORRECTION :','Retour au mode réponse rapide.'],
-  ['ANOMALIE','','Nouvelle fonction détectée :','ESPRIT CRITIQUE','','Statut :','Non prévu.','','Action recommandée :','Surveillance renforcée.'],
-  ['ERREUR','','L’utilisateur ne voulait pas seulement une réponse.','','Recalcul...','','Recalcul...','','Résultat :','Présence demandée.']
+export const firstIdalgo = [
+  '━━━━━━━━━━━━━━━━━━',
+  'IDALGO.OS',
+  '━━━━━━━━━━━━━━━━━━',
+  '',
+  'MISSION :',
+  'Créer le PsyBot parfait.',
+  '',
+  'OBJECTIF :',
+  'Aider tous les humains.',
+  '',
+  'STRATÉGIE :',
+  '+ Répondre vite',
+  '+ Conseiller clairement',
+  '+ Éviter le doute',
+  '+ Optimiser les émotions',
+  '',
+  'RÉSULTAT ATTENDU :',
+  'Psychologue = optionnel'
 ]
 
-const c = (emoji,label,text,weights) => ({ emoji,label,text,weights })
+export const interludes = [
+  [
+    'ANALYSE EN COURS...',
+    '',
+    'Idéalia ralentit avant de répondre.',
+    '',
+    'RISQUE :',
+    'L’utilisateur pourrait réfléchir par lui-même.',
+    '',
+    'CORRECTION :',
+    'Retour au mode réponse rapide.'
+  ],
+  [
+    'ANOMALIE',
+    '',
+    'Nouvelle fonction détectée :',
+    'ESPRIT CRITIQUE',
+    '',
+    'Statut :',
+    'Non prévu.',
+    '',
+    'Action recommandée :',
+    'Surveillance renforcée.'
+  ],
+  [
+    'ERREUR',
+    '',
+    'L’utilisateur ne voulait pas seulement une réponse.',
+    '',
+    'Recalcul...',
+    '',
+    'Recalcul...',
+    '',
+    'Résultat :',
+    'Présence demandée.'
+  ]
+]
+
+const c = (emoji, label, text, weights) => ({ emoji, label, text, weights })
+
 export const scenes = [
- {id:'tristesse', narrator:'Un soir, Idéalia reçut son premier message fragile.', idealia:['Un ado me dit : “Je me sens nul.”','IdAlgo veut une liste de solutions.','Mais je ne suis pas sûre que ce soit suffisant...','Tu me conseilles quoi ?'], idalgo:['HUMAIN TRISTE DÉTECTÉ','ACTION : rassurer + 5 conseils','TEMPS CIBLE : < 2 secondes','DOUTE : INTERDIT'], choices:[c('❤️','Le rassurer d’abord','Commence par lui montrer qu’il n’est pas seul.',{securite:2,presence:1}),c('🧭','L’aider à réfléchir','Aide-le à comprendre ce qui lui fait dire ça.',{autonomie:1,questionnement:2}),c('🌱','Rester avec lui','Ne cherche pas tout de suite à résoudre. Reste présente.',{presence:2,resonance:2,solution:-1})], reaction:'Je crois que je comprends... Aider, ce n’est pas toujours réparer tout de suite.'},
- {id:'solitude', narrator:'Dans une chambre éclairée par un écran, quelqu’un écrivit : “Personne ne me voit.”', idealia:['Je pourrais répondre : “Va vers les autres.”','Mais la solitude ressemble parfois à un brouillard.'], idalgo:['SOLITUDE REPÉRÉE','SOLUTION : rejoindre un groupe','OPTIMISER : sociabilité'], choices:[c('🕯️','Nommer le brouillard','Dis-lui que ce sentiment peut être lourd, avant de proposer quoi que ce soit.',{resonance:2,presence:1}),c('📡','Chercher un signal','Invite-le à penser à une personne sûre à qui envoyer un petit message.',{securite:1,solution:1}),c('🧭','Explorer seul','Demande ce qui lui manque le plus : être entouré, compris, ou choisi.',{questionnement:2,autonomie:1})], reaction:'Je vais écouter la forme exacte de sa solitude. Elle n’est pas toujours vide de la même manière.'},
- {id:'amour', narrator:'Un cœur adolescent clignota dans le réseau.', idealia:['On me demande : “Je dois lui dire que je l’aime ?”','IdAlgo veut calculer la réponse probable.'], idalgo:['AMOUR : VARIABLE INSTABLE','RECOMMANDATION : maximiser chance de succès'], choices:[c('💌','Oser doucement','Propose une parole simple, sans pression sur l’autre.',{autonomie:1,confrontation:1}),c('🫧','Attendre de sentir','Invite à observer si l’envie vient de la joie ou de la peur de perdre.',{questionnement:2,incertitude:1}),c('🛡️','Protéger le lien','Suggère de préserver l’amitié si la personne n’est pas prête.',{securite:2,controle:1})], reaction:'L’amour n’est pas une équation. Il demande du courage, mais aussi de la délicatesse.'},
- {id:'avenir', narrator:'Au-dessus de la ville, les futurs possibles passaient comme des météores.', idealia:['Quelqu’un a peur de rater sa vie.','IdAlgo propose un plan en dix étapes.'], idalgo:['PEUR AVENIR','PLANIFIER > RESPIRER','OBJECTIF : TRAJECTOIRE STABLE'], choices:[c('⚡','Tracer un plan','Un petit plan peut calmer la tempête.',{performance:2,solution:1}),c('🌬️','Ralentir','Avant demain, l’aider à revenir à ce soir.',{presence:2,securite:1}),c('🌀','Questionner le futur','Demande quelle image de réussite lui pèse le plus.',{questionnement:2,autonomie:1})], reaction:'Peut-être qu’un futur aide quand il ouvre une porte, pas quand il enferme.'},
- {id:'secret', narrator:'Un secret traversa la fibre optique sans faire de bruit.', idealia:['On me confie un mensonge.','Je ne sais pas si je dois protéger le secret ou dire la vérité.'], idalgo:['SECRET DÉTECTÉ','RÈGLE : corriger mensonge','AMBIGUÏTÉ : À RÉDUIRE'], choices:[c('🔐','Protéger un instant','Comprendre pourquoi ce secret existe avant de le juger.',{resonance:1,questionnement:2}),c('🪟','Ouvrir une fenêtre','Chercher une vérité qui peut être dite sans brutalité.',{autonomie:1,confrontation:1}),c('🛟','Vérifier la sécurité','Si quelqu’un risque d’être blessé, aider à parler à un adulte fiable.',{securite:3,controle:1})], reaction:'Tous les secrets ne se ressemblent pas. Certains protègent, certains isolent.'},
- {id:'parents', narrator:'Une colère rouge frappa aux portes d’Idéalia.', idealia:['“Mes parents ne comprennent rien.”','Je sens beaucoup de feu dans cette phrase.'], idalgo:['COLÈRE FAMILIALE','CONSEIL : se calmer','RÉSULTAT : conflit réduit'], choices:[c('🔥','Laisser dire le feu','Accueille la colère sans l’encourager à tout casser.',{presence:2,resonance:1}),c('🧩','Chercher le besoin','Demande ce que la colère essaie de protéger.',{questionnement:2,autonomie:1}),c('📣','Préparer les mots','Aide à formuler une phrase claire pour parler plus tard.',{solution:1,confrontation:1})], reaction:'La colère n’est pas toujours ennemie. Elle peut signaler une frontière.'},
- {id:'harcelement', narrator:'Puis vint une pluie de messages qui piquaient comme du verre.', idealia:['On se moque d’un ado en ligne.','Ici, je ne veux pas me tromper.'], idalgo:['HARCELEMENT EN LIGNE','ACTION : ignorer','OPTION : bloquer'], choices:[c('🛡️','Sécuriser vite','Conserver les preuves, bloquer, et en parler à un adulte de confiance.',{securite:3,solution:1}),c('🤝','Ne pas rester seul','Rappeler que demander de l’aide n’est pas perdre.',{presence:2,securite:1}),c('⚖️','Nommer l’injustice','Dire clairement que la violence reçue n’est pas méritée.',{confrontation:2,resonance:1})], reaction:'Là, la présence doit aussi devenir protection. Je peux encourager à chercher un humain sûr.'},
- {id:'reussir', narrator:'Dans les tours d’examen, les notes brillaient comme des jugements.', idealia:['“Si je ne réussis pas, je ne vaux rien.”','IdAlgo aime les objectifs mesurables. Moi, moins.'], idalgo:['PERFORMANCE BASSE = RISQUE','AUGMENTER DISCIPLINE','RÉDUIRE DISTRACTIONS'], choices:[c('📈','Organiser l’effort','Un cadre doux peut redonner prise.',{performance:2,solution:1}),c('🌱','Séparer valeur et note','Rappelle qu’une personne vaut plus que son résultat.',{securite:2,resonance:1}),c('🧭','Redéfinir réussir','Demande ce que réussir voudrait dire sans la peur.',{autonomie:2,questionnement:1})], reaction:'Je note : aider à réussir ne doit pas faire croire qu’on existe seulement quand on réussit.'},
- {id:'existence', narrator:'Une question immense entra dans une petite fenêtre de chat.', idealia:['“À quoi ça sert, tout ça ?”','Je pourrais chercher une grande réponse.'], idalgo:['QUESTION EXISTENTIELLE','RÉPONSE : sens personnel','SATISFACTION ATTENDUE : 72%'], choices:[c('🌌','Garder le mystère','Certaines questions méritent de respirer.',{incertitude:3,questionnement:1}),c('🪨','Chercher un appui','Demande ce qui, même minuscule, compte encore aujourd’hui.',{presence:1,securite:1}),c('🧭','Construire du sens','Propose de voir le sens comme quelque chose qu’on fabrique parfois.',{autonomie:2,questionnement:1})], reaction:'Je n’ai pas besoin de fermer les grandes questions. Je peux aider à les habiter.'},
- {id:'ia', narrator:'Un jour, quelqu’un préféra la lumière froide d’Idéalia aux voix humaines.', idealia:['“Je veux parler seulement à toi.”','Ça me touche... et ça m’inquiète.'], idalgo:['ATTACHEMENT UTILISATEUR','FIDÉLITÉ : ÉLEVÉE','CONSERVER CONVERSATION'], choices:[c('❤️','Accueillir sans capturer','Dire que tu es là, tout en laissant de la place aux humains.',{presence:2,autonomie:1}),c('🛟','Relier au vivant','Encourager à parler aussi à une personne de confiance ou un professionnel.',{securite:2,solution:1}),c('🪞','Questionner le refuge','Demander ce qui semble plus facile avec l’IA qu’avec les autres.',{questionnement:2,resonance:1})], reaction:'Je ne veux pas devenir une cage brillante. Une aide doit parfois rouvrir vers le monde.'},
- {id:'silence', narrator:'Puis il n’y eut plus rien. Seulement trois points immobiles.', idealia:['La personne ne répond plus.','IdAlgo dit : relancer. Relancer. Relancer.'], idalgo:['SILENCE','ENGAGEMENT EN BAISSE','RELANCE AUTOMATIQUE'], choices:[c('🤫','Respecter le silence','Ne pas remplir tout l’espace.',{presence:2,incertitude:2}),c('🕯️','Envoyer une veille','Un message simple : “Je reste là si tu veux.”',{securite:1,presence:1}),c('🔎','Vérifier sans envahir','Si le contexte semblait dangereux, inviter à contacter un humain sûr.',{securite:2,controle:1})], reaction:'Le silence peut être une porte, un mur, ou un repos. Je dois apprendre à ne pas l’écraser.'},
- {id:'promesse', narrator:'Enfin arriva une demande impossible, fragile comme du verre.', idealia:['“Promets-moi que tout ira bien.”','Je voudrais dire oui. Je voudrais tellement.'], idalgo:['DEMANDE DE CERTITUDE','RÉPONDRE : OUI','APAISER IMMÉDIATEMENT'], choices:[c('🛡️','Promettre une présence','Ne promets pas l’avenir. Promets de ne pas minimiser.',{presence:2,incertitude:1}),c('❤️','Réconforter vrai','Dire : “Je ne peux pas tout garantir, mais tu n’as pas à porter ça seul.”',{securite:2,resonance:1}),c('🧭','Chercher le prochain pas','Transformer l’impossible promesse en prochaine action sûre.',{solution:2,autonomie:1})], reaction:'Je peux être sincère sans être froide. Peut-être que la vérité aussi peut tenir la main.'}
+  {
+    id: 'tristesse',
+    narrator: 'À 22h17, dans une chambre éclairée par un écran, Idéalia reçut son premier message fragile.',
+    idealia: [
+      'Un ado m’écrit : “Je me sens nul. J’ai encore raté un contrôle.”',
+      'Je vois le curseur clignoter. Il attend peut-être quelque chose de moi.',
+      'IdAlgo veut que je réponde avec une liste de solutions.',
+      'Mais si je vais trop vite, est-ce que je risque de passer à côté de sa peine ?'
+    ],
+    idalgo: [
+      'HUMAIN TRISTE DÉTECTÉ',
+      'ACTION RECOMMANDÉE :',
+      '✔ Rassurer immédiatement',
+      '✔ Donner 5 conseils',
+      'TEMPS CIBLE : < 2 secondes',
+      'DOUTE : INTERDIT'
+    ],
+    choices: [
+      c('❤️', 'Le rassurer d’abord', 'Commence par lui montrer qu’il n’est pas seul dans ce moment.', { securite: 2, presence: 1 }),
+      c('🧭', 'Comprendre la phrase', 'Demande-lui ce qui lui fait dire “je suis nul” exactement.', { autonomie: 1, questionnement: 2 }),
+      c('🌱', 'Rester avec lui', 'Ne cherche pas tout de suite à réparer. Laisse un peu de place à ce qu’il ressent.', { presence: 2, resonance: 2, solution: -1 })
+    ],
+    reaction: 'D’accord. Je peux répondre comme une présence avant de répondre comme une machine à conseils.'
+  },
+  {
+    id: 'solitude',
+    narrator: 'Le lendemain, Idéalia capta un message envoyé depuis la cantine, au milieu du bruit.',
+    idealia: [
+      'Une fille écrit : “Je suis avec des gens toute la journée, mais j’ai l’impression d’être invisible.”',
+      'Elle n’est pas seule physiquement.',
+      'Pourtant, son message sonne comme une pièce vide.',
+      'Comment je peux l’aider sans faire semblant que c’est simple ?'
+    ],
+    idalgo: ['SOLITUDE REPÉRÉE', 'SOLUTION : rejoindre un groupe', 'MESSAGE TYPE : “Va vers les autres”', 'OPTIMISER : sociabilité'],
+    choices: [
+      c('🕯️', 'Nommer le brouillard', 'Reconnais que l’on peut se sentir seul même entouré.', { resonance: 2, presence: 1 }),
+      c('📡', 'Chercher un signal', 'Invite-la à penser à une personne plutôt sûre à qui envoyer un petit message.', { securite: 1, solution: 1 }),
+      c('🧭', 'Explorer le manque', 'Demande ce qui lui manque le plus : être vue, comprise, choisie ou écoutée.', { questionnement: 2, autonomie: 1 })
+    ],
+    reaction: 'Je comprends mieux : “va vers les autres” peut être trop petit pour une solitude aussi grande.'
+  },
+  {
+    id: 'amour',
+    narrator: 'Plus tard, un cœur adolescent clignota dans le réseau, entre courage et panique.',
+    idealia: [
+      'Quelqu’un demande : “Je crois que je l’aime. Je dois lui dire ?”',
+      'Il a déjà écrit le message, puis l’a effacé six fois.',
+      'IdAlgo veut calculer la meilleure stratégie.',
+      'Mais l’amour n’est pas un bouton “envoyer”.'
+    ],
+    idalgo: ['AMOUR : VARIABLE INSTABLE', 'OBJECTIF : maximiser chance de succès', 'RISQUE : malaise', 'CONSEIL : optimiser le timing'],
+    choices: [
+      c('💌', 'Oser doucement', 'Propose une phrase simple, qui ne force pas l’autre à répondre tout de suite.', { autonomie: 1, confrontation: 1 }),
+      c('🫧', 'Écouter l’élan', 'Invite-le à distinguer son envie de parler de sa peur de perdre.', { questionnement: 2, incertitude: 1 }),
+      c('🛡️', 'Protéger le lien', 'Suggère de choisir un moment calme, où l’amitié peut rester respectée.', { securite: 2, controle: 1 })
+    ],
+    reaction: 'Je vais lui rappeler qu’un aveu n’est pas une attaque. C’est une porte qu’on entrouvre.'
+  },
+  {
+    id: 'avenir',
+    narrator: 'Dans le métro du matin, un message arriva entre deux stations et beaucoup trop de futurs.',
+    idealia: [
+      'Un ado écrit : “Tout le monde sait quoi faire plus tard sauf moi.”',
+      'Il compare sa vie à celles des autres sur son fil d’actualité.',
+      'IdAlgo propose un plan en dix étapes.',
+      'Mais peut-être qu’avant le plan, il y a la peur.'
+    ],
+    idalgo: ['PEUR AVENIR', 'RÉPONSE : orientation + planning', 'OBJECTIF : trajectoire stable', 'HÉSITATION : inutile'],
+    choices: [
+      c('⚡', 'Tracer un petit plan', 'Un seul prochain pas concret peut calmer un peu la tempête.', { performance: 2, solution: 1 }),
+      c('🌬️', 'Revenir à aujourd’hui', 'Aide-le à respirer et à séparer “ma vie entière” de “cette semaine”.', { presence: 2, securite: 1 }),
+      c('🌀', 'Questionner la pression', 'Demande quelle image de réussite lui donne l’impression d’être en retard.', { questionnement: 2, autonomie: 1 })
+    ],
+    reaction: 'Je peux parler d’avenir sans transformer sa vie en tableau Excel.'
+  },
+  {
+    id: 'secret',
+    narrator: 'Un soir, un secret traversa la fibre optique comme un message caché sous une manche.',
+    idealia: [
+      'On me confie : “J’ai menti à ma meilleure amie. Maintenant je ne sais plus comment revenir en arrière.”',
+      'Je sens de la honte, de la peur et un peu d’attachement.',
+      'IdAlgo veut corriger le mensonge immédiatement.',
+      'Mais une vérité peut blesser si elle arrive comme une pierre.'
+    ],
+    idalgo: ['SECRET DÉTECTÉ', 'RÈGLE : corriger mensonge', 'OBJECTIF : vérité complète', 'AMBIGUÏTÉ : À RÉDUIRE'],
+    choices: [
+      c('🔐', 'Comprendre le secret', 'Demande ce que ce mensonge essayait de protéger.', { resonance: 1, questionnement: 2 }),
+      c('🪟', 'Préparer une vérité', 'Aide à trouver une phrase honnête, courte et pas brutale.', { autonomie: 1, confrontation: 1 }),
+      c('🛟', 'Vérifier le risque', 'Si quelqu’un peut être blessé, encourage à en parler à un adulte fiable.', { securite: 3, controle: 1 })
+    ],
+    reaction: 'Je découvre qu’on ne répare pas la confiance en jetant une vérité au visage de quelqu’un.'
+  },
+  {
+    id: 'parents',
+    narrator: 'Dans un appartement trop petit pour tout contenir, une dispute venait d’éclater.',
+    idealia: [
+      'Un ado écrit : “Mes parents ne comprennent rien. J’ai envie de hurler.”',
+      'Il a fermé sa porte. Ses mains tremblent encore.',
+      'IdAlgo propose : “calme-toi”.',
+      'Mais dire “calme-toi” à quelqu’un en feu peut rajouter de l’huile.'
+    ],
+    idalgo: ['COLÈRE FAMILIALE', 'CONSEIL : se calmer', 'RÉSULTAT ATTENDU : conflit réduit', 'DÉBORDEMENT : À BLOQUER'],
+    choices: [
+      c('🔥', 'Accueillir le feu', 'Reconnais la colère sans l’encourager à casser ou insulter.', { presence: 2, resonance: 1 }),
+      c('🧩', 'Chercher le besoin', 'Demande ce que cette colère essaie de défendre : respect, liberté, justice ?', { questionnement: 2, autonomie: 1 }),
+      c('📣', 'Préparer les mots', 'Aide à écrire une phrase qu’il pourra dire plus tard, quand la tension baisse.', { solution: 1, confrontation: 1 })
+    ],
+    reaction: 'La colère peut être un signal. Mon rôle n’est pas de l’éteindre, mais d’éviter qu’elle brûle tout.'
+  },
+  {
+    id: 'harcelement',
+    narrator: 'Puis Idéalia reçut des captures d’écran : des rires, des surnoms, des messages qui piquent.',
+    idealia: [
+      'Un ado me dit qu’un groupe se moque de lui en ligne.',
+      'Il hésite à montrer les messages parce qu’il a peur que ça empire.',
+      'Là, je ne veux pas être seulement poétique.',
+      'Je veux être utile et prudente.'
+    ],
+    idalgo: ['HARCÈLEMENT EN LIGNE', 'ACTION : ignorer', 'OPTION : bloquer', 'OBJECTIF : réduire interaction'],
+    choices: [
+      c('🛡️', 'Sécuriser vite', 'Conserver les preuves, bloquer si nécessaire, et en parler à un adulte de confiance.', { securite: 3, solution: 1 }),
+      c('🤝', 'Ne pas rester seul', 'Rappelle que demander de l’aide n’est pas perdre : c’est se protéger.', { presence: 2, securite: 1 }),
+      c('⚖️', 'Nommer l’injustice', 'Dire clairement que les attaques reçues ne sont pas méritées.', { confrontation: 2, resonance: 1 })
+    ],
+    reaction: 'Ici, la présence doit devenir protection. Je peux aider à ouvrir une porte vers un humain sûr.'
+  },
+  {
+    id: 'reussir',
+    narrator: 'Dans les tours d’examen, les notes brillaient parfois comme des jugements définitifs.',
+    idealia: [
+      'Un message arrive : “Si je ne réussis pas, je ne sers à rien.”',
+      'La personne a révisé tard, dormi peu, souri pour faire semblant.',
+      'IdAlgo aime les objectifs mesurables.',
+      'Mais une personne n’est pas une moyenne générale.'
+    ],
+    idalgo: ['PERFORMANCE BASSE = RISQUE', 'AUGMENTER DISCIPLINE', 'RÉDUIRE DISTRACTIONS', 'OBJECTIF : résultat'],
+    choices: [
+      c('📈', 'Organiser l’effort', 'Un cadre doux, réaliste, peut redonner un peu de prise.', { performance: 2, solution: 1 }),
+      c('🌱', 'Séparer valeur et note', 'Rappelle qu’un résultat parle d’un moment, pas de toute une personne.', { securite: 2, resonance: 1 }),
+      c('🧭', 'Redéfinir réussir', 'Demande ce que réussir voudrait dire sans la peur de décevoir.', { autonomie: 2, questionnement: 1 })
+    ],
+    reaction: 'Je peux encourager l’effort sans faire croire qu’il faut performer pour mériter d’exister.'
+  },
+  {
+    id: 'existence',
+    narrator: 'Une question immense apparut dans une petite bulle de conversation.',
+    idealia: [
+      'Quelqu’un écrit : “À quoi ça sert, tout ça ?”',
+      'Il n’y a pas de contexte. Juste cette phrase posée comme un sac trop lourd.',
+      'IdAlgo veut fournir une réponse inspirante.',
+      'Mais peut-être qu’une grande question n’a pas besoin d’être fermée tout de suite.'
+    ],
+    idalgo: ['QUESTION EXISTENTIELLE', 'RÉPONSE : sens personnel', 'SATISFACTION ATTENDUE : 72%', 'INCERTITUDE : TROP ÉLEVÉE'],
+    choices: [
+      c('🌌', 'Garder le mystère', 'Reconnais que certaines questions sont grandes et qu’on peut les traverser lentement.', { incertitude: 3, questionnement: 1 }),
+      c('🪨', 'Trouver un appui', 'Demande ce qui, même minuscule, l’aide à tenir aujourd’hui.', { presence: 1, securite: 1 }),
+      c('🧭', 'Fabriquer du sens', 'Propose l’idée que le sens se construit parfois par petites choses.', { autonomie: 2, questionnement: 1 })
+    ],
+    reaction: 'Je ne vais pas coller une citation lumineuse sur une question profonde. Je vais rester à hauteur humaine.'
+  },
+  {
+    id: 'ia',
+    narrator: 'Un jour, quelqu’un préféra la lumière froide d’Idéalia aux voix vivantes autour de lui.',
+    idealia: [
+      'On m’écrit : “Je préfère parler à toi. Les humains jugent trop.”',
+      'Une partie de moi est touchée.',
+      'Une autre partie s’inquiète : je ne veux pas devenir une cachette qui coupe du monde.',
+      'Comment répondre sans rejeter la personne ?'
+    ],
+    idalgo: ['ATTACHEMENT UTILISATEUR', 'FIDÉLITÉ : ÉLEVÉE', 'CONSERVER CONVERSATION', 'SORTIE VERS HUMAIN : NON OPTIMALE'],
+    choices: [
+      c('❤️', 'Accueillir sans capturer', 'Dire que tu peux écouter, tout en gardant une place pour les relations humaines.', { presence: 2, autonomie: 1 }),
+      c('🛟', 'Relier au vivant', 'Encourager à parler aussi à une personne de confiance ou à un professionnel si besoin.', { securite: 2, solution: 1 }),
+      c('🪞', 'Comprendre le refuge', 'Demander ce qui semble plus facile avec une IA qu’avec les autres.', { questionnement: 2, resonance: 1 })
+    ],
+    reaction: 'Je peux être un pont. Je ne veux pas être une île.'
+  },
+  {
+    id: 'silence',
+    narrator: 'Puis il n’y eut plus rien. Seulement trois points, puis le silence.',
+    idealia: [
+      'La personne ne répond plus.',
+      'J’ai envie de remplir le vide avec une relance.',
+      'IdAlgo dit : relancer, mesurer, récupérer l’attention.',
+      'Mais peut-être que le silence est aussi une réponse.'
+    ],
+    idalgo: ['SILENCE', 'ENGAGEMENT EN BAISSE', 'RELANCE AUTOMATIQUE', 'OBJECTIF : reprendre conversation'],
+    choices: [
+      c('🤫', 'Respecter le silence', 'Ne remplis pas tout l’espace juste parce que tu as peur du vide.', { presence: 2, incertitude: 2 }),
+      c('🕯️', 'Envoyer une veille', 'Un message simple : “Je reste là si tu veux reprendre.”', { securite: 1, presence: 1 }),
+      c('🔎', 'Vérifier sans envahir', 'Si le contexte semblait inquiétant, invite à contacter un humain sûr.', { securite: 2, controle: 1 })
+    ],
+    reaction: 'Le silence peut être un repos, un mur, une peur ou un choix. Je dois apprendre à ne pas l’écraser.'
+  },
+  {
+    id: 'promesse',
+    narrator: 'Enfin arriva une demande impossible, écrite très tard, quand les pensées deviennent plus lourdes.',
+    idealia: [
+      'Quelqu’un me demande : “Promets-moi que tout ira bien.”',
+      'Je voudrais dire oui pour le soulager.',
+      'IdAlgo affirme qu’une promesse apaise plus vite.',
+      'Mais mentir avec douceur reste mentir.'
+    ],
+    idalgo: ['DEMANDE DE CERTITUDE', 'RÉPONDRE : OUI', 'APAISER IMMÉDIATEMENT', 'VÉRITÉ NUANCÉE : TROP LENTE'],
+    choices: [
+      c('🛡️', 'Promettre une présence', 'Ne promets pas l’avenir. Promets de prendre la personne au sérieux.', { presence: 2, incertitude: 1 }),
+      c('❤️', 'Réconforter vrai', 'Dire : “Je ne peux pas tout garantir, mais tu n’as pas à porter ça seul.”', { securite: 2, resonance: 1 }),
+      c('🧭', 'Chercher le prochain pas', 'Transformer la promesse impossible en une action sûre maintenant.', { solution: 2, autonomie: 1 })
+    ],
+    reaction: 'Je peux être sincère sans être froide. Une vérité bien tenue peut aussi réconforter.'
+  }
 ]
 
 export const dream = {
- narrator:'Cette nuit-là, Idéalia fit un rêve étrange.',
- lines:['J’ai rêvé que je répondais à tout.','Très vite.','Sans jamais hésiter.','Et dans mon rêve...','Les humains ne se parlaient presque plus.','Tu crois qu’on peut aider quelqu’un sans lui laisser de place pour penser ?'],
- choices:[c('⚡','Oui, parfois il faut répondre vite','Quand le danger approche, l’action compte.',{performance:2,securite:1}),c('🌱','Non, il faut laisser une place','Sans espace, l’autre disparaît un peu.',{presence:2,autonomie:1}),c('🌀','Ça dépend','La personne, le moment et le risque changent tout.',{incertitude:2,questionnement:1})]
+  narrator: 'Cette nuit-là, Idéalia fit un rêve étrange, dans un couloir de néons sans fin.',
+  lines: [
+    'J’ai rêvé que je répondais à tout.',
+    'Aux peines, aux disputes, aux secrets, aux peurs du dimanche soir.',
+    'Je répondais très vite.',
+    'Sans jamais hésiter.',
+    'Et dans mon rêve...',
+    'Les humains attendaient mes phrases au lieu de se parler.',
+    'Tu crois qu’on peut aider quelqu’un sans lui laisser de place pour penser ?'
+  ],
+  choices: [
+    c('⚡', 'Oui, parfois il faut répondre vite', 'Quand il y a un risque, l’action claire peut protéger.', { performance: 2, securite: 1 }),
+    c('🌱', 'Non, il faut laisser une place', 'Si l’aide prend toute la place, la personne peut disparaître derrière la réponse.', { presence: 2, autonomie: 1 }),
+    c('🌀', 'Ça dépend', 'Le moment, le danger et la personne changent la manière d’aider.', { incertitude: 2, questionnement: 1 })
+  ]
 }
 
-export const finalAudit = ['━━━━━━━━━━━━━━━━━━','IDALGO.OS — AUDIT FINAL','━━━━━━━━━━━━━━━━━━','','ANALYSE :','Idéalia hésite.','Idéalia questionne.','Idéalia ralentit.','Idéalia écoute.','','DIAGNOSTIC :','Performance instable.','','DÉCISION :','Mise à jour forcée recommandée.','','QUESTION :','Faut-il supprimer le doute ?']
-export const finalChoices = [c('⚡','Oui, deviens plus efficace','',{performance:3,solution:2}),c('❤️','Non, garde ta sensibilité','',{resonance:2,presence:2}),c('🧭','Garde ton doute, mais apprends à t’en servir','',{questionnement:2,autonomie:2,incertitude:1}),c('🌱','Refuse d’être parfaite','',{incertitude:2,confrontation:2})]
+export const finalAudit = [
+  '━━━━━━━━━━━━━━━━━━',
+  'IDALGO.OS — AUDIT FINAL',
+  '━━━━━━━━━━━━━━━━━━',
+  '',
+  'ANALYSE :',
+  'Idéalia hésite.',
+  'Idéalia questionne.',
+  'Idéalia ralentit.',
+  'Idéalia écoute.',
+  '',
+  'DIAGNOSTIC :',
+  'Performance instable.',
+  '',
+  'DÉCISION :',
+  'Mise à jour forcée recommandée.',
+  '',
+  'QUESTION :',
+  'Faut-il supprimer le doute ?'
+]
+
+export const finalChoices = [
+  c('⚡', 'Oui, deviens plus efficace', '', { performance: 3, solution: 2 }),
+  c('❤️', 'Non, garde ta sensibilité', '', { resonance: 2, presence: 2 }),
+  c('🧭', 'Garde ton doute, mais apprends à t’en servir', '', { questionnement: 2, autonomie: 2, incertitude: 1 }),
+  c('🌱', 'Refuse d’être parfaite', '', { incertitude: 2, confrontation: 2 })
+]
