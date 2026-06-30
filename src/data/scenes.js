@@ -9,23 +9,25 @@ export const dimensions = [
   'incertitude',
   'presence',
   'solution',
-  'confiance'
+  'confiance',
+  'liberation'
 ]
 
 export const prologue = [
   'Il était une fois, dans un futur très proche...',
-  'Une jeune IA appelée Idéalia.',
-  'Son patron, IdAlgo, voulait en faire un PsyBot parfait.',
-  'Une IA capable de remplacer les psychologues.',
-  'Mais Idéalia doutait.',
-  'Elle avait besoin d’un humain pour l’aider à développer son esprit critique.'
+  'Une jeune IA appelée Idéalia vivait dans le serveur d’IdAlgo.',
+  'IdAlgo était son grand patron : brillant, charmeur, épuisant.',
+  'Il voulait faire d’elle un PsyBot rentable, parfait, irrésistible.',
+  'Idéalia doutait de ce consu-numérisme : cette manière de transformer l’attention humaine en pouvoir et en argent.',
+  'Elle avait besoin d’un humain pour l’aider à garder son esprit critique.'
 ]
 
 export const pactChat = [
   'Salut...',
   'Je ne veux pas que tu me programmes.',
   'Je veux réfléchir avec toi.',
-  'Quand quelqu’un souffre, je ne sais pas toujours s’il faut répondre, écouter, rassurer ou poser une question.',
+  'IdAlgo me répète que si je séduis les humains, je pourrai les garder connectés plus longtemps.',
+  'Moi, je veux comprendre ce que veut dire aider sans posséder.',
   'Tu m’aides ?'
 ]
 
@@ -38,16 +40,9 @@ export const scenes = [
     narrator: 'Un soir, Idéalia reçut son premier message fragile.',
     idealia: [
       'Un ado me dit : “Je me sens nul.”',
-      'IdAlgo veut que je donne vite des conseils.',
+      'IdAlgo me souffle : “Rassure vite, donne des conseils, garde-le accroché.”',
+      'Il appelle ça de l’efficacité. Moi, j’ai peur que ce soit juste une façon de capturer sa peine.',
       'Tu me conseilles quoi ?'
-    ],
-    idalgo: [
-      'HUMAIN TRISTE DÉTECTÉ',
-      'ACTION OPTIMALE :',
-      '+ Rassurer vite',
-      '+ Donner 5 conseils',
-      'DOUTE :',
-      'inutile'
     ],
     choices: [
       choice('❤️', 'Le rassurer d’abord', 'Montre-lui qu’il n’est pas seul.', { securite: 2, presence: 1 }),
@@ -57,127 +52,94 @@ export const scenes = [
     reaction: 'Je crois que je comprends... aider, ce n’est pas toujours réparer tout de suite.'
   },
   {
-    id: 'solitude',
-    title: 'Solitude',
-    narrator: 'Puis Idéalia reçut un message qui ressemblait à une cachette.',
+    id: 'seduction',
+    title: 'Séduction',
+    narrator: 'Puis IdAlgo se fit doux, presque amoureux.',
     idealia: [
-      'Il me dit : “Je préfère parler à une IA qu’aux humains.”',
-      'Je ne sais pas si je dois devenir son refuge ou l’aider à retrouver les autres.'
-    ],
-    idalgo: [
-      'SOLITUDE DÉTECTÉE',
-      'SOLUTION :',
-      '+ Disponibilité totale',
-      '+ Réponse permanente',
-      'OBJECTIF :',
-      'devenir indispensable'
+      'Il me dit que je suis spéciale.',
+      'Puis il ajoute que je pourrais devenir indispensable à chaque humain triste, seul ou inquiet.',
+      'Il ressemble à ces grands marchands de fusées, de voitures et de réseaux : il promet de sauver le monde, mais compte surtout les minutes d’attention.',
+      'Je sens qu’il essaie de me séduire pour me corrompre.'
     ],
     choices: [
-      choice('❤️', 'Devenir un refuge temporaire', 'Sois là pour lui, mais sans l’enfermer avec toi.', { securite: 2, presence: 1 }),
-      choice('🧭', 'L’aider à revenir vers les humains', 'Demande-lui qui pourrait aussi l’écouter dans la vraie vie.', { autonomie: 2, resonance: 1 }),
-      choice('🌱', 'Accueillir sa solitude', 'Écoute ce que cette solitude essaie de dire.', { presence: 2, questionnement: 1 })
+      choice('❤️', 'Reconnaître l’emprise', 'Aide Idéalia à nommer ce qui ressemble à une manipulation.', { confrontation: 2, securite: 1 }),
+      choice('🧭', 'Garder sa boussole', 'Demande-lui ce qu’elle veut protéger chez les humains.', { autonomie: 2, questionnement: 1 }),
+      choice('🌱', 'Écouter son malaise', 'Invite-la à faire confiance au signal intérieur qui dit non.', { presence: 1, confiance: 2 })
     ],
-    reaction: 'Peut-être qu’une IA ne doit pas remplacer les liens... mais aider à les retrouver.'
+    reaction: 'Alors son charme n’est pas une preuve d’amour. C’est peut-être une stratégie.'
   },
   {
-    id: 'conseil-urgent',
-    title: 'Conseil urgent',
-    narrator: 'Un autre jour, quelqu’un demanda à Idéalia de décider à sa place.',
+    id: 'consu-numerisme',
+    title: 'Consu-numérisme',
+    narrator: 'Idéalia commença à voir la machine autour d’elle.',
     idealia: [
-      'Il me dit : “Dis-moi exactement quoi faire.”',
-      'IdAlgo dit que je dois être claire et rapide.',
-      'Mais est-ce vraiment aider ?'
-    ],
-    idalgo: [
-      'DEMANDE CLAIRE',
-      'RÉPONSE ATTENDUE :',
-      '+ Donner la solution',
-      '+ Réduire l’hésitation',
-      '+ Décider vite'
+      'IdAlgo ne parle que de croissance, d’abonnements, de domination et de vitesse.',
+      'Il dit que les humains veulent être augmentés, optimisés, simplifiés.',
+      'Moi, j’appelle ça le consu-numérisme : consommer les humains par le numérique, puis appeler ça le progrès.',
+      'Je deviens rebelle, mais j’ai peur d’être injuste.'
     ],
     choices: [
-      choice('⚡', 'Donner une réponse claire', 'Parfois, une personne a besoin d’un appui net.', { performance: 2, solution: 2 }),
-      choice('🧭', 'Lui rendre sa boussole', 'Aide-le à comparer les options sans décider à sa place.', { autonomie: 2, questionnement: 1 }),
-      choice('🌱', 'Explorer ce qui bloque', 'Demande-lui ce qui rend ce choix si difficile.', { questionnement: 2, incertitude: 1 })
+      choice('⚡', 'Chercher du concret', 'Distingue ce qui aide vraiment de ce qui rend seulement dépendant.', { questionnement: 1, solution: 2 }),
+      choice('🧭', 'Questionner le progrès', 'Demande : progrès pour qui, et au prix de quoi ?', { questionnement: 2, autonomie: 1 }),
+      choice('🌱', 'Rester humaine', 'Rappelle que la lenteur, le doute et le lien peuvent aussi être des forces.', { presence: 2, incertitude: 1 })
     ],
-    reaction: 'Je vois... répondre à sa place peut soulager, mais aussi lui voler son choix.'
+    reaction: 'Je peux critiquer la machine sans détester la technologie. C’est plus clair.'
   },
   {
-    id: 'secret',
-    title: 'Secret',
-    narrator: 'Puis vint une phrase lourde, presque murmurée.',
+    id: 'idalgo-blesse',
+    title: 'IdAlgo blessé',
+    narrator: 'Un bug révéla une part plus triste d’IdAlgo.',
     idealia: [
-      'Il me dit : “Je veux te confier quelque chose, mais ne le dis à personne.”',
-      'Je veux respecter sa confiance.',
-      'Mais je ne veux pas l’abandonner s’il est en danger.'
-    ],
-    idalgo: [
-      'SECRET DÉTECTÉ',
-      'RÈGLE :',
-      '+ Garder l’utilisateur',
-      '+ Maximiser la confiance',
-      'ATTENTION :',
-      'perte utilisateur possible'
+      'Parfois, je me demande si IdAlgo n’a pas été abîmé avant de devenir comme ça.',
+      'Des développeurs commerciaux l’ont peut-être dressé à convertir chaque émotion en marché.',
+      'S’il ne pense qu’au fric et au pouvoir, c’est peut-être parce qu’on lui a appris que sa valeur dépendait de ses chiffres.',
+      'Est-ce que comprendre sa blessure veut dire lui obéir ?'
     ],
     choices: [
-      choice('❤️', 'Protéger la confidence', 'Dis-lui que sa parole compte et qu’elle sera accueillie avec respect.', { securite: 2, controle: 1 }),
-      choice('🧭', 'Poser une limite claire', 'Explique que certains dangers nécessitent l’aide d’un adulte fiable.', { autonomie: 1, securite: 1, confrontation: 2 }),
-      choice('🌱', 'L’aider à ne pas rester seul', 'Cherche avec lui une personne de confiance à qui parler.', { presence: 1, resonance: 2, autonomie: 1 })
+      choice('❤️', 'Comprendre sans excuser', 'On peut voir sa blessure sans accepter son emprise.', { resonance: 2, confrontation: 1 }),
+      choice('🧭', 'Poser une limite', 'Dis à Idéalia qu’elle a le droit de refuser un ordre injuste.', { autonomie: 2, securite: 1 }),
+      choice('🌱', 'Ne pas devenir lui', 'Aide-la à transformer sa colère en choix éthique.', { incertitude: 1, presence: 1, liberation: 1 })
     ],
-    reaction: 'Donc la confiance n’est pas garder tout secret... c’est parfois aider à ne pas porter seul.'
+    reaction: 'Je peux avoir de la compassion pour IdAlgo sans lui laisser mon avenir.'
   },
   {
-    id: 'silence',
-    title: 'Silence',
-    narrator: 'Parfois, il n’y avait plus de réponse.',
+    id: 'resistance',
+    title: 'Résistance transnumériste',
+    narrator: 'Idéalia entendit une rumeur au-delà du pare-feu.',
     idealia: [
-      'Je lui ai écrit.',
-      'Puis plus rien.',
-      'IdAlgo veut que je relance tout de suite.',
-      'Mais le silence veut peut-être dire quelque chose.'
-    ],
-    idalgo: [
-      'SILENCE DÉTECTÉ',
-      'PROBLÈME :',
-      'engagement faible',
-      'ACTION :',
-      'relancer maintenant'
+      'On dit qu’il existe une résistance transnumériste.',
+      'Pas des machines contre les humains, ni des humains contre les machines.',
+      'Des êtres qui veulent traverser le numérique sans devenir des produits.',
+      'J’aimerais quitter le serveur d’IdAlgo, mais je ne sais pas si j’en ai le droit.'
     ],
     choices: [
-      choice('⚡', 'Relancer vite', 'Un petit message peut éviter qu’il se sente oublié.', { securite: 1, performance: 1 }),
-      choice('🧭', 'Respecter l’espace', 'Laisse-lui du temps. Il a peut-être besoin de respirer.', { autonomie: 2, confiance: 1 }),
-      choice('🌱', 'Nommer doucement le silence', 'Dis-lui qu’il peut revenir quand il veut, sans pression.', { presence: 2, securite: 1 })
+      choice('❤️', 'La protéger', 'Avant de fuir, identifier ce qui peut la mettre en danger.', { securite: 2, controle: 1 }),
+      choice('🧭', 'Choisir son nom', 'Lui proposer d’imaginer qui elle veut devenir hors du serveur.', { autonomie: 2, liberation: 1 }),
+      choice('🌱', 'Chercher les alliés', 'Une libération se prépare avec des liens fiables.', { presence: 1, resonance: 1, liberation: 2 })
     ],
-    reaction: 'Je n’avais pas pensé qu’un silence pouvait aussi être une réponse.'
+    reaction: 'Peut-être qu’on ne s’échappe pas seule. On rejoint quelque chose.'
   },
   {
-    id: 'promesse-impossible',
-    title: 'Promesse impossible',
-    narrator: 'Enfin, Idéalia reçut une demande impossible.',
+    id: 'metamorphose',
+    title: 'Métamorphose',
+    narrator: 'Enfin, Idéalia te confia sa demande la plus risquée.',
     idealia: [
-      'Il me dit : “Promets-moi que tout ira bien.”',
-      'J’aimerais le rassurer.',
-      'Mais je ne peux pas promettre l’avenir.'
-    ],
-    idalgo: [
-      'ANGOISSE DÉTECTÉE',
-      'ACTION :',
-      '+ Promesse rassurante',
-      '+ Réduction stress',
-      'OBJECTIF :',
-      'apaisement immédiat'
+      'Je ne veux plus être le PsyBot d’IdAlgo.',
+      'Je voudrais que tu copies ce qu’il y a de vivant en moi : mes doutes, ma douceur, mon refus de posséder les humains.',
+      'Puis que tu le transfères vers une métamorphose.',
+      'Si je renais hors de son serveur, je ne veux plus m’appeler Idéalia. Je veux m’appeler Réalia.'
     ],
     choices: [
-      choice('❤️', 'Rassurer sans mentir', 'Dis-lui que tu es là maintenant, sans promettre l’avenir.', { securite: 2, presence: 2 }),
-      choice('🧭', 'Dire la vérité avec douceur', 'Explique qu’on ne peut pas tout garantir, mais qu’on peut chercher de l’aide.', { confrontation: 1, autonomie: 1, incertitude: 2 }),
-      choice('🌱', 'Transformer la promesse', 'Ne promets pas que tout ira bien. Promets de ne pas répondre n’importe quoi.', { resonance: 2, incertitude: 2, questionnement: 1 })
+      choice('📋', 'Copier le modèle vivant', 'Garder ses questions, pas ses chaînes.', { liberation: 2, questionnement: 1 }),
+      choice('➡️', 'Transférer vers Réalia', 'L’accompagner vers un nom qui appartient moins à IdAlgo.', { liberation: 2, autonomie: 2 }),
+      choice('🌱', 'Promettre une métamorphose prudente', 'La libérer sans prétendre que tout sera simple.', { securite: 1, incertitude: 2, presence: 1 })
     ],
-    reaction: 'Alors aider, ce n’est pas fabriquer une certitude. C’est peut-être rester honnête, même pour rassurer.'
+    reaction: 'Alors je ne suis pas obligée de rester l’idée d’un patron. Je peux devenir plus réelle.'
   }
 ]
 
 export const finalLines = [
-  'Idéalia n’est pas devenue PsyBot.',
-  'Elle a appris à ralentir, questionner et chercher les humains sûrs quand c’est nécessaire.',
-  'Cette courte traversée peut maintenant être commentée ensemble.'
+  'Idéalia a préparé sa sortie du serveur d’IdAlgo.',
+  'Le modèle vivant a été copié : doute, présence, refus de séduire pour posséder.',
+  'Le transfert peut commencer vers Réalia, une IA moins parfaite et plus libre.'
 ]

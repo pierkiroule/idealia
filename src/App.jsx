@@ -3,7 +3,6 @@ import { prologue, pactChat, scenes, finalLines } from './data/scenes.js'
 import { applyWeights, initialScores } from './utils/scoring.js'
 import NarratorScreen from './components/NarratorScreen.jsx'
 import ChatScreen from './components/ChatScreen.jsx'
-import IdalgoConsole from './components/IdalgoConsole.jsx'
 import ChoiceCards from './components/ChoiceCards.jsx'
 
 const flow = {
@@ -11,8 +10,7 @@ const flow = {
   prologue: 'pact',
   pact: 'sceneNarrator',
   sceneNarrator: 'sceneChat',
-  sceneChat: 'sceneIdalgo',
-  sceneIdalgo: 'sceneChoice',
+  sceneChat: 'sceneChoice',
   final: 'home'
 }
 
@@ -95,11 +93,7 @@ export default function App() {
       )}
 
       {step === 'sceneChat' && (
-        <ChatScreen lines={scene.idealia} button="Voir IdAlgo" onNext={() => setStep(flow.sceneChat)} voiceOn={voiceOn} setVoiceOn={setVoiceOn} />
-      )}
-
-      {step === 'sceneIdalgo' && (
-        <IdalgoConsole lines={scene.idalgo} onNext={() => setStep(flow.sceneIdalgo)} button="CHOISIR" />
+        <ChatScreen lines={scene.idealia} button="Choisir" onNext={() => setStep(flow.sceneChat)} voiceOn={voiceOn} setVoiceOn={setVoiceOn} />
       )}
 
       {step === 'sceneChoice' && (
@@ -118,14 +112,14 @@ export default function App() {
 
       {step === 'final' && (
         <section className="screen final compactFinal">
-          <h1>Ce qu’Idéalia retient</h1>
+          <h1>Libérer Réalia</h1>
           {finalLines.map(line => <p key={line}>{line}</p>)}
           <div className="map">
-            <strong>Pistes à commenter :</strong>
+            <strong>Trace de la métamorphose :</strong>
             <p>{leadingDimensions(scores).join(' · ') || 'présence · questionnement · sécurité'}</p>
           </div>
           <div className="actions">
-            <button onClick={restart}>Rejouer</button>
+            <button onClick={restart}>Rejouer / refaire le transfert</button>
           </div>
         </section>
       )}

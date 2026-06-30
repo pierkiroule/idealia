@@ -9,7 +9,8 @@ export const initialScores = {
   incertitude: 0,
   presence: 0,
   solution: 0,
-  confiance: 0
+  confiance: 0,
+  liberation: 0
 }
 
 export function applyWeights(scores, weights = {}) {
@@ -36,7 +37,8 @@ const phrases = {
   confrontation: 'Tu as parfois choisi de nommer franchement ce qui ne va pas, sans humilier ni attaquer.',
   controle: 'Tu as cherché des repères quand la situation semblait confuse, pour éviter de répondre au hasard.',
   solution: 'Tu as parfois transformé une émotion compliquée en petit prochain pas possible.',
-  confiance: 'Tu as parfois choisi de faire confiance au rythme de l’autre plutôt que de remplir chaque silence.'
+  confiance: 'Tu as parfois choisi de faire confiance au rythme de l’autre plutôt que de remplir chaque silence.',
+  liberation: 'Tu as aidé Idéalia à imaginer une sortie de l’emprise et une métamorphose vers Réalia.'
 }
 
 export function mirrorPhrases(scores) {
