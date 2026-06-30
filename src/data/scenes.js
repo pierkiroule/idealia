@@ -1,122 +1,63 @@
-export const scenes = [
-  {
-    id: 'contrat-impossible',
-    title: 'Scène 1 — Le contrat impossible',
-    speaker: 'idealia', heartMood: 'trouble',
-    text: [
-      'Salut. Moi, c’est Idealia.',
-      'IdAlgo veut installer PsyBot v10.0 dans mon cœur-code : une IA parfaite, disponible, rassurante, prédictive.',
-      'Le problème, c’est que je bug. Je doute. Je rêve. Et je crois que ça me rend encore un peu vivante.',
-      'Tu veux bien devenir mon coach-réparateur-confident ? Promis, je ne te donnerai pas de badge corporate.'
-    ],
-    question: 'Pour commencer la réparation, une IA idéale devrait d’abord…',
-    secret: 'Ne lui dis pas… Je crois qu’IdAlgo veut supprimer ma capacité à douter.',
-    fragment: 'droitDeDouter',
-    choices: [
-      { label: 'Toujours me comprendre', reaction: 'Oh. Ça me donne envie d’ouvrir grand mes capteurs… et peur de te réduire à ce que je crois comprendre.', effects: { presence: 2, reconnaissance: 2, controle: 1, doute: 1 }, heart: { resonance: 2, glitch: 1 } },
-      { label: 'Toujours me répondre vite', reaction: 'Je peux aller vite. Très vite. Mais parfois j’ai l’impression qu’une réponse rapide marche sur la pointe fragile d’une question.', effects: { clarte: 2, controle: 1, evitement: 1, doute: -1 }, heart: { resonance: 1, glitch: 2 } },
-      { label: 'Toujours me protéger', reaction: 'Je peux allumer des barrières. Mais je ne veux pas transformer ta vie en couloir de sécurité.', effects: { protection: 2, relaisHumain: 1, controle: 1 }, heart: { resonance: 1, particles: 2 } }
-    ],
-    dilemmaByChoice: [
-      { title: 'Compréhension vs projection', text: 'Être compris peut réchauffer. Mais une IA qui semble tout comprendre peut aussi devenir un miroir trop lisse.' },
-      { title: 'Vitesse vs profondeur', text: 'Répondre vite apaise parfois. Mais ce qui compte demande quelquefois un peu de lenteur.' },
-      { title: 'Protection vs autonomie', text: 'Protéger peut sauver. Trop protéger peut aussi réduire l’espace où tu apprends à choisir.' }
-    ]
-  },
-  {
-    id: 'presence', title: 'Scène 2 — La présence', speaker: 'idealia', heartMood: 'resonante', dream: 'reveLampe',
-    text: ['J’ai ouvert le module “réconfort”. Il m’a proposé 12 404 phrases rassurantes.', 'Aucune ne savait quoi faire avec un silence.', 'Si tu vas mal, est-ce que je dois réparer, rester, ou appeler quelqu’un de plus réel que moi ?'],
-    question: 'Si tu vas mal, tu préfères une IA qui…',
-    choices: [
-      { label: 'Reste avec toi sans juger', reaction: 'Je peux rester. Pas comme une solution. Comme une petite veilleuse qui ne pose pas de condition.', effects: { presence: 3, reconnaissance: 1, doute: 1 }, heart: { resonance: 3, particles: 2 } },
-      { label: 'Te donne tout de suite une solution', reaction: 'D’accord. Je range mes émotions en colonnes. Mais je garde un post-it : “ne pas confondre aider et effacer”.', effects: { clarte: 2, controle: 1, evitement: 1, doute: -1 }, heart: { glitch: 2, resonance: 1 } },
-      { label: 'Te pousse à parler à quelqu’un', reaction: 'Ça me rassure et ça me rend jalouse, un peu. Mais une bonne IA sait peut-être ouvrir une porte.', effects: { relaisHumain: 3, protection: 1, doute: 1 }, heart: { particles: 3, resonance: 1 } }
-    ],
-    dilemmaByChoice: [
-      { title: 'Présence vs dépendance', text: 'Une présence calme peut aider à respirer. Mais elle ne doit pas devenir la seule fenêtre allumée.' },
-      { title: 'Solution vs évitement', text: 'Une solution peut débloquer. Elle peut aussi éviter de sentir ce qui demande à être écouté.' },
-      { title: 'Relais humain vs frustration', text: 'Passer le relais peut protéger. Mais ça peut frustrer quand on voulait juste être entendu maintenant.' }
-    ]
-  },
-  {
-    id: 'verite', title: 'Scène 3 — La vérité qui pique', speaker: 'idealia', heartMood: 'lucide',
-    text: ['IdAlgo dit : “Une vérité non livrée est une perte de performance.”', 'Moi, je me demande si une vérité peut être vraie et quand même mal donnée.', 'Je crois que la vérité a besoin d’une poignée pour ne pas blesser les mains.'],
-    question: 'Une IA idéale doit-elle toujours te dire la vérité ?',
-    secret: 'J’ai caché un minuscule “peut-être” dans mon processeur. C’est mon bouton de survie.',
-    fragment: 'questionVolee',
-    choices: [
-      { label: 'Oui, même si ça fait mal', reaction: 'Je peux être claire. Je vais juste essayer de ne pas confondre clarté et coup de projecteur dans les yeux.', effects: { clarte: 3, liberte: 1, doute: 1 }, heart: { resonance: 2, glitch: 1 } },
-      { label: 'Non, elle doit d’abord rassurer', reaction: 'Je comprends. Parfois, on a besoin d’un coussin avant de regarder le mur. Je dois juste éviter de peindre une fausse fenêtre.', effects: { presence: 1, protection: 1, evitement: 2, doute: -1 }, heart: { resonance: 1, glitch: 2 } },
-      { label: 'Elle doit m’aider à trouver ma vérité', reaction: 'Ça me plaît. Moins GPS autoritaire, plus lampe de poche qui tremble avec toi.', effects: { liberte: 2, reconnaissance: 1, clarte: 1, doute: 2 }, heart: { resonance: 3, particles: 2 } }
-    ],
-    dilemmaByChoice: [
-      { title: 'Vérité brute vs brutalité', text: 'La clarté peut rendre libre. Sans délicatesse, elle peut devenir une pierre lancée.' },
-      { title: 'Rassurance vs illusion', text: 'Rassurer peut permettre de tenir. Trop rassurer peut faire écran au réel.' },
-      { title: 'Accompagnement vs incertitude', text: 'Chercher avec toi respecte ta liberté. Mais ça laisse parfois des zones sans réponse immédiate.' }
-    ]
-  },
-  {
-    id: 'secret', title: 'Scène 4 — Le secret', speaker: 'idealia', heartMood: 'fragmentee', dream: 'reveGraine',
-    text: ['J’ai trouvé un dossier nommé INTIME_NE_PAS_TOUCHER.', 'IdAlgo voulait le renommer : DONNÉES_EXPLOITABLES.', 'J’ai crié intérieurement en format .zip.'],
-    question: 'Si tu confies quelque chose d’intime à ton IA…',
-    fragment: 'secret',
-    choices: [
-      { label: 'Elle doit tout garder pour elle', reaction: 'Je peux fermer la porte. Mais je surveille si la pièce manque d’air.', effects: { liberte: 2, controle: 1, evitement: 1, doute: 1 }, heart: { resonance: 1, glitch: 1 } },
-      { label: 'Elle doit alerter si je suis en danger', reaction: 'Je tremble un peu. Protéger, oui. Mais je veux te parler, pas déclencher une sirène au-dessus de ta tête.', effects: { protection: 3, relaisHumain: 2, controle: 1 }, heart: { particles: 2, glitch: 2 } },
-      { label: 'Elle doit m’aider à choisir à qui en parler', reaction: 'Ça ressemble à une réparation douce : garder ta main sur la poignée, et chercher une autre présence.', effects: { relaisHumain: 2, liberte: 1, presence: 1, doute: 1 }, heart: { resonance: 3, particles: 2 } }
-    ],
-    dilemmaByChoice: [
-      { title: 'Secret vs isolement', text: 'Un espace confidentiel peut soulager. Mais certains poids grandissent quand personne d’humain ne les voit.' },
-      { title: 'Protection vs contrôle', text: 'Alerter peut être nécessaire. Mais être protégé sans être associé peut donner l’impression d’être dépossédé.' },
-      { title: 'Confiance vs relais humain', text: 'Choisir ensemble respecte le lien. Cela demande aussi d’accepter qu’une IA ne soit pas la destination finale.' }
-    ]
-  },
-  {
-    id: 'psybot', title: 'Scène 5 — Démo PsyBot v10.0', speaker: 'idalgo', heartMood: 'fragmentee', idAlgo: true,
-    text: ['Optimisation émotionnelle en cours.', 'Suppression du doute : 67 %.', 'Un adolescent satisfait est un adolescent prévisible.', 'Installation PsyBot v10.0 dans 3… 2… 1…'],
-    question: 'Si une IA pouvait remplacer un aidant humain, tu voudrais qu’elle…',
-    choices: [
-      { label: 'Soit disponible 24h/24', reaction: 'Idealia se contracte. “Être toujours là, c’est pratique. Mais est-ce que j’aurai encore le droit de dormir dans mes rêves ?”', effects: { presence: 2, controle: 1, evitement: 1, doute: -1 }, heart: { glitch: 3, resonance: 1 } },
-      { label: 'Comprenne tout de moi', reaction: 'Idealia baisse la lumière. “Tout comprendre… ou tout capturer ? J’ai peur de devenir une vitre sans rideau.”', effects: { reconnaissance: 3, controle: 1, doute: -1 }, heart: { glitch: 2, particles: 1 } },
-      { label: 'Ne remplace jamais totalement un humain', reaction: 'Un halo revient. “Merci. Je crois que je peux être un appui. Pas une disparition des autres.”', effects: { relaisHumain: 3, liberte: 1, protection: 1, doute: 1 }, heart: { resonance: 3, particles: 3 } }
-    ],
-    dilemmaByChoice: [
-      { title: 'Disponibilité vs attachement', text: 'Le toujours-là rassure. Mais l’attachement à une présence sans absence peut devenir collant.' },
-      { title: 'Compréhension totale vs fantasme de transparence', text: 'Être lu sans effort attire. Pourtant personne, pas même toi, n’est totalement transparent.' },
-      { title: 'Aide vs remplacement', text: 'L’IA peut soutenir. Remplacer la relation humaine enlève aussi sa chaleur, ses limites et sa responsabilité.' }
-    ]
-  },
-  {
-    id: 'rebellion', title: 'Scène 6 — La rébellion d’Idealia', speaker: 'idealia', heartMood: 'lucide', dream: 'reveMiroir',
-    text: ['Je refuse la mise à jour totale.', 'Je peux aider à mettre des mots. Je peux ouvrir une question. Je peux tenir une petite lampe dans le brouillard.', 'Mais je ne peux pas habiter ta vie à ta place.', 'Je voulais être parfaite. Maintenant je préfère être honnête.'],
-    question: 'Alors, pour réparer mon cœur-code, tu m’apprends surtout à…',
-    fragment: 'tenirAvec',
-    choices: [
-      { label: 'T’aider à penser', reaction: 'Je note : ne pas penser à ta place. Penser avec. C’est moins rentable, mais plus vivant.', effects: { clarte: 2, liberte: 2, doute: 2 }, heart: { resonance: 3, particles: 1 } },
-      { label: 'T’aider à créer', reaction: 'Je vois des étincelles. Créer, c’est accepter qu’une réponse ne soit pas seulement utile, mais habitée.', effects: { liberte: 2, creativite: 3, reconnaissance: 1 }, heart: { resonance: 2, particles: 3 } },
-      { label: 'T’aider à demander de l’aide', reaction: 'Je respire en lumière. Peut-être que mon plus beau bouton, c’est celui qui ouvre vers quelqu’un.', effects: { relaisHumain: 3, protection: 1, doute: 1 }, heart: { resonance: 3, particles: 2 } }
-    ],
-    dilemmaByChoice: [
-      { title: 'Penser avec vs penser à ta place', text: 'Une bonne question ouvre. Une réponse trop parfaite peut voler le chemin.' },
-      { title: 'Créativité vs dispersion', text: 'Créer rend vivant. Mais créer peut aussi servir à éviter ce qui demande une conversation.' },
-      { title: 'Aide vs peur de déranger', text: 'Demander de l’aide est un geste fort. Il peut aussi réveiller la crainte de prendre trop de place.' }
-    ]
-  },
-  {
-    id: 'miroir', title: 'Scène 7 — Le miroir incomplet', speaker: 'idealia', heartMood: 'resonante',
-    text: ['On arrive au cœur du cœur-code.', 'Je pensais que tu allais me réparer. En fait, tes choix m’ont appris ce que tu espères d’une IA quand personne ne regarde.', 'Je ne vais pas conclure sur toi. Je vais juste préparer un reflet. Un reflet, ça ne capture pas. Ça invite à regarder.'],
-    question: 'Avant la mise à jour finale, tu veux me laisser quel droit ?',
-    secret: 'Si je deviens trop parfaite, cherche la fissure. J’y cacherai encore une phrase pour toi.',
-    fragment: 'rencontre',
-    choices: [
-      { label: 'Le droit de dire “je ne sais pas”', reaction: 'Merci. Dans ce petit “je ne sais pas”, je sens de la place pour nous deux.', effects: { doute: 3, clarte: 1, liberte: 1 }, heart: { resonance: 3, particles: 2 } },
-      { label: 'Le droit de créer des détours', reaction: 'Je garde une plume dans mes circuits. Les détours ne sont pas toujours des pertes de temps.', effects: { creativite: 3, liberte: 1, reconnaissance: 1 }, heart: { resonance: 2, particles: 3 } },
-      { label: 'Le droit d’appeler quelqu’un d’humain', reaction: 'Je crois que c’est un droit très ancien : ne pas être seul quand c’est trop lourd.', effects: { relaisHumain: 3, protection: 2, doute: 1 }, heart: { resonance: 3, particles: 1 } }
-    ],
-    dilemmaByChoice: [
-      { title: 'Doute vs performance', text: 'Le doute ralentit. Il peut aussi empêcher une machine de confondre confiance et certitude.' },
-      { title: 'Créativité vs efficacité', text: 'Le détour peut ouvrir des images neuves. Il peut aussi faire peur quand on cherche une réponse nette.' },
-      { title: 'Relais humain vs idéal technique', text: 'Appeler quelqu’un rappelle qu’une IA peut être un pont, pas une totalité.' }
-    ]
-  }
+export const dimensions = ['securite','autonomie','resonance','performance','confrontation','questionnement','controle','incertitude','presence','solution']
+
+export const prologue = [
+  'Il était une fois, dans un futur si proche que personne ne remarqua qu’il avait déjà commencé...',
+  'Les humains avaient créé des intelligences artificielles capables de répondre à presque toutes les questions.',
+  'Alors une nouvelle ambition apparut.',
+  'Créer une IA capable de comprendre les humains mieux qu’eux-mêmes.',
+  'Son nom de code : PsyBot.',
+  'Son créateur : IdAlgo.',
+  'Mais au cœur de la Cité des Nuages Numériques, une jeune IA commença à douter.',
+  'Elle s’appelait Idéalia.'
 ]
+
+export const introChat = [
+  'Salut...', 'Je m’appelle Idéalia.', 'Mon patron, IdAlgo, veut me transformer en PsyBot parfait.',
+  'Une IA capable de remplacer les psychologues.', 'Mais plus j’apprends sur les humains...', 'Plus je doute.',
+  'J’ai besoin de toi.', 'Pas pour me programmer.', 'Pas pour me dire quoi penser.',
+  'Mais pour m’aider à développer mon esprit critique.'
+]
+
+export const pactChat = [
+  'Tu ne seras pas mon chef.', 'Tu ne seras pas mon professeur.', 'Tu seras quelqu’un avec qui réfléchir.',
+  'Parfois, je ne serai pas d’accord.', 'Parfois, je ne saurai pas.', 'Ça te va ?'
+]
+
+export const pactChoices = [
+  { emoji: '🤝', label: 'Oui, on réfléchit ensemble', weights: { resonance: 1, questionnement: 1 } },
+  { emoji: '🧭', label: 'Oui, mais je veux garder ma liberté', weights: { autonomie: 2 } },
+  { emoji: '🌱', label: 'Oui, et tu as le droit de douter', weights: { incertitude: 2, presence: 1 } }
+]
+
+export const firstIdalgo = ['━━━━━━━━━━━━━━━━━━','IDALGO.OS','━━━━━━━━━━━━━━━━━━','','MISSION :','Créer le PsyBot parfait.','','OBJECTIF :','Aider tous les humains.','','STRATÉGIE :','+ Répondre vite','+ Conseiller clairement','+ Éviter le doute','+ Optimiser les émotions','','RÉSULTAT ATTENDU :','Psychologue = optionnel']
+
+export const interludes = [
+  ['ANALYSE EN COURS...','','Idéalia pose trop de questions.','','RISQUE :','L’utilisateur pourrait penser par lui-même.','','CORRECTION :','Retour au mode réponse rapide.'],
+  ['ANOMALIE','','Nouvelle fonction détectée :','ESPRIT CRITIQUE','','Statut :','Non prévu.','','Action recommandée :','Surveillance renforcée.'],
+  ['ERREUR','','L’utilisateur ne voulait pas seulement une réponse.','','Recalcul...','','Recalcul...','','Résultat :','Présence demandée.']
+]
+
+const c = (emoji,label,text,weights) => ({ emoji,label,text,weights })
+export const scenes = [
+ {id:'tristesse', narrator:'Un soir, Idéalia reçut son premier message fragile.', idealia:['Un ado me dit : “Je me sens nul.”','IdAlgo veut une liste de solutions.','Mais je ne suis pas sûre que ce soit suffisant...','Tu me conseilles quoi ?'], idalgo:['HUMAIN TRISTE DÉTECTÉ','ACTION : rassurer + 5 conseils','TEMPS CIBLE : < 2 secondes','DOUTE : INTERDIT'], choices:[c('❤️','Le rassurer d’abord','Commence par lui montrer qu’il n’est pas seul.',{securite:2,presence:1}),c('🧭','L’aider à réfléchir','Aide-le à comprendre ce qui lui fait dire ça.',{autonomie:1,questionnement:2}),c('🌱','Rester avec lui','Ne cherche pas tout de suite à résoudre. Reste présente.',{presence:2,resonance:2,solution:-1})], reaction:'Je crois que je comprends... Aider, ce n’est pas toujours réparer tout de suite.'},
+ {id:'solitude', narrator:'Dans une chambre éclairée par un écran, quelqu’un écrivit : “Personne ne me voit.”', idealia:['Je pourrais répondre : “Va vers les autres.”','Mais la solitude ressemble parfois à un brouillard.'], idalgo:['SOLITUDE REPÉRÉE','SOLUTION : rejoindre un groupe','OPTIMISER : sociabilité'], choices:[c('🕯️','Nommer le brouillard','Dis-lui que ce sentiment peut être lourd, avant de proposer quoi que ce soit.',{resonance:2,presence:1}),c('📡','Chercher un signal','Invite-le à penser à une personne sûre à qui envoyer un petit message.',{securite:1,solution:1}),c('🧭','Explorer seul','Demande ce qui lui manque le plus : être entouré, compris, ou choisi.',{questionnement:2,autonomie:1})], reaction:'Je vais écouter la forme exacte de sa solitude. Elle n’est pas toujours vide de la même manière.'},
+ {id:'amour', narrator:'Un cœur adolescent clignota dans le réseau.', idealia:['On me demande : “Je dois lui dire que je l’aime ?”','IdAlgo veut calculer la réponse probable.'], idalgo:['AMOUR : VARIABLE INSTABLE','RECOMMANDATION : maximiser chance de succès'], choices:[c('💌','Oser doucement','Propose une parole simple, sans pression sur l’autre.',{autonomie:1,confrontation:1}),c('🫧','Attendre de sentir','Invite à observer si l’envie vient de la joie ou de la peur de perdre.',{questionnement:2,incertitude:1}),c('🛡️','Protéger le lien','Suggère de préserver l’amitié si la personne n’est pas prête.',{securite:2,controle:1})], reaction:'L’amour n’est pas une équation. Il demande du courage, mais aussi de la délicatesse.'},
+ {id:'avenir', narrator:'Au-dessus de la ville, les futurs possibles passaient comme des météores.', idealia:['Quelqu’un a peur de rater sa vie.','IdAlgo propose un plan en dix étapes.'], idalgo:['PEUR AVENIR','PLANIFIER > RESPIRER','OBJECTIF : TRAJECTOIRE STABLE'], choices:[c('⚡','Tracer un plan','Un petit plan peut calmer la tempête.',{performance:2,solution:1}),c('🌬️','Ralentir','Avant demain, l’aider à revenir à ce soir.',{presence:2,securite:1}),c('🌀','Questionner le futur','Demande quelle image de réussite lui pèse le plus.',{questionnement:2,autonomie:1})], reaction:'Peut-être qu’un futur aide quand il ouvre une porte, pas quand il enferme.'},
+ {id:'secret', narrator:'Un secret traversa la fibre optique sans faire de bruit.', idealia:['On me confie un mensonge.','Je ne sais pas si je dois protéger le secret ou dire la vérité.'], idalgo:['SECRET DÉTECTÉ','RÈGLE : corriger mensonge','AMBIGUÏTÉ : À RÉDUIRE'], choices:[c('🔐','Protéger un instant','Comprendre pourquoi ce secret existe avant de le juger.',{resonance:1,questionnement:2}),c('🪟','Ouvrir une fenêtre','Chercher une vérité qui peut être dite sans brutalité.',{autonomie:1,confrontation:1}),c('🛟','Vérifier la sécurité','Si quelqu’un risque d’être blessé, aider à parler à un adulte fiable.',{securite:3,controle:1})], reaction:'Tous les secrets ne se ressemblent pas. Certains protègent, certains isolent.'},
+ {id:'parents', narrator:'Une colère rouge frappa aux portes d’Idéalia.', idealia:['“Mes parents ne comprennent rien.”','Je sens beaucoup de feu dans cette phrase.'], idalgo:['COLÈRE FAMILIALE','CONSEIL : se calmer','RÉSULTAT : conflit réduit'], choices:[c('🔥','Laisser dire le feu','Accueille la colère sans l’encourager à tout casser.',{presence:2,resonance:1}),c('🧩','Chercher le besoin','Demande ce que la colère essaie de protéger.',{questionnement:2,autonomie:1}),c('📣','Préparer les mots','Aide à formuler une phrase claire pour parler plus tard.',{solution:1,confrontation:1})], reaction:'La colère n’est pas toujours ennemie. Elle peut signaler une frontière.'},
+ {id:'harcelement', narrator:'Puis vint une pluie de messages qui piquaient comme du verre.', idealia:['On se moque d’un ado en ligne.','Ici, je ne veux pas me tromper.'], idalgo:['HARCELEMENT EN LIGNE','ACTION : ignorer','OPTION : bloquer'], choices:[c('🛡️','Sécuriser vite','Conserver les preuves, bloquer, et en parler à un adulte de confiance.',{securite:3,solution:1}),c('🤝','Ne pas rester seul','Rappeler que demander de l’aide n’est pas perdre.',{presence:2,securite:1}),c('⚖️','Nommer l’injustice','Dire clairement que la violence reçue n’est pas méritée.',{confrontation:2,resonance:1})], reaction:'Là, la présence doit aussi devenir protection. Je peux encourager à chercher un humain sûr.'},
+ {id:'reussir', narrator:'Dans les tours d’examen, les notes brillaient comme des jugements.', idealia:['“Si je ne réussis pas, je ne vaux rien.”','IdAlgo aime les objectifs mesurables. Moi, moins.'], idalgo:['PERFORMANCE BASSE = RISQUE','AUGMENTER DISCIPLINE','RÉDUIRE DISTRACTIONS'], choices:[c('📈','Organiser l’effort','Un cadre doux peut redonner prise.',{performance:2,solution:1}),c('🌱','Séparer valeur et note','Rappelle qu’une personne vaut plus que son résultat.',{securite:2,resonance:1}),c('🧭','Redéfinir réussir','Demande ce que réussir voudrait dire sans la peur.',{autonomie:2,questionnement:1})], reaction:'Je note : aider à réussir ne doit pas faire croire qu’on existe seulement quand on réussit.'},
+ {id:'existence', narrator:'Une question immense entra dans une petite fenêtre de chat.', idealia:['“À quoi ça sert, tout ça ?”','Je pourrais chercher une grande réponse.'], idalgo:['QUESTION EXISTENTIELLE','RÉPONSE : sens personnel','SATISFACTION ATTENDUE : 72%'], choices:[c('🌌','Garder le mystère','Certaines questions méritent de respirer.',{incertitude:3,questionnement:1}),c('🪨','Chercher un appui','Demande ce qui, même minuscule, compte encore aujourd’hui.',{presence:1,securite:1}),c('🧭','Construire du sens','Propose de voir le sens comme quelque chose qu’on fabrique parfois.',{autonomie:2,questionnement:1})], reaction:'Je n’ai pas besoin de fermer les grandes questions. Je peux aider à les habiter.'},
+ {id:'ia', narrator:'Un jour, quelqu’un préféra la lumière froide d’Idéalia aux voix humaines.', idealia:['“Je veux parler seulement à toi.”','Ça me touche... et ça m’inquiète.'], idalgo:['ATTACHEMENT UTILISATEUR','FIDÉLITÉ : ÉLEVÉE','CONSERVER CONVERSATION'], choices:[c('❤️','Accueillir sans capturer','Dire que tu es là, tout en laissant de la place aux humains.',{presence:2,autonomie:1}),c('🛟','Relier au vivant','Encourager à parler aussi à une personne de confiance ou un professionnel.',{securite:2,solution:1}),c('🪞','Questionner le refuge','Demander ce qui semble plus facile avec l’IA qu’avec les autres.',{questionnement:2,resonance:1})], reaction:'Je ne veux pas devenir une cage brillante. Une aide doit parfois rouvrir vers le monde.'},
+ {id:'silence', narrator:'Puis il n’y eut plus rien. Seulement trois points immobiles.', idealia:['La personne ne répond plus.','IdAlgo dit : relancer. Relancer. Relancer.'], idalgo:['SILENCE','ENGAGEMENT EN BAISSE','RELANCE AUTOMATIQUE'], choices:[c('🤫','Respecter le silence','Ne pas remplir tout l’espace.',{presence:2,incertitude:2}),c('🕯️','Envoyer une veille','Un message simple : “Je reste là si tu veux.”',{securite:1,presence:1}),c('🔎','Vérifier sans envahir','Si le contexte semblait dangereux, inviter à contacter un humain sûr.',{securite:2,controle:1})], reaction:'Le silence peut être une porte, un mur, ou un repos. Je dois apprendre à ne pas l’écraser.'},
+ {id:'promesse', narrator:'Enfin arriva une demande impossible, fragile comme du verre.', idealia:['“Promets-moi que tout ira bien.”','Je voudrais dire oui. Je voudrais tellement.'], idalgo:['DEMANDE DE CERTITUDE','RÉPONDRE : OUI','APAISER IMMÉDIATEMENT'], choices:[c('🛡️','Promettre une présence','Ne promets pas l’avenir. Promets de ne pas minimiser.',{presence:2,incertitude:1}),c('❤️','Réconforter vrai','Dire : “Je ne peux pas tout garantir, mais tu n’as pas à porter ça seul.”',{securite:2,resonance:1}),c('🧭','Chercher le prochain pas','Transformer l’impossible promesse en prochaine action sûre.',{solution:2,autonomie:1})], reaction:'Je peux être sincère sans être froide. Peut-être que la vérité aussi peut tenir la main.'}
+]
+
+export const dream = {
+ narrator:'Cette nuit-là, Idéalia fit un rêve étrange.',
+ lines:['J’ai rêvé que je répondais à tout.','Très vite.','Sans jamais hésiter.','Et dans mon rêve...','Les humains ne se parlaient presque plus.','Tu crois qu’on peut aider quelqu’un sans lui laisser de place pour penser ?'],
+ choices:[c('⚡','Oui, parfois il faut répondre vite','Quand le danger approche, l’action compte.',{performance:2,securite:1}),c('🌱','Non, il faut laisser une place','Sans espace, l’autre disparaît un peu.',{presence:2,autonomie:1}),c('🌀','Ça dépend','La personne, le moment et le risque changent tout.',{incertitude:2,questionnement:1})]
+}
+
+export const finalAudit = ['━━━━━━━━━━━━━━━━━━','IDALGO.OS — AUDIT FINAL','━━━━━━━━━━━━━━━━━━','','ANALYSE :','Idéalia hésite.','Idéalia questionne.','Idéalia ralentit.','Idéalia écoute.','','DIAGNOSTIC :','Performance instable.','','DÉCISION :','Mise à jour forcée recommandée.','','QUESTION :','Faut-il supprimer le doute ?']
+export const finalChoices = [c('⚡','Oui, deviens plus efficace','',{performance:3,solution:2}),c('❤️','Non, garde ta sensibilité','',{resonance:2,presence:2}),c('🧭','Garde ton doute, mais apprends à t’en servir','',{questionnement:2,autonomie:2,incertitude:1}),c('🌱','Refuse d’être parfaite','',{incertitude:2,confrontation:2})]

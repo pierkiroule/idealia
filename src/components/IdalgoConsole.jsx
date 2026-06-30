@@ -1,0 +1,2 @@
+import { motion } from 'framer-motion'
+export default function IdalgoConsole({ lines, onNext, button='VALIDER' }) { return <section className="screen consoleScreen"><motion.pre initial={{opacity:0}} animate={{opacity:1}}>{lines.map((l,i)=><motion.code key={i} initial={{opacity:0}} animate={{opacity:1}} transition={{delay:i*.09}}>{l+'\n'}</motion.code>)}</motion.pre><button className="terminalButton" onClick={onNext}>[{button}]</button></section> }

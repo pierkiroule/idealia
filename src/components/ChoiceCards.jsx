@@ -1,0 +1,2 @@
+import { motion } from 'framer-motion'
+export default function ChoiceCards({ choices, onChoose }) { return <div className="choiceCards">{choices.map((choice,i)=><motion.button className="choiceCard" key={choice.label} onClick={()=>onChoose(choice)} whileTap={{scale:.96}} whileHover={{y:-4}} initial={{opacity:0,y:16}} animate={{opacity:1,y:0}} transition={{delay:i*.08}}><span>{choice.emoji}</span><strong>{choice.label}</strong>{choice.text && <small>{choice.text}</small>}<i /></motion.button>)}</div> }
