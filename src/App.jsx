@@ -11,7 +11,7 @@ import EchoMoodPorthole from './components/EchoMoodPorthole.jsx'
 
 const INTRO_VIDEO_SRC = 'https://raw.githubusercontent.com/pierkiroule/idealia/refs/heads/main/public/videos/intro.mp4'
 const AMBIENT_AUDIO_SRC = 'https://raw.githubusercontent.com/pierkiroule/idealia/refs/heads/main/public/audio/music/Idalgo.mp3'
-const AMBIENT_AUDIO_VOLUME = 0.3
+const AMBIENT_AUDIO_VOLUME = 0.12
 
 export default function App() {
   const [step, setStep] = useState('home')
