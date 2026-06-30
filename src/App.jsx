@@ -44,7 +44,7 @@ export default function App() {
 
     setVoiceOn(true)
 
-    const utterance = new SpeechSynthesisUtterance(`Idéalia répond : ${reaction}`)
+    const utterance = new SpeechSynthesisUtterance(reaction)
     utterance.lang = 'fr-FR'
     utterance.rate = 0.95
 
@@ -117,7 +117,7 @@ export default function App() {
           <ChoiceCards choices={scene.choices} onChoose={chooseScene} />
           {reaction && (
             <div className="reaction">
-              <p>Idéalia répond : “{reaction}”</p>
+              <p>“{reaction}”</p>
               <button onClick={nextAfterScene}>Continuer</button>
             </div>
           )}
