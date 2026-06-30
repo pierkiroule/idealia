@@ -10,7 +10,7 @@ import ProMap from './components/ProMap.jsx'
 import EchoMoodPorthole from './components/EchoMoodPorthole.jsx'
 
 const INTRO_VIDEO_SRC = 'https://raw.githubusercontent.com/pierkiroule/idealia/refs/heads/main/public/videos/intro.mp4'
-const AMBIENT_AUDIO_SRC = '/audio/music/Idalgo.mp3'
+const AMBIENT_AUDIO_SRC = 'https://raw.githubusercontent.com/pierkiroule/idealia/refs/heads/main/public/audio/music/Idalgo.mp3'
 const AMBIENT_AUDIO_VOLUME = 0.3
 
 export default function App() {
@@ -142,7 +142,7 @@ export default function App() {
 
   return (
     <main className={`app consultationApp ${step.includes('realia') || step === 'mirror' || step === 'map' ? 'gardenMode' : ''}`}>
-      <audio ref={ambientAudioRef} src={AMBIENT_AUDIO_SRC} preload="auto" loop aria-hidden="true" />
+      <audio ref={ambientAudioRef} src={AMBIENT_AUDIO_SRC} crossOrigin="anonymous" preload="auto" loop aria-hidden="true" />
       <div className="grid" />
       <div className="glow g1" />
       <div className="glow g2" />
