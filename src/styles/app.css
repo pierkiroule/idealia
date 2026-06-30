@@ -424,3 +424,71 @@ footer {
     text-align: center;
   }
 }
+
+.consultationApp {
+  padding-block: 54px 18px;
+}
+
+.consultationProgress {
+  position: fixed;
+  top: 12px;
+  left: 50%;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transform: translateX(-50%);
+  padding: 8px 12px;
+  border: 1px solid rgba(97, 246, 255, 0.22);
+  border-radius: 999px;
+  background: rgba(2, 6, 17, 0.78);
+  color: #dffbff;
+  font-size: 0.78rem;
+  backdrop-filter: blur(14px);
+}
+
+.consultationProgress b {
+  color: #fff;
+}
+
+.compactHome small {
+  max-width: 310px;
+  color: #b9d8de;
+  font-size: 0.78rem;
+  line-height: 1.4;
+}
+
+.compactDilemma {
+  justify-content: flex-start;
+  padding-top: 48px;
+}
+
+.sceneKicker {
+  margin: 0;
+  color: #9dffdf;
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.compactFinal p {
+  max-width: 620px;
+  margin: 0;
+  line-height: 1.5;
+}
+
+@media (max-width: 560px) {
+  .consultationApp {
+    padding: 48px 12px 18px;
+  }
+
+  .consultationProgress {
+    width: calc(100% - 24px);
+    justify-content: space-between;
+  }
+
+  .compactDilemma {
+    padding-top: 28px;
+  }
+}

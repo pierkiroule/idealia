@@ -8,7 +8,8 @@ export const initialScores = {
   controle: 0,
   incertitude: 0,
   presence: 0,
-  solution: 0
+  solution: 0,
+  confiance: 0
 }
 
 export function applyWeights(scores, weights = {}) {
@@ -34,7 +35,8 @@ const phrases = {
   resonance: 'Tu as souvent demandé à Idéalia d’écouter ce qui se cache derrière les mots : honte, peur, colère ou besoin d’être vu.',
   confrontation: 'Tu as parfois choisi de nommer franchement ce qui ne va pas, sans humilier ni attaquer.',
   controle: 'Tu as cherché des repères quand la situation semblait confuse, pour éviter de répondre au hasard.',
-  solution: 'Tu as parfois transformé une émotion compliquée en petit prochain pas possible.'
+  solution: 'Tu as parfois transformé une émotion compliquée en petit prochain pas possible.',
+  confiance: 'Tu as parfois choisi de faire confiance au rythme de l’autre plutôt que de remplir chaque silence.'
 }
 
 export function mirrorPhrases(scores) {
