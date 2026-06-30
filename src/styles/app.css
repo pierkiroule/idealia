@@ -761,7 +761,7 @@ footer {
     radial-gradient(circle at 50% 38%, rgba(255, 255, 255, 0.16), transparent 19%),
     radial-gradient(circle at 50% 45%, color-mix(in srgb, var(--mood-accent, #93c5fd) 26%, transparent), transparent 46%),
     radial-gradient(circle, color-mix(in srgb, var(--mood-base, #1d4ed8) 42%, #020611), #020611 72%);
-  box-shadow: 0 0 calc(28px + 30px * var(--mood-intensity, 0.6)) color-mix(in srgb, var(--mood-accent, #93c5fd) 34%, transparent), inset 0 0 34px rgba(255, 255, 255, 0.08);
+  box-shadow: 0 0 calc(28px + 30px * var(--mood-intensity, 0.6) + 26px * var(--audio-flux, 0)) color-mix(in srgb, var(--mood-accent, #93c5fd) calc(34% + 18% * var(--audio-level, 0)), transparent), inset 0 0 34px rgba(255, 255, 255, 0.08);
   isolation: isolate;
   perspective: 720px;
 }
@@ -781,7 +781,7 @@ footer {
   display: grid;
   place-items: center;
   transform-style: preserve-3d;
-  animation: morphStageTilt calc(5.2s - 1.4s * var(--mood-intensity, 0.5)) ease-in-out infinite;
+  animation: morphStageTilt calc(5.4s - 1.5s * var(--mood-intensity, 0.5) - 1.2s * var(--audio-flux, 0)) ease-in-out infinite;
 }
 
 .echoMoodMorph::before,
@@ -796,13 +796,13 @@ footer {
   filter: drop-shadow(0 0 18px color-mix(in srgb, var(--mood-accent, #93c5fd) 48%, transparent));
   mix-blend-mode: screen;
   opacity: 0.86;
-  animation: morphMeshSpin 9s linear infinite;
+  animation: morphMeshSpin calc(9s - 3s * var(--audio-level, 0)) linear infinite;
 }
 
 .echoMoodMorph::after {
   inset: 20%;
   border-radius: 58% 42% 54% 46% / 42% 56% 44% 58%;
-  animation-duration: 6.8s;
+  animation-duration: calc(6.8s - 2s * var(--audio-flux, 0));
   animation-direction: reverse;
   opacity: 0.65;
 }
@@ -818,7 +818,7 @@ footer {
     linear-gradient(90deg, transparent 48%, color-mix(in srgb, var(--mood-accent, #93c5fd) 38%, transparent) 49% 51%, transparent 52%),
     linear-gradient(0deg, transparent 48%, color-mix(in srgb, var(--mood-base, #1d4ed8) 34%, transparent) 49% 51%, transparent 52%);
   transform-style: preserve-3d;
-  animation: morphWireBreathe 4.6s ease-in-out infinite;
+  animation: morphWireBreathe calc(4.6s - 1.6s * var(--audio-level, 0)) ease-in-out infinite;
 }
 
 .morphWire-one {
@@ -850,7 +850,7 @@ footer {
   box-shadow:
     0 0 18px color-mix(in srgb, var(--mood-accent, #93c5fd) 72%, transparent),
     0 0 54px color-mix(in srgb, var(--mood-base, #1d4ed8) 54%, transparent);
-  animation: morphAudioPulse 1.15s ease-in-out infinite;
+  animation: morphAudioPulse calc(1.15s - 0.42s * var(--audio-flux, 0)) ease-in-out infinite;
 }
 
 .morphParticleField {
@@ -864,8 +864,8 @@ footer {
   background-size: 18px 18px, 27px 27px;
   background-position: 0 0, 9px 12px;
   mask-image: radial-gradient(circle, black 42%, transparent 74%);
-  opacity: 0.62;
-  animation: morphParticleDrift 7.5s linear infinite;
+  opacity: calc(0.48 + var(--audio-level, 0) * 0.42);
+  animation: morphParticleDrift calc(7.5s - 2.6s * var(--audio-flux, 0)) linear infinite;
 }
 
 .echoMoodPorthole.is-bursting .echoMoodMorph,
@@ -894,7 +894,7 @@ footer {
   z-index: 3;
   border: 1px solid rgba(255, 255, 255, 0.16);
   border-radius: 50%;
-  animation: portholeBreath calc(5s - 1.8s * var(--mood-intensity, 0.5)) ease-in-out infinite;
+  animation: portholeBreath calc(5s - 1.8s * var(--mood-intensity, 0.5) - 1.2s * var(--audio-flux, 0)) ease-in-out infinite;
   pointer-events: none;
 }
 
@@ -970,8 +970,8 @@ footer {
 }
 
 @keyframes morphAudioPulse {
-  0%, 100% { transform: scale(calc(0.72 + var(--mood-intensity, 0.5) * 0.12)); opacity: 0.62; }
-  50% { transform: scale(calc(1.08 + var(--mood-intensity, 0.5) * 0.36)); opacity: 1; }
+  0%, 100% { transform: scale(calc(0.72 + var(--mood-intensity, 0.5) * 0.12 + var(--audio-level, 0) * 0.16)); opacity: calc(0.58 + var(--audio-level, 0) * 0.24); }
+  50% { transform: scale(calc(1.08 + var(--mood-intensity, 0.5) * 0.36 + var(--audio-flux, 0) * 0.5)); opacity: 1; }
 }
 
 @keyframes morphParticleDrift {

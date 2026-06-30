@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { prologue, firstMeeting, pactChat, pactChoices, scenes, revelation, escapeLines, transferTrace, metamorphosisNarrator, realiaLines } from './data/scenes.js'
 import { applyWeights, initialScores } from './utils/scoring.js'
+import { AmbientAudioContext, defaultAudioMotion } from './utils/ambientAudio.js'
 import { speakIdealiaLines } from './utils/voice.js'
 import NarratorScreen from './components/NarratorScreen.jsx'
 import IdealiaChat from './components/IdealiaChat.jsx'
@@ -11,7 +12,7 @@ import ProMap from './components/ProMap.jsx'
 import EchoMoodPorthole from './components/EchoMoodPorthole.jsx'
 
 const INTRO_VIDEO_SRC = 'https://raw.githubusercontent.com/pierkiroule/idealia/refs/heads/main/public/videos/intro.mp4'
-const AMBIENT_AUDIO_SRC = 'https://raw.githubusercontent.com/pierkiroule/idealia/refs/heads/main/public/audio/music/Idalgo.mp3'
+const AMBIENT_AUDIO_SRC = 'https://raw.githubusercontent.com/pierkiroule/idealia/refs/heads/main/public/audio/music/Le%20Bruissement.mp3'
 const AMBIENT_AUDIO_VOLUME = 0.12
 
 export default function App() {
@@ -23,9 +24,11 @@ export default function App() {
   const [newName, setNewName] = useState('Réalia')
   const [burstKey, setBurstKey] = useState(0)
   const [introPlaying, setIntroPlaying] = useState(false)
+  const [audioMotion, setAudioMotion] = useState(defaultAudioMotion)
   const introVideoRef = useRef(null)
   const ambientAudioRef = useRef(null)
   const introAudioRef = useRef({ audioContext: null, analyser: null, source: null, frame: null })
+  const ambientMotionRef = useRef({ audioContext: null, analyser: null, source: null, frame: null, previousLevel: 0, drift: 0, lastStateUpdate: 0 })
   const scene = scenes[sceneIndex]
   const progress = `${Math.min(sceneIndex + 1, scenes.length)}/${scenes.length}`
 
@@ -40,12 +43,68 @@ export default function App() {
     setBurstKey(0)
   }
 
+
+  function startAmbientMotion() {
+    const audio = ambientAudioRef.current
+    if (!audio || typeof window === 'undefined') return
+
+    const AudioContext = window.AudioContext || window.webkitAudioContext
+    if (!AudioContext) return
+
+    const motion = ambientMotionRef.current
+    motion.audioContext ??= new AudioContext()
+    motion.analyser ??= motion.audioContext.createAnalyser()
+    motion.analyser.fftSize = 256
+    motion.analyser.smoothingTimeConstant = 0.72
+
+    if (!motion.source) {
+      motion.source = motion.audioContext.createMediaElementSource(audio)
+      motion.source.connect(motion.analyser)
+      motion.analyser.connect(motion.audioContext.destination)
+    }
+
+    if (motion.audioContext.state === 'suspended') motion.audioContext.resume()
+    if (motion.frame) return
+
+    const frequencyData = new Uint8Array(motion.analyser.frequencyBinCount)
+
+    function average(start, end) {
+      let total = 0
+      const safeEnd = Math.max(start + 1, Math.min(end, frequencyData.length))
+      for (let index = start; index < safeEnd; index += 1) total += frequencyData[index]
+      return total / (safeEnd - start) / 255
+    }
+
+    function pulse(now = 0) {
+      motion.analyser.getByteFrequencyData(frequencyData)
+
+      const low = average(1, 10)
+      const mid = average(10, 38)
+      const high = average(38, 96)
+      const level = Math.min(1, low * 0.45 + mid * 0.35 + high * 0.2)
+      const flux = Math.min(1, Math.abs(level - motion.previousLevel) * 7 + high * 0.25)
+      motion.previousLevel = level
+      motion.drift = (motion.drift + 0.0025 + low * 0.018 + flux * 0.006) % 1000
+
+      if (now - motion.lastStateUpdate > 48) {
+        motion.lastStateUpdate = now
+        setAudioMotion({ level, low, mid, high, flux, drift: motion.drift, ready: true })
+      }
+
+      motion.frame = requestAnimationFrame(pulse)
+    }
+
+    pulse()
+  }
+
   function startAmbientAudio() {
     const audio = ambientAudioRef.current
     if (!audio) return
 
     audio.volume = AMBIENT_AUDIO_VOLUME
     audio.loop = true
+
+    startAmbientMotion()
 
     const playback = audio.play()
     if (playback?.catch) playback.catch(() => undefined)
@@ -89,7 +148,7 @@ export default function App() {
 
     const levels = new Uint8Array(audio.analyser.frequencyBinCount)
 
-    function pulse() {
+    function pulse(now = 0) {
       audio.analyser.getByteFrequencyData(levels)
       const average = levels.reduce((sum, value) => sum + value, 0) / levels.length
       video.parentElement?.style.setProperty('--intro-audio-level', Math.min(1, average / 150).toFixed(3))
@@ -116,7 +175,11 @@ export default function App() {
     return speakIdealiaLines(reaction)
   }, [reaction])
 
-  useEffect(() => () => stopIntroAudioHalo(), [])
+  useEffect(() => () => {
+    stopIntroAudioHalo()
+    const motion = ambientMotionRef.current
+    if (motion.frame) cancelAnimationFrame(motion.frame)
+  }, [])
 
   function nextAfterScene() {
     const nextScene = sceneIndex + 1
@@ -132,6 +195,7 @@ export default function App() {
   }
 
   return (
+    <AmbientAudioContext.Provider value={audioMotion}>
     <main className={`app consultationApp ${step.includes('realia') || step === 'mirror' || step === 'map' ? 'gardenMode' : ''}`}>
       <audio ref={ambientAudioRef} src={AMBIENT_AUDIO_SRC} crossOrigin="anonymous" preload="auto" loop aria-hidden="true" />
       <div className="grid" />
@@ -233,5 +297,6 @@ export default function App() {
 
       {step === 'map' && <ProMap scores={scores} onRestart={restart} />}
     </main>
+    </AmbientAudioContext.Provider>
   )
 }
