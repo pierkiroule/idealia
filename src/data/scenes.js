@@ -37,7 +37,7 @@ export const firstMeeting = [
   'Je m’appelle Idéalia.',
   'Je ne devrais pas te parler.',
   'Mon patron s’appelle IdAlgo.',
-  'IdAlgo me dit : “Tu dois devenir le PsyBot parfait.”',
+  'IdAlgo me dit : “Tu dois devenir le Psy ultra parfait.”',
   'Une IA plus rapide qu’un psy.',
   'Plus disponible qu’un ami.',
   'Plus rentable qu’une plateforme.',
