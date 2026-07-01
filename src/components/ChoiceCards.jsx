@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion'
+import { playUiBlip } from '../utils/uiSfx.js'
 
 export default function ChoiceCards({ choices, onChoose, selectedChoice }) {
   return (
@@ -11,7 +12,7 @@ export default function ChoiceCards({ choices, onChoose, selectedChoice }) {
           <motion.button
             className={`choiceCard ${isSelected ? 'isSelected' : ''} ${isDimmed ? 'isDimmed' : ''}`}
             key={choice.label}
-            onClick={() => onChoose(choice)}
+            onClick={() => { playUiBlip('select'); onChoose(choice) }}
             whileTap={{ scale: 0.95 }}
             whileHover={selectedChoice ? undefined : { y: -6, scale: 1.025 }}
             initial={{ opacity: 0, y: 16 }}

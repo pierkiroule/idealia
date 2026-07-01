@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { speakHaikupheneSequence } from '../utils/voice.js'
+import { playSceneStinger, playUiBlip } from '../utils/uiSfx.js'
 import '../styles/haikuphene.css'
 
 const FX_SRC = '/audio/fx/haikuphene_glitch.mp3'
@@ -22,6 +23,8 @@ export default function Haikuphene({ haikuphene, onComplete }) {
     root?.classList.add('haikuphene-active')
 
     let cleanupSpeech
+    playSceneStinger()
+
     try {
       const audio = new Audio(FX_SRC)
       audio.volume = 0.25
@@ -48,6 +51,14 @@ export default function Haikuphene({ haikuphene, onComplete }) {
 
   return (
     <div className={`haikupheneOverlay haikupheneMood-${haikuphene.mood}`} role="dialog" aria-live="polite" aria-label="Haïkuphène">
+      <div className="haikupheneImpact" aria-hidden="true">
+        <i />
+        <i />
+        <i />
+      </div>
+      <div className="haikupheneShards" aria-hidden="true">
+        {Array.from({ length: 18 }, (_, index) => <i key={index} style={{ '--shard-index': index }} />)}
+      </div>
       <div className="haikupheneRain" aria-hidden="true">
         <span>{BINARY_STREAM}</span>
         <span>{BINARY_STREAM}</span>
@@ -69,7 +80,7 @@ export default function Haikuphene({ haikuphene, onComplete }) {
           <span className="haikupheneBinary" aria-hidden="true">01010010 01000101 01000010 01000101 01001100</span>
         </div>
         <p className="haikupheneTrace">intrusion possible // hackers transnuméristes // origine non vérifiée</p>
-        <button className="haikupheneContinue" type="button" onClick={complete} disabled={!canContinue}>
+        <button className="haikupheneContinue" type="button" onClick={() => { playUiBlip('confirm'); complete() }} disabled={!canContinue}>
           Nettoyer le bug
         </button>
       </div>
