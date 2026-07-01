@@ -28,6 +28,7 @@ export default function App() {
   const [sceneIndex, setSceneIndex] = useState(0)
   const [scores, setScores] = useState(initialScores)
   const [reaction, setReaction] = useState('')
+  const [selectedChoice, setSelectedChoice] = useState(null)
   const [pact, setPact] = useState('')
   const [newName, setNewName] = useState('Réalia')
   const [burstKey, setBurstKey] = useState(0)
@@ -50,6 +51,7 @@ export default function App() {
     setSceneIndex(0)
     setScores(initialScores)
     setReaction('')
+    setSelectedChoice(null)
     setPact('')
     setNewName('Réalia')
     setBurstKey(0)
@@ -128,6 +130,7 @@ export default function App() {
 
   function chooseScene(choice) {
     update(choice.weights)
+    setSelectedChoice(choice)
     setBurstKey(key => key + 1)
     setReaction(choice.reaction ?? scene.reaction)
     if (navigator.vibrate) navigator.vibrate(25)
@@ -202,6 +205,7 @@ export default function App() {
 
     maybeTriggerHaikuphene(scene.id, () => {
       setReaction('')
+      setSelectedChoice(null)
 
       if (nextScene >= scenes.length) {
         setStep('revelationNarrator')
@@ -308,7 +312,7 @@ export default function App() {
           <EchoMoodPorthole mood={scene.mood} phase="choice" burstKey={burstKey} />
           <p className="sceneKicker">Scène {progress} — {scene.title}</p>
           <h2>Toi en tant qu’être humain, tu conseilles à Idéalia de dire quoi ?</h2>
-          <ChoiceCards choices={scene.choices} onChoose={chooseScene} />
+          <ChoiceCards choices={scene.choices} onChoose={chooseScene} selectedChoice={selectedChoice} />
           {reaction && (
             <div className="reaction">
               <p>“{reaction}”</p>

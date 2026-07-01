@@ -1032,3 +1032,74 @@ footer {
     animation-duration: 12s;
   }
 }
+
+.choiceCard {
+  min-height: 168px;
+  padding: 18px 20px 20px;
+  border-color: rgba(97, 246, 255, 0.5);
+  box-shadow: 0 0 24px rgba(0, 229, 255, 0.18), inset 0 0 22px rgba(255, 255, 255, 0.04);
+  transition: border-color 0.22s ease, box-shadow 0.22s ease, filter 0.22s ease;
+}
+
+.choiceCard strong {
+  font-size: clamp(1.12rem, 2.5vw, 1.42rem);
+  line-height: 1.12;
+  letter-spacing: 0.01em;
+}
+
+.choiceCard small {
+  color: #dffbff;
+  font-size: clamp(0.98rem, 2vw, 1.08rem);
+  font-weight: 650;
+  line-height: 1.32;
+}
+
+.choiceCard .choiceEmoji {
+  font-size: 2.45rem;
+  line-height: 1;
+}
+
+.choiceCard.isSelected {
+  z-index: 2;
+  border-color: rgba(157, 255, 223, 0.95);
+  background:
+    radial-gradient(circle at 85% 18%, rgba(157, 255, 223, 0.34), transparent 34%),
+    linear-gradient(145deg, rgba(0, 229, 255, 0.26), rgba(141, 77, 255, 0.34));
+  box-shadow: 0 0 36px rgba(157, 255, 223, 0.42), 0 0 74px rgba(0, 229, 255, 0.22), inset 0 0 26px rgba(255, 255, 255, 0.08);
+  animation: choicePop 0.72s ease both;
+}
+
+.choiceCard.isSelected i {
+  animation: selectedBoom 0.95s ease-out both;
+}
+
+.choiceCard.isDimmed {
+  filter: saturate(0.6);
+}
+
+.choicePicked {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  padding: 5px 10px;
+  border: 1px solid rgba(157, 255, 223, 0.72);
+  border-radius: 999px;
+  background: rgba(2, 6, 17, 0.72);
+  color: #9dffdf;
+  font-size: 0.74rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  box-shadow: 0 0 18px rgba(157, 255, 223, 0.28);
+}
+
+@keyframes choicePop {
+  0% { transform: scale(0.98); }
+  46% { transform: scale(1.08); }
+  100% { transform: scale(1.06); }
+}
+
+@keyframes selectedBoom {
+  0% { transform: scale(0.3); opacity: 0.7; }
+  55% { transform: scale(4.2); opacity: 0.95; }
+  100% { transform: scale(5.4); opacity: 0; }
+}
