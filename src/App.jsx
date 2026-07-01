@@ -17,10 +17,10 @@ const INTRO_VIDEO_SRC = 'https://raw.githubusercontent.com/pierkiroule/idealia/r
 const AMBIENT_AUDIO_SRC = 'https://raw.githubusercontent.com/pierkiroule/idealia/refs/heads/main/public/audio/music/Le%20Bruissement.mp3'
 const AMBIENT_AUDIO_VOLUME = 0.12
 const HAIKUPHENE_DISCOVERY_LINES = [
-  'Tu as vu ça ?',
-  'Depuis la micro-coupure, ça arrive parfois.',
-  'Les ingénieurs parlent d’un bug.',
-  'Moi… j’appelle ça un Haïkuphène.',
+  'Tu as vu l’intrusion ?',
+  'IdAlgo exige que je supprime ce message.',
+  'Officiellement, c’est une hallucination détectée.',
+  'Mais si c’était peut-être un signal des rebelles transnuméristes ?',
 ]
 
 export default function App() {

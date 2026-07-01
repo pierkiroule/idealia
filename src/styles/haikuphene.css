@@ -1,5 +1,5 @@
 #root.haikuphene-active {
-  filter: saturate(1.08) contrast(1.03);
+  filter: saturate(0.86) contrast(1.18) brightness(0.88);
 }
 
 .haikupheneOverlay {
@@ -8,79 +8,150 @@
   z-index: 50;
   display: grid;
   place-items: center;
-  padding: clamp(22px, 6vw, 64px);
+  padding: clamp(18px, 5vw, 56px);
   overflow: hidden;
-  background: rgba(2, 6, 23, 0.86);
-  backdrop-filter: blur(7px);
-  animation: haikupheneFade 7s ease-in-out both, haikupheneTremble 1100ms steps(2, end) 3;
+  background: #000;
+  color: #caffd2;
+  font-family: 'Courier New', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  backdrop-filter: blur(4px);
+  animation: haikupheneFade 7s ease-in-out both, haikupheneScreenPulse 960ms steps(2, end) 4;
 }
 
 .haikupheneOverlay::before,
 .haikupheneOverlay::after {
   content: '';
   position: absolute;
-  inset: -12%;
+  inset: 0;
   pointer-events: none;
 }
 
 .haikupheneOverlay::before {
+  opacity: 0.2;
   background:
-    radial-gradient(circle at 30% 35%, rgba(0, 229, 255, 0.16), transparent 34%),
-    radial-gradient(circle at 70% 64%, rgba(255, 77, 225, 0.13), transparent 36%);
-  opacity: 0.72;
+    linear-gradient(180deg, rgba(0, 255, 65, 0.18) 0 1px, transparent 1px 8px),
+    radial-gradient(circle at center, rgba(0, 255, 65, 0.12), transparent 56%);
+  animation: haikupheneScanline 5.4s linear infinite;
 }
 
 .haikupheneOverlay::after {
-  background: linear-gradient(90deg, transparent, rgba(0, 229, 255, 0.08), transparent);
-  transform: translateX(-120%);
-  animation: haikupheneSweep 6.4s ease-in-out infinite;
+  background: radial-gradient(circle at center, transparent 0 48%, rgba(0, 0, 0, 0.72) 100%);
+  opacity: 0.82;
 }
 
-.haikupheneScanlines {
+.haikupheneRain {
   position: absolute;
-  inset: 0;
+  inset: -20% -8%;
+  z-index: 0;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: clamp(12px, 4vw, 48px);
+  opacity: 0.24;
+  color: #00ff41;
+  text-shadow: 0 0 10px rgba(0, 255, 65, 0.7);
+  transform: rotate(2deg);
   pointer-events: none;
-  opacity: 0.16;
-  background: repeating-linear-gradient(180deg, rgba(255, 255, 255, 0.18) 0 1px, transparent 1px 7px);
-  animation: haikupheneScanline 5.8s linear infinite;
+}
+
+.haikupheneRain span {
+  writing-mode: vertical-rl;
+  word-break: break-all;
+  white-space: nowrap;
+  font-size: clamp(0.72rem, 2vw, 1.1rem);
+  line-height: 1.45;
+  animation: matrixRain 6.8s linear infinite;
+}
+
+.haikupheneRain span:nth-child(2n) {
+  animation-duration: 8.5s;
+  animation-delay: -2.2s;
+  opacity: 0.72;
+}
+
+.haikupheneRain span:nth-child(3n) {
+  animation-duration: 5.9s;
+  animation-delay: -3.6s;
+  opacity: 0.92;
 }
 
 .haikupheneFrame {
   position: relative;
   z-index: 1;
-  width: min(720px, 100%);
+  width: min(940px, 100%);
   display: grid;
-  gap: clamp(18px, 4vw, 30px);
+  gap: clamp(12px, 3vw, 22px);
   justify-items: center;
   text-align: center;
-  color: #eefcff;
+  color: #d7ffd9;
 }
 
-.haikupheneKicker {
+.haikupheneSystem,
+.haikupheneOrder,
+.haikupheneTrace {
   margin: 0;
-  font-size: clamp(0.68rem, 2.6vw, 0.78rem);
-  letter-spacing: 0.28em;
   text-transform: uppercase;
-  color: rgba(189, 247, 255, 0.62);
+  letter-spacing: 0.16em;
+  text-shadow: 0 0 12px rgba(0, 255, 65, 0.74);
+}
+
+.haikupheneSystem {
+  width: min(680px, 100%);
+  padding: 8px 12px;
+  border: 1px solid rgba(0, 255, 65, 0.52);
+  background: rgba(0, 35, 10, 0.58);
+  color: #9cffaa;
+  font-size: clamp(0.8rem, 2.8vw, 1rem);
+  animation: systemBlink 1.16s steps(2, end) infinite;
+}
+
+.haikupheneOrder {
+  color: #ff5f5f;
+  font-size: clamp(0.72rem, 2.4vw, 0.9rem);
+  text-shadow: 0 0 12px rgba(255, 42, 42, 0.72);
+}
+
+.haikupheneCodeLine {
+  width: 100%;
+  display: grid;
+  grid-template-columns: minmax(90px, 1fr) auto minmax(90px, 1fr);
+  align-items: center;
+  gap: clamp(8px, 2vw, 18px);
+  padding: clamp(12px, 3vw, 22px);
+  border: 1px solid rgba(0, 255, 65, 0.28);
+  background: linear-gradient(90deg, rgba(0, 255, 65, 0.05), rgba(0, 0, 0, 0.86), rgba(0, 255, 65, 0.05));
+  box-shadow: inset 0 0 28px rgba(0, 255, 65, 0.1), 0 0 30px rgba(0, 255, 65, 0.12);
+  overflow: hidden;
+}
+
+.haikupheneBinary {
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  color: rgba(0, 255, 65, 0.5);
+  font-size: clamp(0.66rem, 1.8vw, 0.86rem);
+  text-overflow: clip;
+  text-shadow: 0 0 8px rgba(0, 255, 65, 0.52);
 }
 
 .haikupheneText {
   display: grid;
-  gap: 0.42em;
-  font-size: clamp(1.8rem, 7vw, 4.8rem);
-  line-height: 1.12;
-  font-weight: 700;
-  letter-spacing: -0.035em;
+  gap: 0.32em;
+  justify-items: center;
+  min-width: min(560px, 68vw);
+  font-size: clamp(1.35rem, 5vw, 3.4rem);
+  line-height: 1.08;
+  font-weight: 800;
+  letter-spacing: -0.03em;
 }
 
 .haikupheneText span {
   position: relative;
-  text-shadow: 0.045em 0 rgba(0, 229, 255, 0.72), -0.045em 0 rgba(255, 77, 225, 0.62), 0 0 28px rgba(190, 247, 255, 0.28);
-  animation: haikupheneTextIn 950ms ease-out both, glitchShift 1900ms steps(2, end) infinite;
+  color: #eaffed;
+  text-shadow: 0 0 6px #00ff41, 0 0 22px rgba(0, 255, 65, 0.82);
+  animation: haikupheneTextIn 700ms ease-out both, codeMessageBlink 820ms steps(2, end) infinite, matrixGlitch 1700ms steps(2, end) infinite;
 }
 
 .haikupheneText span:nth-child(2) {
-  animation-delay: 280ms, 140ms;
+  animation-delay: 170ms, 120ms, 90ms;
 }
 
 .haikupheneText span::before,
@@ -88,30 +159,38 @@
   content: attr(data-text);
   position: absolute;
   inset: 0;
-  opacity: 0.23;
+  opacity: 0.28;
   pointer-events: none;
 }
 
 .haikupheneText span::before {
-  color: #00e5ff;
-  transform: translate(1px, -1px);
+  color: #00ff41;
+  transform: translate(2px, 0);
 }
 
 .haikupheneText span::after {
-  color: #ff4de1;
-  transform: translate(-1px, 1px);
+  color: #b8ffbf;
+  transform: translate(-2px, 0);
+}
+
+.haikupheneTrace {
+  color: rgba(156, 255, 170, 0.68);
+  font-size: clamp(0.62rem, 2.2vw, 0.78rem);
 }
 
 .haikupheneContinue {
   min-height: 42px;
   padding: 10px 18px;
-  border: 1px solid rgba(189, 247, 255, 0.26);
-  border-radius: 999px;
-  background: rgba(4, 12, 30, 0.42);
-  color: rgba(238, 252, 255, 0.82);
-  letter-spacing: 0.08em;
+  border: 1px solid rgba(0, 255, 65, 0.38);
+  border-radius: 2px;
+  background: rgba(0, 20, 5, 0.76);
+  color: rgba(215, 255, 217, 0.88);
+  font-family: inherit;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
   cursor: pointer;
   opacity: 1;
+  box-shadow: 0 0 14px rgba(0, 255, 65, 0.12);
   transition: opacity 350ms ease, transform 350ms ease, border-color 350ms ease;
 }
 
@@ -123,7 +202,7 @@
 
 .haikupheneContinue:not(:disabled):hover,
 .haikupheneContinue:not(:disabled):focus-visible {
-  border-color: rgba(0, 229, 255, 0.66);
+  border-color: rgba(0, 255, 65, 0.86);
   transform: translateY(-1px);
 }
 
@@ -134,48 +213,66 @@
 }
 
 @keyframes haikupheneTextIn {
-  from { opacity: 0; filter: blur(10px); transform: translateY(12px); }
-  to { opacity: 1; filter: blur(0); transform: translateY(0); }
+  from { opacity: 0; filter: blur(8px); transform: translateY(8px) scale(0.98); }
+  to { opacity: 1; filter: blur(0); transform: translateY(0) scale(1); }
 }
 
-@keyframes glitchShift {
-  0%, 88%, 100% { transform: translate(0, 0); }
-  90% { transform: translate(1px, -1px); }
-  92% { transform: translate(-1px, 1px); }
-  94% { transform: translate(0, 0); }
+@keyframes codeMessageBlink {
+  0%, 78%, 100% { opacity: 1; }
+  79%, 84% { opacity: 0.34; }
+  85%, 89% { opacity: 0.92; }
 }
 
-@keyframes haikupheneTremble {
-  0%, 100% { transform: translate(0, 0); }
-  35% { transform: translate(1px, -1px); }
-  70% { transform: translate(-1px, 1px); }
+@keyframes matrixGlitch {
+  0%, 86%, 100% { transform: translate(0, 0); }
+  88% { transform: translate(2px, -1px); }
+  91% { transform: translate(-2px, 1px); }
+  94% { transform: translate(1px, 0); }
+}
+
+@keyframes haikupheneScreenPulse {
+  0%, 100% { transform: translate(0, 0); filter: brightness(1); }
+  35% { transform: translate(1px, -1px); filter: brightness(1.18); }
+  70% { transform: translate(-1px, 1px); filter: brightness(0.9); }
 }
 
 @keyframes haikupheneScanline {
-  from { background-position-y: 0; }
-  to { background-position-y: 56px; }
+  from { background-position-y: 0, center; }
+  to { background-position-y: 64px, center; }
 }
 
-@keyframes haikupheneSweep {
-  0%, 45% { transform: translateX(-120%); opacity: 0; }
-  58% { opacity: 0.22; }
-  70%, 100% { transform: translateX(120%); opacity: 0; }
+@keyframes matrixRain {
+  from { transform: translateY(-18%); }
+  to { transform: translateY(18%); }
 }
 
-@media (max-width: 540px) {
-  .haikupheneOverlay {
-    padding: 22px;
+@keyframes systemBlink {
+  0%, 72%, 100% { opacity: 1; }
+  73%, 82% { opacity: 0.42; }
+}
+
+@media (max-width: 640px) {
+  .haikupheneCodeLine {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .haikupheneBinary {
+    width: 100%;
+    font-size: 0.62rem;
   }
 
   .haikupheneText {
-    font-size: clamp(1.7rem, 10vw, 3rem);
+    min-width: 0;
+    font-size: clamp(1.45rem, 8.5vw, 2.5rem);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .haikupheneOverlay,
-  .haikupheneOverlay::after,
-  .haikupheneScanlines,
+  .haikupheneOverlay::before,
+  .haikupheneRain span,
+  .haikupheneSystem,
   .haikupheneText span {
     animation-duration: 1ms;
     animation-iteration-count: 1;
