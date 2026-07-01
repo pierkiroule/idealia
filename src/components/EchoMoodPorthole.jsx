@@ -15,19 +15,6 @@ const colors = {
   realia: ['#10b981', '#fef3c7']
 }
 
-const captions = {
-  birth: 'Une méduse de lumière s’éveille et respire doucement.',
-  doubt: 'Des voiles organiques hésitent, puis se déploient.',
-  sadness: 'Une algue bleue dérive lentement dans la profondeur.',
-  solitude: 'Un organisme lunaire flotte en silence.',
-  pressure: 'Une fleur de feu se contracte sans se briser.',
-  rebellion: 'Des pétales électriques s’ouvrent hors de l’emprise.',
-  hope: 'Un corail lumineux pousse vers le centre.',
-  transfer: 'Une graine translucide traverse le portail.',
-  metamorphosis: 'La chrysalide lumineuse change de peau.',
-  realia: 'Le vivant numérique respire en lente résonance.'
-}
-
 function hexToRgb(hex) {
   const value = hex.replace('#', '')
   return [parseInt(value.slice(0, 2), 16) / 255, parseInt(value.slice(2, 4), 16) / 255, parseInt(value.slice(4, 6), 16) / 255]
@@ -203,7 +190,6 @@ export default function EchoMoodPorthole({ mood, intensity, phase = 'chat', burs
       </div>
       <div className="morphParticleField" aria-hidden="true" />
       <div className="echoMoodGlass" />
-      <p>{captions[current.type] || 'La forme morphique écoute.'}</p>
     </div>
   )
 }
