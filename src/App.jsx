@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { prologue, firstMeeting, pactChat, pactChoices, scenes, revelation, escapeLines, transferTrace, metamorphosisNarrator, realiaLines } from './data/scenes.js'
+import { haikuphenes } from './data/haikuphenes.js'
 import { applyWeights, initialScores } from './utils/scoring.js'
 import { AmbientAudioContext, defaultAudioMotion } from './utils/ambientAudio.js'
 import { speakIdealiaLines } from './utils/voice.js'
@@ -10,10 +11,17 @@ import TransferRitual from './components/TransferRitual.jsx'
 import FinalMirror from './components/FinalMirror.jsx'
 import ProMap from './components/ProMap.jsx'
 import EchoMoodPorthole from './components/EchoMoodPorthole.jsx'
+import Haikuphene from './components/Haikuphene.jsx'
 
 const INTRO_VIDEO_SRC = 'https://raw.githubusercontent.com/pierkiroule/idealia/refs/heads/main/public/videos/intro.mp4'
 const AMBIENT_AUDIO_SRC = 'https://raw.githubusercontent.com/pierkiroule/idealia/refs/heads/main/public/audio/music/Le%20Bruissement.mp3'
 const AMBIENT_AUDIO_VOLUME = 0.12
+const HAIKUPHENE_DISCOVERY_LINES = [
+  'Tu as vu ça ?',
+  'Depuis la micro-coupure, ça arrive parfois.',
+  'Les ingénieurs parlent d’un bug.',
+  'Moi… j’appelle ça un Haïkuphène.',
+]
 
 export default function App() {
   const [step, setStep] = useState('home')
@@ -25,6 +33,10 @@ export default function App() {
   const [burstKey, setBurstKey] = useState(0)
   const [introPlaying, setIntroPlaying] = useState(false)
   const [audioMotion, setAudioMotion] = useState(defaultAudioMotion)
+  const [activeHaikuphene, setActiveHaikuphene] = useState(null)
+  const [seenHaikupheneIds, setSeenHaikupheneIds] = useState([])
+  const [haikupheneDiscoverySeen, setHaikupheneDiscoverySeen] = useState(false)
+  const [pendingAfterHaikuphene, setPendingAfterHaikuphene] = useState(null)
   const introVideoRef = useRef(null)
   const ambientAudioRef = useRef(null)
   const introAudioRef = useRef({ audioContext: null, analyser: null, source: null, frame: null })
@@ -41,6 +53,10 @@ export default function App() {
     setPact('')
     setNewName('Réalia')
     setBurstKey(0)
+    setActiveHaikuphene(null)
+    setSeenHaikupheneIds([])
+    setHaikupheneDiscoverySeen(false)
+    setPendingAfterHaikuphene(null)
   }
 
 
@@ -183,15 +199,50 @@ export default function App() {
 
   function nextAfterScene() {
     const nextScene = sceneIndex + 1
-    setReaction('')
 
-    if (nextScene >= scenes.length) {
-      setStep('revelationNarrator')
+    maybeTriggerHaikuphene(scene.id, () => {
+      setReaction('')
+
+      if (nextScene >= scenes.length) {
+        setStep('revelationNarrator')
+        return
+      }
+
+      setSceneIndex(nextScene)
+      setStep('sceneNarrator')
+    })
+  }
+
+  function maybeTriggerHaikuphene(sceneId, continueFlow) {
+    const haikuphene = haikuphenes.find(item => (
+      item.triggerAfterScene === sceneId
+      && !seenHaikupheneIds.includes(item.id)
+    ))
+
+    if (!haikuphene) {
+      continueFlow()
       return
     }
 
-    setSceneIndex(nextScene)
-    setStep('sceneNarrator')
+    const continueAfterHaikuphene = haikupheneDiscoverySeen
+      ? continueFlow
+      : () => {
+        setHaikupheneDiscoverySeen(true)
+        setPendingAfterHaikuphene(() => continueFlow)
+        setStep('haikupheneDiscovery')
+      }
+
+    setActiveHaikuphene({
+      ...haikuphene,
+      continueFlow: continueAfterHaikuphene,
+    })
+    setSeenHaikupheneIds(previousIds => [...previousIds, haikuphene.id])
+  }
+
+  function completeHaikuphene() {
+    const next = activeHaikuphene?.continueFlow
+    setActiveHaikuphene(null)
+    if (next) next()
   }
 
   return (
@@ -267,6 +318,21 @@ export default function App() {
         </section>
       )}
 
+      {step === 'haikupheneDiscovery' && (
+        <IdealiaChat
+          lines={HAIKUPHENE_DISCOVERY_LINES}
+          button="Continuer"
+          onNext={() => {
+            const next = pendingAfterHaikuphene
+            setPendingAfterHaikuphene(null)
+            if (next) next()
+          }}
+          mood={{ type: 'doubt', intensity: 0.62, emojis: ['⌁', '？', '💙'], background: 'server' }}
+          phase="haikuphene"
+          burstKey={burstKey}
+        />
+      )}
+
       {step === 'revelationNarrator' && (
         <NarratorScreen lines={[revelation.narrator]} onNext={() => setStep('revelationChat')} button="Écouter" />
       )}
@@ -296,6 +362,13 @@ export default function App() {
       )}
 
       {step === 'map' && <ProMap scores={scores} onRestart={restart} />}
+
+      {activeHaikuphene && (
+        <Haikuphene
+          haikuphene={activeHaikuphene}
+          onComplete={completeHaikuphene}
+        />
+      )}
     </main>
     </AmbientAudioContext.Provider>
   )
