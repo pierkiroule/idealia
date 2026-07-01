@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import ChoiceCards from './ChoiceCards.jsx'
 import EchoMoodPorthole from './EchoMoodPorthole.jsx'
 import { speakIdealiaLines } from '../utils/voice.js'
@@ -45,31 +45,14 @@ function useTyped(lines) {
   return currentLine ? [...completed, currentLine] : completed
 }
 
-export default function IdealiaChat({ lines, onNext, button, choices, onChoose, speakerName = 'Idéalia', mood, moodIntensity, phase = 'chat', burstKey = 0, audioSrc }) {
-  const narrationAudioRef = useRef(null)
+export default function IdealiaChat({ lines, onNext, button, choices, onChoose, speakerName = 'Idéalia', mood, moodIntensity, phase = 'chat', burstKey = 0 }) {
   const typedLines = useTyped(lines)
   const avatarIntensity = Math.min(1.15, (moodIntensity ?? mood?.intensity ?? 0.55) + 0.18)
 
-  useEffect(() => {
-    const audio = narrationAudioRef.current
-
-    if (audioSrc && audio) {
-      audio.currentTime = 0
-      const playback = audio.play()
-      if (playback?.catch) playback.catch(() => undefined)
-
-      return () => {
-        audio.pause()
-        audio.currentTime = 0
-      }
-    }
-
-    return speakIdealiaLines(lines)
-  }, [audioSrc, lines])
+  useEffect(() => speakIdealiaLines(lines), [lines])
 
   return (
     <section className="screen chat">
-      {audioSrc && <audio ref={narrationAudioRef} src={audioSrc} preload="auto" aria-hidden="true" />}
       <div className="chatPresence" aria-live="polite">
         <EchoMoodPorthole mood={mood} intensity={avatarIntensity} phase={phase} burstKey={burstKey} />
         <div className="presenceCopy">

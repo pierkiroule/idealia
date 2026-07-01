@@ -16,13 +16,6 @@ import Haikuphene from './components/Haikuphene.jsx'
 const INTRO_VIDEO_SRC = 'https://raw.githubusercontent.com/pierkiroule/idealia/refs/heads/main/public/videos/intro.mp4'
 const AMBIENT_AUDIO_SRC = 'https://raw.githubusercontent.com/pierkiroule/idealia/refs/heads/main/public/audio/music/Le%20Bruissement.mp3'
 const PROLOGUE_NARRATION_SRC = '/audio/music/narration.mp3'
-const FIRST_MEETING_NARRATION_SRC = 'https://raw.githubusercontent.com/pierkiroule/idealia/refs/heads/main/public/audio/music/idealia1.mp3'
-const PACT_NARRATION_SRC = 'https://raw.githubusercontent.com/pierkiroule/idealia/refs/heads/main/public/audio/music/idealia2.mp3'
-const SCENE_NARRATION_SOURCES = {
-  tristesse: 'https://raw.githubusercontent.com/pierkiroule/idealia/refs/heads/main/public/audio/music/idealia3.mp3',
-  solitude: 'https://raw.githubusercontent.com/pierkiroule/idealia/refs/heads/main/public/audio/music/idealia4.mp3',
-  'conseil-urgent': 'https://raw.githubusercontent.com/pierkiroule/idealia/refs/heads/main/public/audio/music/idealia5.mp3',
-}
 const AMBIENT_AUDIO_VOLUME = 0.12
 const HAIKUPHENE_DISCOVERY_LINES = [
   'Tu as vu l’intrusion ?',
@@ -300,11 +293,11 @@ export default function App() {
       )}
 
       {step === 'firstMeeting' && (
-        <IdealiaChat lines={firstMeeting} button="Je t’aide" onNext={() => setStep('pact')} mood={{ type: 'birth', intensity: 0.65, emojis: ['🌊', '👁️', '💙'], background: 'server' }} audioSrc={FIRST_MEETING_NARRATION_SRC} />
+        <IdealiaChat lines={firstMeeting} button="Je t’aide" onNext={() => setStep('pact')} mood={{ type: 'birth', intensity: 0.65, emojis: ['🌊', '👁️', '💙'], background: 'server' }} />
       )}
 
       {step === 'pact' && (
-        <IdealiaChat lines={pactChat} choices={pactChoices} onChoose={choice => { setBurstKey(key => key + 1); setPact(choice.label); update(choice.weights); setStep('sceneNarrator') }} mood={{ type: 'doubt', intensity: 0.7, emojis: ['🌀', '?', '💙'], background: 'server' }} burstKey={burstKey} audioSrc={PACT_NARRATION_SRC} />
+        <IdealiaChat lines={pactChat} choices={pactChoices} onChoose={choice => { setBurstKey(key => key + 1); setPact(choice.label); update(choice.weights); setStep('sceneNarrator') }} mood={{ type: 'doubt', intensity: 0.7, emojis: ['🌀', '?', '💙'], background: 'server' }} burstKey={burstKey} />
       )}
 
       {step === 'sceneNarrator' && (
@@ -312,7 +305,7 @@ export default function App() {
       )}
 
       {step === 'sceneChat' && (
-        <IdealiaChat lines={scene.idealia} button="Choisir" onNext={() => setStep('sceneChoice')} mood={scene.mood} moodIntensity={scene.mood?.intensity} phase={scene.id} burstKey={burstKey} audioSrc={SCENE_NARRATION_SOURCES[scene.id]} />
+        <IdealiaChat lines={scene.idealia} button="Choisir" onNext={() => setStep('sceneChoice')} mood={scene.mood} moodIntensity={scene.mood?.intensity} phase={scene.id} burstKey={burstKey} />
       )}
 
       {step === 'sceneChoice' && (
