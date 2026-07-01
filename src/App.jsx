@@ -17,6 +17,7 @@ const INTRO_VIDEO_SRC = 'https://raw.githubusercontent.com/pierkiroule/idealia/r
 const AMBIENT_AUDIO_SRC = 'https://raw.githubusercontent.com/pierkiroule/idealia/refs/heads/main/public/audio/music/Le%20Bruissement.mp3'
 const PROLOGUE_NARRATION_SRC = '/audio/music/narration.mp3'
 const FIRST_MEETING_NARRATION_SRC = 'https://raw.githubusercontent.com/pierkiroule/idealia/refs/heads/main/public/audio/music/idealia1.mp3'
+const PACT_NARRATION_SRC = 'https://raw.githubusercontent.com/pierkiroule/idealia/refs/heads/main/public/audio/music/idealia2.mp3'
 const AMBIENT_AUDIO_VOLUME = 0.12
 const HAIKUPHENE_DISCOVERY_LINES = [
   'Tu as vu l’intrusion ?',
@@ -298,7 +299,7 @@ export default function App() {
       )}
 
       {step === 'pact' && (
-        <IdealiaChat lines={pactChat} choices={pactChoices} onChoose={choice => { setBurstKey(key => key + 1); setPact(choice.label); update(choice.weights); setStep('sceneNarrator') }} mood={{ type: 'doubt', intensity: 0.7, emojis: ['🌀', '?', '💙'], background: 'server' }} burstKey={burstKey} />
+        <IdealiaChat lines={pactChat} choices={pactChoices} onChoose={choice => { setBurstKey(key => key + 1); setPact(choice.label); update(choice.weights); setStep('sceneNarrator') }} mood={{ type: 'doubt', intensity: 0.7, emojis: ['🌀', '?', '💙'], background: 'server' }} burstKey={burstKey} audioSrc={PACT_NARRATION_SRC} />
       )}
 
       {step === 'sceneNarrator' && (
