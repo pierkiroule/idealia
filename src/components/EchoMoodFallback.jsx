@@ -1,14 +1,14 @@
 const captions = {
-  birth: 'La forme filaire s’éveille en pulsation néon.',
-  doubt: 'La géométrie hésite et se recompose.',
-  sadness: 'Une nappe de points bleus dérive lentement.',
-  solitude: 'Le réseau suspend son orbite silencieuse.',
-  pressure: 'Les lignes vibrent comme un signal saturé.',
-  rebellion: 'Le maillage rompt sa symétrie.',
-  hope: 'Un motif lumineux converge au centre.',
-  transfer: 'La trame traverse le portail.',
-  metamorphosis: 'La forme morphique change de dimension.',
-  realia: 'La structure respire en réseau vivant.'
+  birth: 'Une méduse de lumière s’éveille et respire doucement.',
+  doubt: 'Des voiles organiques hésitent, puis se déploient.',
+  sadness: 'Une algue bleue dérive lentement dans la profondeur.',
+  solitude: 'Un organisme lunaire flotte en silence.',
+  pressure: 'Une fleur de feu se contracte sans se briser.',
+  rebellion: 'Des pétales électriques s’ouvrent hors de l’emprise.',
+  hope: 'Un corail lumineux pousse vers le centre.',
+  transfer: 'Une graine translucide traverse le portail.',
+  metamorphosis: 'La chrysalide lumineuse change de peau.',
+  realia: 'Le vivant numérique respire en lente résonance.'
 }
 
 export default function EchoMoodFallback({ mood, burst = false, audioMotion }) {
@@ -18,7 +18,7 @@ export default function EchoMoodFallback({ mood, burst = false, audioMotion }) {
 
   return (
     <div className={`echoMoodFallback mood-${current.type} ${burst ? 'is-bursting' : ''}`} style={{ '--mood-intensity': intensity, '--audio-level': motion.level, '--audio-flux': motion.flux, '--audio-drift': motion.drift }}>
-      <div className="echoMoodMorph" aria-label={`Forme géométrique filaire néon, humeur ${current.type}`}>
+      <div className="echoMoodMorph" aria-label={`Forme organique lumineuse, humeur ${current.type}`}>
         <span className="morphWire morphWire-one" aria-hidden="true" />
         <span className="morphWire morphWire-two" aria-hidden="true" />
         <span className="morphWire morphWire-three" aria-hidden="true" />
