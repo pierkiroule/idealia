@@ -1028,7 +1028,9 @@ footer {
   .echoMoodMorph::after,
   .morphWire,
   .morphPulse,
-  .morphParticleField {
+  .morphHeart,
+  .morphParticleField,
+  .echoMoodHalo {
     animation-duration: 12s;
   }
 }
@@ -1102,4 +1104,79 @@ footer {
   0% { transform: scale(0.3); opacity: 0.7; }
   55% { transform: scale(4.2); opacity: 0.95; }
   100% { transform: scale(5.4); opacity: 0; }
+}
+
+.echoMoodHalo {
+  position: absolute;
+  inset: 20%;
+  z-index: 1;
+  border: 1px solid color-mix(in srgb, var(--mood-accent, #93c5fd) 58%, transparent);
+  border-radius: 50%;
+  box-shadow:
+    0 0 calc(18px + 42px * var(--voice-level, var(--audio-level, 0))) color-mix(in srgb, var(--mood-accent, #93c5fd) 38%, transparent),
+    inset 0 0 24px color-mix(in srgb, var(--mood-base, #1d4ed8) 24%, transparent);
+  opacity: 0;
+  transform: scale(0.48);
+  pointer-events: none;
+  animation: echoMoodConcentricWave calc(3.4s - 1s * var(--voice-level, var(--audio-level, 0))) ease-out infinite;
+}
+
+.echoMoodHalo-two {
+  animation-delay: -1.1s;
+}
+
+.echoMoodHalo-three {
+  animation-delay: -2.2s;
+}
+
+.morphHeart {
+  position: absolute;
+  width: 24%;
+  aspect-ratio: 1;
+  background:
+    radial-gradient(circle at 34% 26%, rgba(255, 255, 255, 0.9), transparent 22%),
+    linear-gradient(135deg, #80ecff, #166bff 58%, #061b74);
+  filter: drop-shadow(0 0 calc(14px + 34px * var(--voice-level, var(--audio-level, 0))) rgba(56, 189, 248, 0.74));
+  opacity: calc(0.28 + var(--mood-intensity, 0.5) * 0.34 + var(--voice-level, var(--audio-level, 0)) * 0.38);
+  clip-path: path('M 50 88 C 18 62 8 46 16 28 C 22 13 40 12 50 25 C 60 12 78 13 84 28 C 92 46 82 62 50 88 Z');
+  transform: scale(calc(0.74 + var(--mood-intensity, 0.5) * 0.16 + var(--voice-level, var(--audio-level, 0)) * 0.32));
+  animation: morphBubbleToBlueHeart calc(5.4s - 1.8s * var(--voice-flux, var(--audio-flux, 0))) ease-in-out infinite;
+}
+
+.phase-metamorphosis .morphHeart,
+.phase-realia .morphHeart {
+  opacity: calc(0.72 + var(--voice-level, var(--audio-level, 0)) * 0.28);
+}
+
+@keyframes echoMoodConcentricWave {
+  0% {
+    opacity: calc(0.48 + var(--voice-level, var(--audio-level, 0)) * 0.34);
+    transform: scale(calc(0.32 + var(--voice-flux, var(--audio-flux, 0)) * 0.08));
+    filter: blur(0.5px);
+  }
+  58% {
+    opacity: calc(0.22 + var(--voice-level, var(--audio-level, 0)) * 0.26);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(calc(1.42 + var(--voice-level, var(--audio-level, 0)) * 0.42));
+    filter: blur(3px);
+  }
+}
+
+@keyframes morphBubbleToBlueHeart {
+  0%, 100% {
+    border-radius: 58% 42% 52% 48% / 48% 56% 44% 52%;
+    clip-path: circle(48% at 50% 50%);
+    transform: scale(calc(0.72 + var(--mood-intensity, 0.5) * 0.14));
+  }
+  46% {
+    border-radius: 50%;
+    clip-path: path('M 50 88 C 18 62 8 46 16 28 C 22 13 40 12 50 25 C 60 12 78 13 84 28 C 92 46 82 62 50 88 Z');
+    transform: scale(calc(0.9 + var(--mood-intensity, 0.5) * 0.16 + var(--voice-level, var(--audio-level, 0)) * 0.32));
+  }
+  68% {
+    clip-path: path('M 50 88 C 18 62 8 46 16 28 C 22 13 40 12 50 25 C 60 12 78 13 84 28 C 92 46 82 62 50 88 Z');
+    transform: scale(calc(0.82 + var(--mood-intensity, 0.5) * 0.2 + var(--voice-flux, var(--audio-flux, 0)) * 0.36));
+  }
 }
