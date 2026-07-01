@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import ChoiceCards from './ChoiceCards.jsx'
 import EchoMoodPorthole from './EchoMoodPorthole.jsx'
 import { speakIdealiaLines } from '../utils/voice.js'
+import { playTypeTick, playUiBlip } from '../utils/uiSfx.js'
 
 function wait(ms) {
   return new Promise(resolve => setTimeout(resolve, ms))
@@ -25,6 +26,7 @@ function useTyped(lines) {
           if (cancelled) return
           nextLine += character
           setCurrentLine(nextLine)
+          if (nextLine.length % 4 === 0) playTypeTick()
           await wait(18)
         }
 
@@ -70,7 +72,7 @@ export default function IdealiaChat({ lines, onNext, button, choices, onChoose, 
       {choices ? (
         <ChoiceCards choices={choices} onChoose={onChoose} />
       ) : button ? (
-        <button onClick={onNext}>{button}</button>
+        <button onClick={() => { playUiBlip('confirm'); onNext() }}>{button}</button>
       ) : null}
     </section>
   )

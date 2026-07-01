@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { motion } from 'framer-motion'
 
-export default function NarratorScreen({ lines, onNext, button = 'Continuer', audioSrc }) {
+export default function NarratorScreen({ lines, onNext, button = 'Continuer', audioSrc, children }) {
   const narrationAudioRef = useRef(null)
 
   useEffect(() => {
@@ -22,6 +22,7 @@ export default function NarratorScreen({ lines, onNext, button = 'Continuer', au
     <section className="screen narrator">
       <div className="halo" />
       {audioSrc && <audio ref={narrationAudioRef} src={audioSrc} preload="auto" aria-hidden="true" />}
+      {children}
       {lines.map((line, i) => (
         <motion.p
           key={line}

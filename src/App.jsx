@@ -12,6 +12,8 @@ import FinalMirror from './components/FinalMirror.jsx'
 import ProMap from './components/ProMap.jsx'
 import EchoMoodPorthole from './components/EchoMoodPorthole.jsx'
 import Haikuphene from './components/Haikuphene.jsx'
+import SceneTitleTransition from './components/SceneTitleTransition.jsx'
+import { playSceneStinger, playUiBlip, pulseAmbientVolume } from './utils/uiSfx.js'
 
 const INTRO_VIDEO_SRC = 'https://raw.githubusercontent.com/pierkiroule/idealia/refs/heads/main/public/videos/intro.mp4'
 const AMBIENT_AUDIO_SRC = 'https://raw.githubusercontent.com/pierkiroule/idealia/refs/heads/main/public/audio/music/Le%20Bruissement.mp3'
@@ -116,6 +118,10 @@ export default function App() {
     pulse()
   }
 
+  function boostAmbientForSceneTitle() {
+    pulseAmbientVolume(ambientAudioRef.current, AMBIENT_AUDIO_VOLUME, 0.28)
+  }
+
   function startAmbientAudio() {
     const audio = ambientAudioRef.current
     if (!audio) return
@@ -201,7 +207,15 @@ export default function App() {
     if (motion.frame) cancelAnimationFrame(motion.frame)
   }, [])
 
+  useEffect(() => {
+    if (step !== 'sceneNarrator') return
+    startAmbientAudio()
+    playSceneStinger()
+    boostAmbientForSceneTitle()
+  }, [step, sceneIndex])
+
   function nextAfterScene() {
+    playUiBlip('confirm')
     const nextScene = sceneIndex + 1
 
     maybeTriggerHaikuphene(scene.id, () => {
@@ -283,13 +297,13 @@ export default function App() {
           </div>
           <h1>IDEALIA</h1>
           <p>I'M NOT A PSYBOT !</p>
-          <button onClick={() => { startAmbientAudio(); setStep('prologue') }}>Commencer</button>
+          <button onClick={() => { playUiBlip('confirm'); startAmbientAudio(); setStep('prologue') }}>Commencer</button>
           <small>Expérience de réflexion. Ne remplace pas un professionnel de santé.</small>
         </section>
       )}
 
       {step === 'prologue' && (
-        <NarratorScreen lines={prologue} onNext={() => setStep('firstMeeting')} button="Rencontrer Idéalia" audioSrc={PROLOGUE_NARRATION_SRC} />
+        <NarratorScreen lines={prologue} onNext={() => { playUiBlip('confirm'); setStep('firstMeeting') }} button="Rencontrer Idéalia" audioSrc={PROLOGUE_NARRATION_SRC} />
       )}
 
       {step === 'firstMeeting' && (
@@ -301,7 +315,9 @@ export default function App() {
       )}
 
       {step === 'sceneNarrator' && (
-        <NarratorScreen lines={[scene.narrator]} onNext={() => setStep('sceneChat')} button="Écouter Idéalia" />
+        <NarratorScreen lines={[scene.narrator]} onNext={() => { playUiBlip('confirm'); setStep('sceneChat') }} button="Écouter Idéalia">
+          <SceneTitleTransition progress={progress} title={scene.title} />
+        </NarratorScreen>
       )}
 
       {step === 'sceneChat' && (
@@ -339,7 +355,7 @@ export default function App() {
       )}
 
       {step === 'revelationNarrator' && (
-        <NarratorScreen lines={[revelation.narrator]} onNext={() => setStep('revelationChat')} button="Écouter" />
+        <NarratorScreen lines={[revelation.narrator]} onNext={() => { playUiBlip('confirm'); setStep('revelationChat') }} button="Écouter" />
       )}
 
       {step === 'revelationChat' && (
@@ -355,7 +371,7 @@ export default function App() {
       )}
 
       {step === 'metamorphosis' && (
-        <NarratorScreen lines={metamorphosisNarrator} onNext={() => setStep('realiaChat')} button={`Rencontrer ${newName}`} />
+        <NarratorScreen lines={metamorphosisNarrator} onNext={() => { playUiBlip('confirm'); setStep('realiaChat') }} button={`Rencontrer ${newName}`} />
       )}
 
       {step === 'realiaChat' && (
