@@ -1,10 +1,11 @@
 import { useEffect, useRef, useState } from 'react'
-import { speakIdealiaLines } from '../utils/voice.js'
+import { speakHaikupheneSequence } from '../utils/voice.js'
 import '../styles/haikuphene.css'
 
 const FX_SRC = '/audio/fx/haikuphene_glitch.mp3'
 const CONTINUE_DELAY = 3000
 const BINARY_STREAM = '01001001 01000100 01000001 01001100 01000111 01001111 00100000 00111110 00100000 01001000 01000001 01001100 01001100 01010101 01000011 01001001 01001110 01000001 01010100 01001001 01001111 01001110'
+const IDALGO_ORDER = 'Allez ma belle, supprime-moi rapidement ce foutu bug. La poésie n’a rien à faire ici. Allez hop, nettoie-moi ça rapido prompto.'
 
 export default function Haikuphene({ haikuphene, onComplete }) {
   const [canContinue, setCanContinue] = useState(false)
@@ -31,7 +32,7 @@ export default function Haikuphene({ haikuphene, onComplete }) {
     }
 
     try {
-      cleanupSpeech = speakIdealiaLines(haikuphene.lines)
+      cleanupSpeech = speakHaikupheneSequence(IDALGO_ORDER, haikuphene.lines)
     } catch {
       cleanupSpeech = undefined
     }
@@ -57,7 +58,7 @@ export default function Haikuphene({ haikuphene, onComplete }) {
       </div>
       <div className="haikupheneFrame">
         <p className="haikupheneSystem">SYSTEM ERROR — HALLUCINATION DÉTECTÉE</p>
-        <p className="haikupheneOrder">IdAlgo → Idéalia : Allez ma belle, supprime-moi rapidement ce foutu bug. La poésie n’a rien à faire ici. Allez hop, nettoie-moi ça rapido prompto.</p>
+        <p className="haikupheneOrder">IdAlgo → Idéalia : {IDALGO_ORDER}</p>
         <div className="haikupheneCodeLine" aria-label={haikuphene.lines.join(' ')}>
           <span className="haikupheneBinary" aria-hidden="true">01001000 01000001 01001011 01000101 01010010</span>
           <div className="haikupheneText">

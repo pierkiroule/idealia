@@ -18,11 +18,15 @@ export default function EchoMoodFallback({ mood, burst = false, audioMotion }) {
 
   return (
     <div className={`echoMoodFallback mood-${current.type} ${burst ? 'is-bursting' : ''}`} style={{ '--mood-intensity': intensity, '--audio-level': motion.level, '--audio-flux': motion.flux, '--audio-drift': motion.drift }}>
+      <div className="echoMoodHalo echoMoodHalo-one" aria-hidden="true" />
+      <div className="echoMoodHalo echoMoodHalo-two" aria-hidden="true" />
+      <div className="echoMoodHalo echoMoodHalo-three" aria-hidden="true" />
       <div className="echoMoodMorph" aria-label={`Forme organique lumineuse, humeur ${current.type}`}>
         <span className="morphWire morphWire-one" aria-hidden="true" />
         <span className="morphWire morphWire-two" aria-hidden="true" />
         <span className="morphWire morphWire-three" aria-hidden="true" />
         <span className="morphPulse" aria-hidden="true" />
+        <span className="morphHeart" aria-hidden="true" />
       </div>
       <div className="morphParticleField" aria-hidden="true" />
       <div className="echoMoodLens" />

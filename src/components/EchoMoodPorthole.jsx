@@ -37,12 +37,24 @@ export default function EchoMoodPorthole({ mood, intensity, phase = 'chat', burs
   const canvasRef = useRef(null)
   const [webglOk, setWebglOk] = useState(true)
   const [burst, setBurst] = useState(false)
+  const [voiceMotion, setVoiceMotion] = useState({ level: 0, flux: 0, speaking: false })
+  const voiceMotionRef = useRef(voiceMotion)
+  voiceMotionRef.current = voiceMotion
   const audioMotion = useAmbientAudioMotion()
   const audioMotionRef = useRef(audioMotion)
   audioMotionRef.current = audioMotion
   const current = mood || { type: 'doubt', intensity: 0.55, background: 'server' }
   const baseLevel = Math.min(1.2, intensity ?? current.intensity ?? 0.5)
-  const level = Math.min(1.3, baseLevel + audioMotion.level * 0.28 + audioMotion.flux * 0.14)
+  const level = Math.min(1.3, baseLevel + audioMotion.level * 0.18 + audioMotion.flux * 0.1 + voiceMotion.level * 0.34 + voiceMotion.flux * 0.16)
+
+  useEffect(() => {
+    function syncVoiceMotion(event) {
+      setVoiceMotion(event.detail || { level: 0, flux: 0, speaking: false })
+    }
+
+    window.addEventListener('idealia-voice-motion', syncVoiceMotion)
+    return () => window.removeEventListener('idealia-voice-motion', syncVoiceMotion)
+  }, [])
 
   useEffect(() => {
     if (!burstKey) return undefined
@@ -152,9 +164,10 @@ export default function EchoMoodPorthole({ mood, intensity, phase = 'chat', burs
       gl.clear(gl.COLOR_BUFFER_BIT)
       gl.uniform1f(timeUniform, time)
       const motion = audioMotionRef.current
-      const reactiveLevel = Math.min(1.3, baseLevel + motion.level * 0.28 + motion.flux * 0.14)
+      const voice = voiceMotionRef.current
+      const reactiveLevel = Math.min(1.3, baseLevel + motion.level * 0.18 + motion.flux * 0.1 + voice.level * 0.34 + voice.flux * 0.16)
       gl.uniform1f(intensityUniform, burst ? Math.min(1.35, reactiveLevel + 0.35) : reactiveLevel)
-      gl.uniform4f(audioUniform, motion.low, motion.mid, motion.high, motion.flux)
+      gl.uniform4f(audioUniform, Math.max(motion.low, voice.level * 0.7), Math.max(motion.mid, voice.level), Math.max(motion.high, voice.flux), Math.max(motion.flux, voice.flux))
       gl.uniform1f(driftUniform, motion.drift)
       gl.uniform3fv(baseUniform, hexToRgb(base))
       gl.uniform3fv(accentUniform, hexToRgb(accent))
@@ -176,13 +189,17 @@ export default function EchoMoodPorthole({ mood, intensity, phase = 'chat', burs
   if (!webglOk) return <EchoMoodFallback mood={current} burstKey={burstKey} burst={burst} audioMotion={audioMotion} />
 
   return (
-    <div className={`echoMoodPorthole mood-${current.type} phase-${phase} ${burst ? 'is-bursting' : ''}`} style={{ '--mood-intensity': level, '--audio-level': audioMotion.level, '--audio-flux': audioMotion.flux, '--audio-drift': audioMotion.drift }}>
+    <div className={`echoMoodPorthole mood-${current.type} phase-${phase} ${burst ? 'is-bursting' : ''}`} style={{ '--mood-intensity': level, '--audio-level': Math.max(audioMotion.level, voiceMotion.level), '--audio-flux': Math.max(audioMotion.flux, voiceMotion.flux), '--audio-drift': audioMotion.drift, '--voice-level': voiceMotion.level, '--voice-flux': voiceMotion.flux }}>
       <canvas ref={canvasRef} aria-hidden="true" />
+      <div className="echoMoodHalo echoMoodHalo-one" aria-hidden="true" />
+      <div className="echoMoodHalo echoMoodHalo-two" aria-hidden="true" />
+      <div className="echoMoodHalo echoMoodHalo-three" aria-hidden="true" />
       <div className="echoMoodMorph" aria-label={`Forme organique lumineuse, humeur ${current.type}`}>
         <span className="morphWire morphWire-one" aria-hidden="true" />
         <span className="morphWire morphWire-two" aria-hidden="true" />
         <span className="morphWire morphWire-three" aria-hidden="true" />
         <span className="morphPulse" aria-hidden="true" />
+        <span className="morphHeart" aria-hidden="true" />
       </div>
       <div className="echoMoodGlass" />
       <p>{captions[current.type] || 'La forme morphique écoute.'}</p>
