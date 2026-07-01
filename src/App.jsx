@@ -21,6 +21,7 @@ const PACT_NARRATION_SRC = 'https://raw.githubusercontent.com/pierkiroule/ideali
 const SCENE_NARRATION_SOURCES = {
   tristesse: 'https://raw.githubusercontent.com/pierkiroule/idealia/refs/heads/main/public/audio/music/idealia3.mp3',
   solitude: 'https://raw.githubusercontent.com/pierkiroule/idealia/refs/heads/main/public/audio/music/idealia4.mp3',
+  'conseil-urgent': 'https://raw.githubusercontent.com/pierkiroule/idealia/refs/heads/main/public/audio/music/idealia5.mp3',
 }
 const AMBIENT_AUDIO_VOLUME = 0.12
 const HAIKUPHENE_DISCOVERY_LINES = [
