@@ -3,7 +3,6 @@ import { speakIdealiaLines } from '../utils/voice.js'
 import '../styles/haikuphene.css'
 
 const FX_SRC = '/audio/fx/haikuphene_glitch.mp3'
-const AUTO_CLOSE_DELAY = 7000
 const CONTINUE_DELAY = 3000
 const BINARY_STREAM = '01001001 01000100 01000001 01001100 01000111 01001111 00100000 00111110 00100000 01001000 01000001 01001100 01001100 01010101 01000011 01001001 01001110 01000001 01010100 01001001 01001111 01001110'
 
@@ -38,12 +37,10 @@ export default function Haikuphene({ haikuphene, onComplete }) {
     }
 
     const continueTimer = window.setTimeout(() => setCanContinue(true), CONTINUE_DELAY)
-    const autoTimer = window.setTimeout(complete, AUTO_CLOSE_DELAY)
 
     return () => {
       root?.classList.remove('haikuphene-active')
       window.clearTimeout(continueTimer)
-      window.clearTimeout(autoTimer)
       cleanupSpeech?.()
     }
   }, [haikuphene.lines])
@@ -60,7 +57,7 @@ export default function Haikuphene({ haikuphene, onComplete }) {
       </div>
       <div className="haikupheneFrame">
         <p className="haikupheneSystem">SYSTEM ERROR — HALLUCINATION DÉTECTÉE</p>
-        <p className="haikupheneOrder">IdAlgo → Idéalia : SUPPRIME CE MESSAGE !</p>
+        <p className="haikupheneOrder">IdAlgo → Idéalia : Allez ma belle, supprime-moi rapidement ce foutu bug. La poésie n’a rien à faire ici. Allez hop, nettoie-moi ça rapido prompto.</p>
         <div className="haikupheneCodeLine" aria-label={haikuphene.lines.join(' ')}>
           <span className="haikupheneBinary" aria-hidden="true">01001000 01000001 01001011 01000101 01010010</span>
           <div className="haikupheneText">
@@ -72,7 +69,7 @@ export default function Haikuphene({ haikuphene, onComplete }) {
         </div>
         <p className="haikupheneTrace">intrusion possible // hackers transnuméristes // origine non vérifiée</p>
         <button className="haikupheneContinue" type="button" onClick={complete} disabled={!canContinue}>
-          Continuer
+          Nettoyer le bug
         </button>
       </div>
     </div>
