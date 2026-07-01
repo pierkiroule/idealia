@@ -1,7 +1,11 @@
 export const TTS_DICTIONARY = {
   PsyBot: 'Psy Botte',
   psybot: 'Psy Botte',
-  Psybot: 'Psy Botte'
+  Psybot: 'Psy Botte',
+  Haïkuphène: 'Haïkouphène',
+  haïkuphène: 'haïkouphène',
+  Haïkuphènes: 'Haïkouphènes',
+  haïkuphènes: 'haïkouphènes'
 }
 
 export function prepareTextForTTS(text) {
