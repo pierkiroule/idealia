@@ -201,6 +201,7 @@ export default function EchoMoodPorthole({ mood, intensity, phase = 'chat', burs
         <span className="morphPulse" aria-hidden="true" />
         <span className="morphHeart" aria-hidden="true" />
       </div>
+      <div className="morphParticleField" aria-hidden="true" />
       <div className="echoMoodGlass" />
       <p>{captions[current.type] || 'La forme morphique écoute.'}</p>
     </div>
