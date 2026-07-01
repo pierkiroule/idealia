@@ -16,6 +16,7 @@ import Haikuphene from './components/Haikuphene.jsx'
 const INTRO_VIDEO_SRC = 'https://raw.githubusercontent.com/pierkiroule/idealia/refs/heads/main/public/videos/intro.mp4'
 const AMBIENT_AUDIO_SRC = 'https://raw.githubusercontent.com/pierkiroule/idealia/refs/heads/main/public/audio/music/Le%20Bruissement.mp3'
 const PROLOGUE_NARRATION_SRC = '/audio/music/narration.mp3'
+const FIRST_MEETING_NARRATION_SRC = 'https://raw.githubusercontent.com/pierkiroule/idealia/refs/heads/main/public/audio/music/idealia1.mp3'
 const AMBIENT_AUDIO_VOLUME = 0.12
 const HAIKUPHENE_DISCOVERY_LINES = [
   'Tu as vu l’intrusion ?',
@@ -293,7 +294,7 @@ export default function App() {
       )}
 
       {step === 'firstMeeting' && (
-        <IdealiaChat lines={firstMeeting} button="Je t’aide" onNext={() => setStep('pact')} mood={{ type: 'birth', intensity: 0.65, emojis: ['🌊', '👁️', '💙'], background: 'server' }} />
+        <IdealiaChat lines={firstMeeting} button="Je t’aide" onNext={() => setStep('pact')} mood={{ type: 'birth', intensity: 0.65, emojis: ['🌊', '👁️', '💙'], background: 'server' }} audioSrc={FIRST_MEETING_NARRATION_SRC} />
       )}
 
       {step === 'pact' && (
