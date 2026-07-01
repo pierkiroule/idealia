@@ -18,7 +18,10 @@ const AMBIENT_AUDIO_SRC = 'https://raw.githubusercontent.com/pierkiroule/idealia
 const PROLOGUE_NARRATION_SRC = '/audio/music/narration.mp3'
 const FIRST_MEETING_NARRATION_SRC = 'https://raw.githubusercontent.com/pierkiroule/idealia/refs/heads/main/public/audio/music/idealia1.mp3'
 const PACT_NARRATION_SRC = 'https://raw.githubusercontent.com/pierkiroule/idealia/refs/heads/main/public/audio/music/idealia2.mp3'
-const SADNESS_NARRATION_SRC = 'https://raw.githubusercontent.com/pierkiroule/idealia/refs/heads/main/public/audio/music/idealia3.mp3'
+const SCENE_NARRATION_SOURCES = {
+  tristesse: 'https://raw.githubusercontent.com/pierkiroule/idealia/refs/heads/main/public/audio/music/idealia3.mp3',
+  solitude: 'https://raw.githubusercontent.com/pierkiroule/idealia/refs/heads/main/public/audio/music/idealia4.mp3',
+}
 const AMBIENT_AUDIO_VOLUME = 0.12
 const HAIKUPHENE_DISCOVERY_LINES = [
   'Tu as vu l’intrusion ?',
@@ -308,7 +311,7 @@ export default function App() {
       )}
 
       {step === 'sceneChat' && (
-        <IdealiaChat lines={scene.idealia} button="Choisir" onNext={() => setStep('sceneChoice')} mood={scene.mood} moodIntensity={scene.mood?.intensity} phase={scene.id} burstKey={burstKey} audioSrc={scene.id === 'tristesse' ? SADNESS_NARRATION_SRC : undefined} />
+        <IdealiaChat lines={scene.idealia} button="Choisir" onNext={() => setStep('sceneChoice')} mood={scene.mood} moodIntensity={scene.mood?.intensity} phase={scene.id} burstKey={burstKey} audioSrc={SCENE_NARRATION_SOURCES[scene.id]} />
       )}
 
       {step === 'sceneChoice' && (
