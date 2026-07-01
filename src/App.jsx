@@ -15,6 +15,7 @@ import Haikuphene from './components/Haikuphene.jsx'
 
 const INTRO_VIDEO_SRC = 'https://raw.githubusercontent.com/pierkiroule/idealia/refs/heads/main/public/videos/intro.mp4'
 const AMBIENT_AUDIO_SRC = 'https://raw.githubusercontent.com/pierkiroule/idealia/refs/heads/main/public/audio/music/Le%20Bruissement.mp3'
+const PROLOGUE_NARRATION_SRC = '/audio/music/narration.mp3'
 const AMBIENT_AUDIO_VOLUME = 0.12
 const HAIKUPHENE_DISCOVERY_LINES = [
   'Tu as vu l’intrusion ?',
@@ -288,7 +289,7 @@ export default function App() {
       )}
 
       {step === 'prologue' && (
-        <NarratorScreen lines={prologue} onNext={() => setStep('firstMeeting')} button="Rencontrer Idéalia" />
+        <NarratorScreen lines={prologue} onNext={() => setStep('firstMeeting')} button="Rencontrer Idéalia" audioSrc={PROLOGUE_NARRATION_SRC} />
       )}
 
       {step === 'firstMeeting' && (
