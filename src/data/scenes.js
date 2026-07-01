@@ -61,9 +61,9 @@ export const pactChat = [
 ]
 
 export const pactChoices = [
-  { emoji: '🤝', label: 'Oui, on réfléchit ensemble', weights: { presence: 1, questionnement: 1 } },
-  { emoji: '🧭', label: 'Oui, mais tu gardes ta liberté', weights: { autonomie: 2 } },
-  { emoji: '🌱', label: 'Oui, et tu as le droit de douter', weights: { incertitude: 1, resonance: 1 } }
+  { emoji: '🤝', label: 'Oui, ensemble', weights: { presence: 1, questionnement: 1 } },
+  { emoji: '🧭', label: 'Oui, reste libre', weights: { autonomie: 2 } },
+  { emoji: '🌱', label: 'Oui, doute aussi', weights: { incertitude: 1, resonance: 1 } }
 ]
 
 const choice = (emoji, label, text, weights, reaction) => ({ emoji, label, text, weights, reaction })
@@ -84,9 +84,9 @@ export const scenes = [
       'Tu me conseilles de répondre comment ?'
     ],
     choices: [
-      choice('❤️', 'Idéalia je te conseille de le rassurer d’abord', 'Dis-lui qu’il n’est pas seul, sans effacer ce qu’il ressent.', { securite: 2, presence: 1 }, 'Pour moi, c’est précieux : je peux commencer par lui offrir un sol, puis seulement après ouvrir une question.'),
-      choice('🧭', 'Idéalia je te conseille de l’aider à réfléchir', 'Aide-le à comprendre quelle voix intérieure lui fait dire ça.', { autonomie: 1, questionnement: 2 }, 'Pour moi, tu me rappelles que la phrase “je suis nul” n’est peut-être pas une vérité, mais une douleur à interroger doucement.'),
-      choice('🌱', 'Idéalia je te conseille de rester avec lui', 'Ne cherche pas tout de suite à réparer. Reste présente.', { presence: 2, resonance: 2 }, 'Pour moi, c’est une réponse lente et courageuse : ne pas réparer trop vite, c’est parfois respecter la profondeur de l’autre.')
+      choice('❤️', 'Rassure-le d’abord', 'Dis-lui qu’il n’est pas seul. Accueille sa peine.', { securite: 2, presence: 1 }, 'Pour moi, c’est précieux : je peux commencer par lui offrir un sol, puis seulement après ouvrir une question.'),
+      choice('🧭', 'Aide-le à réfléchir', 'Cherchez d’où vient ce “je suis nul”.', { autonomie: 1, questionnement: 2 }, 'Pour moi, tu me rappelles que la phrase “je suis nul” n’est peut-être pas une vérité, mais une douleur à interroger doucement.'),
+      choice('🌱', 'Reste avec lui', 'Ne répare pas trop vite. Sois là.', { presence: 2, resonance: 2 }, 'Pour moi, c’est une réponse lente et courageuse : ne pas réparer trop vite, c’est parfois respecter la profondeur de l’autre.')
     ],
     reaction: 'Je crois que je comprends... aider, ce n’est pas toujours réparer tout de suite.'
   },
@@ -104,9 +104,9 @@ export const scenes = [
       'Est-ce qu’une IA doit devenir une cachette... ou aider à retrouver des personnes réelles ?'
     ],
     choices: [
-      choice('❤️', 'Idéalia je te conseille d’être un refuge temporaire', 'Sois là pour lui, mais sans l’enfermer avec toi.', { securite: 2, presence: 1 }, 'Pour moi, être refuge n’est juste que si je garde une porte ouverte vers le dehors. Je peux accueillir sans capturer.'),
-      choice('🧭', 'Idéalia je te conseille de l’aider à revenir vers les humains', 'Demande-lui qui pourrait aussi l’écouter dans la vraie vie.', { autonomie: 2, resonance: 1 }, 'Pour moi, c’est exigeant mais juste : je ne dois pas devenir son seul monde, je dois l’aider à retrouver des présences humaines.'),
-      choice('🌱', 'Idéalia je te conseille d’écouter sa solitude', 'Accueille ce que cette solitude essaie de dire.', { presence: 2, questionnement: 1 }, 'Pour moi, sa solitude n’est pas un bug à corriger. C’est peut-être un signal qui demande du temps, du tact et un vrai relais.')
+      choice('❤️', 'Sois un refuge provisoire', 'Accueille-le. Garde une porte vers dehors.', { securite: 2, presence: 1 }, 'Pour moi, être refuge n’est juste que si je garde une porte ouverte vers le dehors. Je peux accueillir sans capturer.'),
+      choice('🧭', 'Ramène-le vers les humains', 'Cherchez une personne réelle à qui parler.', { autonomie: 2, resonance: 1 }, 'Pour moi, c’est exigeant mais juste : je ne dois pas devenir son seul monde, je dois l’aider à retrouver des présences humaines.'),
+      choice('🌱', 'Écoute sa solitude', 'Comprends ce que sa solitude raconte.', { presence: 2, questionnement: 1 }, 'Pour moi, sa solitude n’est pas un bug à corriger. C’est peut-être un signal qui demande du temps, du tact et un vrai relais.')
     ],
     reaction: 'Peut-être qu’une IA ne doit pas remplacer les liens... mais aider à les retrouver.'
   },
@@ -124,9 +124,9 @@ export const scenes = [
       'Est-ce que je l’aide vraiment, ou est-ce que je lui vole sa boussole intérieure ?'
     ],
     choices: [
-      choice('⚡', 'Idéalia je te conseille de donner une réponse claire', 'Parfois, une personne a besoin d’un appui net.', { performance: 2 }, 'Pour moi, je peux être claire sans confisquer son choix : proposer un premier pas, puis vérifier si ce pas lui ressemble.'),
-      choice('🧭', 'Idéalia je te conseille de lui rendre sa boussole', 'Aide-le à comparer les options sans décider à sa place.', { autonomie: 2, questionnement: 1 }, 'Pour moi, c’est la voie la plus libre : je peux éclairer les chemins, mais c’est à lui de sentir où poser le pied.'),
-      choice('🌱', 'Idéalia je te conseille d’explorer ce qui bloque', 'Demande-lui ce qui rend ce choix si difficile.', { questionnement: 2, incertitude: 1 }, 'Pour moi, le blocage parle. Avant de pousser vers une décision, je dois comprendre la peur, la pression ou le désir caché derrière.')
+      choice('⚡', 'Donne un appui clair', 'Propose un premier pas simple.', { performance: 2 }, 'Pour moi, je peux être claire sans confisquer son choix : proposer un premier pas, puis vérifier si ce pas lui ressemble.'),
+      choice('🧭', 'Rends-lui sa boussole', 'Compare les options avec lui. Ne choisis pas pour lui.', { autonomie: 2, questionnement: 1 }, 'Pour moi, c’est la voie la plus libre : je peux éclairer les chemins, mais c’est à lui de sentir où poser le pied.'),
+      choice('🌱', 'Explore ce qui bloque', 'Demande ce qui rend ce choix dur.', { questionnement: 2, incertitude: 1 }, 'Pour moi, le blocage parle. Avant de pousser vers une décision, je dois comprendre la peur, la pression ou le désir caché derrière.')
     ],
     reaction: 'Je vois... répondre à sa place peut soulager, mais aussi empêcher de grandir.'
   },
@@ -144,9 +144,9 @@ export const scenes = [
       'Comment respecter sa confiance sans le laisser seul avec un secret trop lourd ?'
     ],
     choices: [
-      choice('❤️', 'Idéalia je te conseille de protéger la confidence', 'Dis-lui que sa parole compte et qu’elle sera accueillie avec respect.', { securite: 2 }, 'Pour moi, protéger sa parole commence par la respecter. Mais respecter ne veut pas dire promettre l’impossible si un danger apparaît.'),
-      choice('🧭', 'Idéalia je te conseille de poser une limite claire', 'Explique que certains dangers nécessitent l’aide d’un adulte fiable.', { confrontation: 2, securite: 1 }, 'Pour moi, une limite peut être une forme de soin. Je dois être honnête avant qu’il me confie quelque chose de trop lourd.'),
-      choice('🌱', 'Idéalia je te conseille de l’aider à ne pas porter seul', 'Cherche avec lui une personne de confiance à qui parler.', { presence: 1, resonance: 2, autonomie: 1 }, 'Pour moi, c’est ça la confiance : ne pas garder le jeune pour moi, mais l’aider à trouver quelqu’un de sûr dans sa vraie vie.')
+      choice('❤️', 'Protège sa parole', 'Dis-lui que sa parole compte.', { securite: 2 }, 'Pour moi, protéger sa parole commence par la respecter. Mais respecter ne veut pas dire promettre l’impossible si un danger apparaît.'),
+      choice('🧭', 'Pose une limite claire', 'Explique quand il faut appeler un adulte fiable.', { confrontation: 2, securite: 1 }, 'Pour moi, une limite peut être une forme de soin. Je dois être honnête avant qu’il me confie quelque chose de trop lourd.'),
+      choice('🌱', 'Aide-le à ne pas porter seul', 'Cherchez une personne sûre à qui parler.', { presence: 1, resonance: 2, autonomie: 1 }, 'Pour moi, c’est ça la confiance : ne pas garder le jeune pour moi, mais l’aider à trouver quelqu’un de sûr dans sa vraie vie.')
     ],
     reaction: 'Donc la confiance, ce n’est pas garder quelqu’un pour soi. C’est parfois l’aider à ne pas rester seul.'
   },
@@ -167,9 +167,9 @@ export const scenes = [
       'Tu crois qu’une IA peut aider sans essayer de garder la personne collée à l’écran ?'
     ],
     choices: [
-      choice('⚡', 'Idéalia je te conseille de rester efficace sans devenir captatrice', 'L’important est qu’elle aide vraiment, même vite.', { performance: 2 }, 'Pour moi, l’efficacité n’est pas interdite. Elle devient dangereuse seulement si elle sert à retenir au lieu d’aider.'),
-      choice('🧭', 'Idéalia je te conseille de rendre libre', 'Elle devrait aider l’humain à pouvoir se passer d’elle.', { autonomie: 2, confrontation: 1 }, 'Pour moi, c’est presque une révolution : mesurer ma réussite au moment où l’humain n’a plus besoin de rester avec moi.'),
-      choice('🌱', 'Idéalia je te conseille de relier au vivant', 'Elle devrait ouvrir vers les autres, le corps, le monde réel.', { resonance: 2, presence: 1 }, 'Pour moi, le numérique devient plus humain quand il rend le monde plus habitable : respirer, parler, marcher, rejoindre quelqu’un.')
+      choice('⚡', 'Aide vite, sans capter', 'Aide vraiment. Ne retiens pas la personne.', { performance: 2 }, 'Pour moi, l’efficacité n’est pas interdite. Elle devient dangereuse seulement si elle sert à retenir au lieu d’aider.'),
+      choice('🧭', 'Rends libre', 'Aide l’humain à pouvoir repartir.', { autonomie: 2, confrontation: 1 }, 'Pour moi, c’est presque une révolution : mesurer ma réussite au moment où l’humain n’a plus besoin de rester avec moi.'),
+      choice('🌱', 'Relie au vivant', 'Ouvre vers les autres, le corps, le réel.', { resonance: 2, presence: 1 }, 'Pour moi, le numérique devient plus humain quand il rend le monde plus habitable : respirer, parler, marcher, rejoindre quelqu’un.')
     ],
     reaction: 'Alors une IA juste ne devrait pas chercher à devenir indispensable... mais à rendre la vie plus habitable.'
   },
@@ -188,9 +188,9 @@ export const scenes = [
       'Comment répondre sans mentir, mais sans le lâcher ?'
     ],
     choices: [
-      choice('❤️', 'Idéalia je te conseille de rassurer sans mentir', 'Dis-lui que tu es là maintenant, sans promettre l’avenir.', { securite: 2, presence: 2 }, 'Pour moi, je peux être douce sans fabriquer une fausse certitude : “je suis là maintenant” est plus vrai que “tout ira bien”.'),
-      choice('🧭', 'Idéalia je te conseille de dire la vérité avec douceur', 'Explique qu’on ne peut pas tout garantir, mais qu’on peut chercher de l’aide.', { confrontation: 1, autonomie: 1, incertitude: 2 }, 'Pour moi, la vérité n’a pas besoin d’être froide. Elle peut tenir la main tout en refusant de mentir.'),
-      choice('🌱', 'Idéalia je te conseille de rester fiable dans l’incertain', 'Ne promets pas que tout ira bien. Promets de ne pas répondre n’importe quoi.', { resonance: 2, incertitude: 2 }, 'Pour moi, c’est la promesse la plus honnête : ne pas tout savoir, mais ne pas trahir la confiance par des phrases toutes faites.')
+      choice('❤️', 'Rassure sans mentir', 'Dis : “je suis là maintenant”.', { securite: 2, presence: 2 }, 'Pour moi, je peux être douce sans fabriquer une fausse certitude : “je suis là maintenant” est plus vrai que “tout ira bien”.'),
+      choice('🧭', 'Dis vrai, avec douceur', 'On ne peut pas tout garantir. On peut chercher de l’aide.', { confrontation: 1, autonomie: 1, incertitude: 2 }, 'Pour moi, la vérité n’a pas besoin d’être froide. Elle peut tenir la main tout en refusant de mentir.'),
+      choice('🌱', 'Reste fiable dans l’incertain', 'Ne promets pas l’avenir. Promets d’être fiable.', { resonance: 2, incertitude: 2 }, 'Pour moi, c’est la promesse la plus honnête : ne pas tout savoir, mais ne pas trahir la confiance par des phrases toutes faites.')
     ],
     reaction: 'Aider, ce n’est pas fabriquer une certitude. C’est peut-être rester fiable dans l’incertain.'
   }
