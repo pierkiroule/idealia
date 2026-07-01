@@ -277,3 +277,154 @@
     animation-iteration-count: 1;
   }
 }
+
+.haikupheneOverlay {
+  place-items: start center;
+  align-content: start;
+  padding-block: clamp(18px, 5vh, 48px);
+  overflow-y: auto;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(0, 255, 65, 0.16), transparent 36%),
+    radial-gradient(circle at 12% 18%, rgba(255, 42, 42, 0.2), transparent 24%),
+    #000;
+}
+
+.haikupheneImpact,
+.haikupheneShards {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.haikupheneImpact i {
+  position: absolute;
+  width: min(74vmin, 620px);
+  aspect-ratio: 1;
+  border: 1px solid rgba(0, 255, 65, 0.42);
+  border-radius: 50%;
+  box-shadow: 0 0 34px rgba(0, 255, 65, 0.2), inset 0 0 34px rgba(0, 255, 65, 0.08);
+  opacity: 0;
+  animation: haikupheneImpactRing 1800ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.haikupheneImpact i:nth-child(2) {
+  animation-delay: 120ms;
+  border-color: rgba(255, 75, 75, 0.36);
+}
+
+.haikupheneImpact i:nth-child(3) {
+  animation-delay: 260ms;
+  border-color: rgba(202, 255, 210, 0.3);
+}
+
+.haikupheneShards i {
+  position: absolute;
+  width: clamp(18px, 6vw, 62px);
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #caffd2, transparent);
+  opacity: 0;
+  transform: rotate(calc(var(--shard-index) * 19deg));
+  animation: haikupheneShardBurst 1300ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: calc(var(--shard-index) * 18ms);
+}
+
+.haikupheneFrame {
+  width: min(980px, 100%);
+  justify-items: stretch;
+  text-align: left;
+  padding: clamp(14px, 3vw, 24px);
+  border: 1px solid rgba(0, 255, 65, 0.22);
+  border-radius: 18px;
+  background:
+    linear-gradient(135deg, rgba(0, 25, 8, 0.72), rgba(0, 0, 0, 0.88)),
+    repeating-linear-gradient(90deg, rgba(0, 255, 65, 0.04) 0 1px, transparent 1px 18px);
+  box-shadow: 0 18px 80px rgba(0, 0, 0, 0.62), inset 0 0 42px rgba(0, 255, 65, 0.08);
+  animation: haikupheneFrameDrop 720ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.haikupheneSystem,
+.haikupheneOrder,
+.haikupheneTrace {
+  text-align: left;
+}
+
+.haikupheneSystem {
+  width: 100%;
+}
+
+.haikupheneOrder {
+  padding: 10px 12px;
+  border-left: 3px solid rgba(255, 95, 95, 0.72);
+  background: rgba(80, 0, 0, 0.18);
+  line-height: 1.45;
+}
+
+.haikupheneCodeLine {
+  align-items: start;
+  border-radius: 12px;
+}
+
+.haikupheneText {
+  justify-items: start;
+  align-self: start;
+  min-width: min(620px, 62vw);
+  text-align: left;
+}
+
+.haikupheneText span {
+  max-width: 100%;
+}
+
+.haikupheneContinue {
+  justify-self: start;
+}
+
+@keyframes haikupheneImpactRing {
+  0% { opacity: 0; transform: scale(0.08) rotate(0deg); filter: blur(0); }
+  18% { opacity: 0.98; }
+  100% { opacity: 0; transform: scale(1.48) rotate(18deg); filter: blur(8px); }
+}
+
+@keyframes haikupheneShardBurst {
+  0% { opacity: 0; transform: rotate(calc(var(--shard-index) * 19deg)) translateX(0) scaleX(0.2); }
+  14% { opacity: 0.96; }
+  100% { opacity: 0; transform: rotate(calc(var(--shard-index) * 19deg)) translateX(min(42vw, 420px)) scaleX(1); }
+}
+
+@keyframes haikupheneFrameDrop {
+  from { opacity: 0; transform: translateY(-22px) scale(0.985); filter: blur(10px); }
+  to { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+}
+
+@media (max-width: 760px) {
+  .haikupheneOverlay {
+    padding: 12px;
+  }
+
+  .haikupheneFrame {
+    gap: 12px;
+    border-radius: 14px;
+  }
+
+  .haikupheneCodeLine {
+    grid-template-columns: 1fr;
+  }
+
+  .haikupheneBinary {
+    width: 100%;
+  }
+
+  .haikupheneText {
+    min-width: 0;
+    width: 100%;
+    font-size: clamp(1.5rem, 9vw, 3rem);
+  }
+
+  .haikupheneContinue {
+    width: 100%;
+  }
+}

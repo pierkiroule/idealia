@@ -1286,3 +1286,75 @@ footer {
 @keyframes sceneVignettePulse {
   50% { filter: saturate(1.35); opacity: 0.82; }
 }
+
+@media (max-width: 860px) {
+  .screen {
+    width: min(100%, 680px);
+    min-height: auto;
+    padding-block: 32px;
+    justify-content: flex-start;
+  }
+
+  .home h1 {
+    font-size: clamp(3.2rem, 16vw, 6.8rem);
+    letter-spacing: 0.12em;
+  }
+
+  .chatCard,
+  .reaction,
+  .mirrorText,
+  .map {
+    border-radius: 22px;
+  }
+
+  .choiceCards {
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  }
+}
+
+@media (max-width: 560px) {
+  body {
+    overflow-y: auto;
+  }
+
+  .app {
+    min-height: 100dvh;
+    place-items: start center;
+  }
+
+  .screen {
+    gap: 16px;
+    width: 100%;
+    padding-block: 22px;
+  }
+
+  button {
+    width: 100%;
+    min-height: 48px;
+    padding-inline: 18px;
+  }
+
+  .introPorthole {
+    width: min(76vw, 320px);
+  }
+
+  .chatCard {
+    padding: 16px;
+  }
+
+  .bubble {
+    margin-top: 10px;
+    padding: 11px 12px;
+    font-size: 0.96rem;
+  }
+
+  .choiceCard {
+    min-height: 136px;
+    padding: 16px;
+  }
+
+  .sceneTitleTransition {
+    min-height: 190px;
+    border-radius: 22px;
+  }
+}
